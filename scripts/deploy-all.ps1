@@ -66,22 +66,6 @@ if (-not $changes) {
     exit 0
 }
 
-$changedPaths = @()
-foreach ($line in $changes) {
-    if ($line.Length -lt 4) {
-        continue
-    }
-
-    $pathPart = $line.Substring(3).Trim()
-    if ($pathPart -like "* -> *") {
-        $pathPart = ($pathPart -split " -> ")[-1].Trim()
-    }
-
-    if (-not [string]::IsNullOrWhiteSpace($pathPart)) {
-        $changedPaths += $pathPart
-    }
-}
-
 if ([string]::IsNullOrWhiteSpace($CommitMessage)) {
     $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm"
     $CommitMessage = "deploy: auto update $timestamp"
@@ -93,6 +77,10 @@ Invoke-CommandChecked -Executable "git" -Arguments @("add", "-A")
 Write-Host "Creating commit..."
 Invoke-CommandChecked -Executable "git" -Arguments @("commit", "-m", $CommitMessage)
 
+$createdCommit = (& git rev-parse HEAD).Trim()
+$changedPaths = @(& git diff-tree --no-commit-id --name-only -r --root $createdCommit)
+$changedPaths = $changedPaths | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+
 Write-Host "Pushing to remote..."
 Invoke-CommandChecked -Executable "git" -Arguments @("push")
 
@@ -102,36 +90,41 @@ $remoteUrl = (& git remote get-url origin).Trim()
 $baseUrl = Get-PagesBaseUrl -RemoteUrl $remoteUrl
 
 if ($baseUrl) {
-    $projectDirs = @{}
-    foreach ($path in $changedPaths) {
-        $dir = Split-Path -Path $path -Parent
-        while ($true) {
-            if ([string]::IsNullOrWhiteSpace($dir)) {
-                break
-            }
+    try {
+        $projectDirs = @{}
+        foreach ($path in $changedPaths) {
+            $dir = Split-Path -Path $path -Parent
+            while ($true) {
+                if ([string]::IsNullOrWhiteSpace($dir)) {
+                    break
+                }
 
-            $indexCandidate = Join-Path -Path $dir -ChildPath "index.html"
-            if (Test-Path -Path $indexCandidate) {
-                $projectDirs[$dir] = $true
-                break
-            }
+                $indexCandidate = Join-Path -Path $dir -ChildPath "index.html"
+                if (Test-Path -Path $indexCandidate) {
+                    $projectDirs[$dir] = $true
+                    break
+                }
 
-            $parent = Split-Path -Path $dir -Parent
-            if ($parent -eq $dir) {
-                break
+                $parent = Split-Path -Path $dir -Parent
+                if ($parent -eq $dir) {
+                    break
+                }
+                $dir = $parent
             }
-            $dir = $parent
+        }
+
+        Write-Host ""
+        Write-Host "Site links:"
+        Write-Host "  Root: $baseUrl"
+
+        $projectLinks = @($projectDirs.Keys | Sort-Object)
+        foreach ($projectDir in $projectLinks) {
+            $urlPath = Convert-ToUrlPath -RelativePath $projectDir
+            Write-Host "  $projectDir => $baseUrl$urlPath"
         }
     }
-
-    Write-Host ""
-    Write-Host "Site links:"
-    Write-Host "  Root: $baseUrl"
-
-    $projectLinks = @($projectDirs.Keys | Sort-Object)
-    foreach ($projectDir in $projectLinks) {
-        $urlPath = Convert-ToUrlPath -RelativePath $projectDir
-        Write-Host "  $projectDir => $baseUrl$urlPath"
+    catch {
+        Write-Warning "Site links could not be generated: $($_.Exception.Message)"
     }
 }
 
