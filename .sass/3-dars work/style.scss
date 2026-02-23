@@ -104,19 +104,22 @@ a {
         margin-top: 20px;
         color: v.$baseCl;
         max-width: 940px;
-        font-size: clamp(28px, 3vw, 35px);
+        font-size: clamp(24px, 3vw, 35px);
         font-weight: 600;
         line-height: 1.1;
         letter-spacing: -0.015em;
     }
 }
+
 @keyframes anim {
     0% {
         transform: translateY(0);
     }
+
     50% {
         transform: translateY(-30px);
     }
+
     100% {
         transform: translateY(0);
     }
@@ -143,13 +146,16 @@ a {
         color: v.$secondCl;
     }
 }
+
 @keyframes anim2 {
     0% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.7;
     }
+
     100% {
         opacity: 1;
     }
@@ -164,12 +170,12 @@ a {
     margin-top: 4px;
     background-color: #000;
     background-image: url("./Picture%20%E2%86%92%20iphone_16_pro__dbqs3s14emky_large.jpg.png");
-    background-size:  auto;
-    background-position: center ;
+    background-size: auto;
+    background-position: center;
     background-repeat: no-repeat;
     overflow: hidden;
     position: relative;
-    
+
     .iphone--text {
         margin-top: 6px;
         display: grid;
@@ -177,7 +183,7 @@ a {
         line-height: 1;
         position: absolute;
         top: 70px;
-        
+
         h2 {
             color: v.$baseCl;
             font-size: clamp(42px, 6vw, 82px);
@@ -185,14 +191,14 @@ a {
             letter-spacing: -0.02em;
             margin-bottom: -100px;
         }
-        
+
         img {
             height: auto;
             display: block;
             animation: anim2 3s ease-in-out infinite;
         }
     }
-    
+
     >h2 {
         margin-top: 800px;
         color: v.$baseCl;
@@ -201,7 +207,7 @@ a {
         font-weight: 600;
         line-height: 1.24;
     }
-    
+
     >p {
         margin-top: 26px;
         color: rgba(255, 255, 255, 0.9);
@@ -209,14 +215,14 @@ a {
         font-size: 20px;
         line-height: 1.35;
     }
-    
+
     .btns {
         margin-top: 28px;
         display: flex;
         justify-content: center;
         gap: 16px;
         flex-wrap: wrap;
-        
+
         .btn--outlineW {
             margin-top: 0;
         }
