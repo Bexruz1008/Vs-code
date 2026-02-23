@@ -34,9 +34,6 @@ jobs:
     needs: check-secrets
     if: ${{ needs.check-secrets.outputs.ready == 'true' }}
     runs-on: ubuntu-latest
-    env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -44,12 +41,33 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
+      - name: Normalize Vercel IDs
+        id: ids
+        shell: bash
+        run: |
+          ORG_ID="$(printf '%s' '${{ secrets.VERCEL_ORG_ID }}' | tr -d '\r\n' | xargs)"
+          PROJECT_ID="$(printf '%s' '${{ secrets.VERCEL_PROJECT_ID }}' | tr -d '\r\n' | xargs)"
+
+          if [ -z "$ORG_ID" ] || [ -z "$PROJECT_ID" ]; then
+            echo "Vercel IDs are empty after normalization."
+            exit 1
+          fi
+
+          echo "org_id=$ORG_ID" >> "$GITHUB_OUTPUT"
+          echo "project_id=$PROJECT_ID" >> "$GITHUB_OUTPUT"
+
       - name: Pull project settings
+        env:
+          VERCEL_ORG_ID: ${{ steps.ids.outputs.org_id }}
+          VERCEL_PROJECT_ID: ${{ steps.ids.outputs.project_id }}
         run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Deploy
         id: deploy
         shell: bash
+        env:
+          VERCEL_ORG_ID: ${{ steps.ids.outputs.org_id }}
+          VERCEL_PROJECT_ID: ${{ steps.ids.outputs.project_id }}
         run: |
           DEPLOY_OUTPUT="$(vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }} 2>&1)"
           echo "$DEPLOY_OUTPUT"
