@@ -134,3 +134,13 @@ if ($baseUrl) {
         Write-Host "  $projectDir => $baseUrl$urlPath"
     }
 }
+
+$repoMatch = [regex]::Match($remoteUrl, "github\.com[/:](?<owner>[^/]+)/(?<repo>[^/.]+)(\.git)?$")
+if ($repoMatch.Success) {
+    $owner = $repoMatch.Groups["owner"].Value
+    $repo = $repoMatch.Groups["repo"].Value
+    Write-Host ""
+    Write-Host "Workflow links:"
+    Write-Host "  Pages: https://github.com/$owner/$repo/actions/workflows/deploy-pages.yml"
+    Write-Host "  Vercel: https://github.com/$owner/$repo/actions/workflows/deploy-vercel.yml"
+}
