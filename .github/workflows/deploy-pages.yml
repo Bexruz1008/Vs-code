@@ -45,6 +45,12 @@ jobs:
             --exclude='*.zip' \
             ./ _site/
 
+          # GitHub's upload-pages-artifact excludes dot-prefixed entries.
+          # Mirror ".sass" into "sass" so Pages can serve it.
+          if [ -d "_site/.sass" ]; then
+            cp -a "_site/.sass" "_site/sass"
+          fi
+
           touch _site/.nojekyll
 
       - name: Setup GitHub Pages

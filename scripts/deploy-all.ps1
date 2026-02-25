@@ -35,6 +35,11 @@ function Convert-ToUrlPath {
     }
 
     $segments = $RelativePath -split "[/\\]+" | Where-Object { $_ -ne "" }
+    if ($segments.Count -gt 0 -and $segments[0] -eq ".sass") {
+        # Dot-prefixed folders are not published by GitHub Pages artifact upload.
+        # We deploy ".sass" as public "sass" alias in Pages workflow.
+        $segments[0] = "sass"
+    }
     $encoded = $segments | ForEach-Object { [System.Uri]::EscapeDataString($_) }
     return (($encoded -join "/").Trim("/") + "/")
 }
