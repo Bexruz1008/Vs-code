@@ -1,0 +1,256 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Krona+One&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Orbitron:wght@400..900&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Sora:wght@100..800&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Krona+One&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Orbitron:wght@400..900&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Sora:wght@100..800&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+*, html{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body{
+  width: 100%;
+  background-color:  #1c2431;
+  font-family: "Raleway", sans-serif;;
+}
+header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2vw 5vw;
+  background-color:  #1c2431;
+  .nav{
+    display: flex;
+    gap: 5vw;
+    a{
+      text-decoration: none;
+      color: white;
+      font-size: clamp(12px, 3vw, 18px);
+      &:hover{
+        text-decoration: underline  ;
+      }
+    }
+  }
+}
+.hero{
+  display: grid;
+  font-family: "Open Sans", sans-serif;
+}
+.hero1{
+  place-items: center;
+  color: white;
+  width: 100%;
+  font-family: "Raleway", sans-serif;
+  position: relative;
+  h1{
+    width: 40%;
+    text-align: center;
+    line-height: 2.5rem;
+    font-weight: 700;
+    font-size: clamp(26px, 4vw, 36px);
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  p{
+    width: 34%;
+    text-align: center;
+    line-height: 1.5rem;
+    font-weight: 500;
+    font-size: clamp(11px, 4vw, 17px);
+  }
+  &__btn{
+    background: linear-gradient(to right, #65e2d9,#339ecc);
+    padding: 20px 70px;
+    font-family: "Raleway", sans-serif;
+    font-weight: 700;
+    font-size: clamp(14px, 2vw, 20px);
+    color: white;
+    border:none;
+    border-radius: 70px;
+    margin: 20px 0 230px 0;
+    cursor: pointer;
+    &:hover{
+      background: linear-gradient(to left, #65e2d9,#339ecc);
+      transform: scale(1.05);
+    }
+  }
+  .bg__img{
+    margin-top: 200px;
+    position: absolute;
+    z-index: -1;
+    bottom: 0;
+    width: 100vw;
+  }
+}
+.btn{
+      background: linear-gradient(to right, #65e2d9,#339ecc);
+    padding: 20px 70px;
+    font-family: "Raleway", sans-serif;
+    font-weight: 700;
+    font-size: clamp(14px, 2vw, 20px);
+    color: white;
+    border:none;
+    border-radius: 70px;
+}
+.hero2{
+  background-color: #181f2a;
+  place-items: center;
+  width: 100%;
+  padding-bottom: 30px;
+}
+.cards__wrapper{
+  display: grid;
+  width: 100%;
+  place-items: center;
+  grid-template-columns: 1fr 1fr;
+  padding: 20px auto;
+  gap: 50px;
+  margin-top: -80px;
+}
+.cards__card{
+  display: grid;
+  grid-template-rows: auto;
+  place-items: center;
+  text-align: center;
+  width: 300px;
+  color: white;
+  gap: 15px;
+}
+.hero3{
+  color: white;
+  background-color: #181f2a;
+  grid-template-columns: 1fr 1fr;
+  padding:50px ;
+  place-items: center;
+  &__content{
+    display: grid;
+    gap: 30px;
+    h2{
+      font-size: clamp(18px, 3vw, 36px);
+      width: 50%;
+    }
+    p{
+      width: 90%;
+    }
+    a{
+      color: #65e2d9;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      &:hover{
+        color: white;
+      }
+      img{
+        fill: white;
+      }
+    }
+  }
+}
+.hero4{
+  background-color: #181f2a;
+  background-image: url(./images/bg-quotes.png);
+  background-repeat: no-repeat;
+}
+.divs__wrapper{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 50px;
+  margin: 70px;
+}
+.divs{
+  background-color: #202a3c;
+  border-radius: 8px;
+  color: white;
+  padding: 30px;
+  h5{
+    font-size: clamp(14px, 2vw, 18px);
+    font-weight: 500;
+  }
+  .profile{
+    display: flex;
+    padding-top: 15px ;
+    gap: 10px;
+    align-items: center;
+    img{
+      width: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    p{
+      font-size: clamp(10px, 3vw, 16px);
+    }
+    span{
+      font-size: clamp(7px, 3vw, 13px);
+    color: rgb(166, 166, 166);
+    }
+  }
+}
+
+@media (max-width:768px) {
+  *, html{
+    margin-bottom: 0;
+    width: auto ;
+    // background-color: rgba(255, 0, 0, 0.434);
+  }
+  body{
+    width: 100vw;
+  }
+  header{
+    display: flex;
+    align-items: center;
+    padding: 10px 15px ;
+    img{
+      width: 50%;
+    }
+  }
+  .hero1{
+    >img{
+      padding-top: 30px;
+      width: 80%;
+      object-fit: contain;
+    }
+    h1,p{
+      width: 100%;
+      padding: 10px 30px;
+    }
+    &__btn{
+      padding: 20px 60px;
+      margin-bottom: 150px;
+    }
+  }
+  .bg__img{
+    width: 100%;
+    object-fit: cover;
+    padding: 0;
+    margin: 0;
+  }
+
+  .cards__wrapper{
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+  
+  .hero3{
+    grid-template-columns: 1fr;
+    padding: 20px;
+    >img{
+      width: 100%;
+    }
+    &__content{
+      h2,p{
+        width: 100%;
+      }
+      p{
+        font-size: 14px;
+      }
+      a{
+        font-size: 15px;
+      }
+    }
+  }
+  .hero4{
+    padding-top: 50px;
+  }
+  .divs__wrapper{
+    grid-template-columns: 1fr;
+    padding: 0;
+    margin: 20px;
+  }
+}
