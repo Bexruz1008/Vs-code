@@ -57,6 +57,95 @@ function Invoke-CommandChecked {
     }
 }
 
+function Show-DeployLinks {
+    param(
+        [string]$RemoteUrl,
+        [string[]]$ChangedPaths = @()
+    )
+
+    if ([string]::IsNullOrWhiteSpace($RemoteUrl)) {
+        return
+    }
+
+    $baseUrl = Get-PagesBaseUrl -RemoteUrl $RemoteUrl
+
+    if ($baseUrl) {
+        try {
+            $projectDirs = @{}
+            foreach ($path in $ChangedPaths) {
+                $dir = Split-Path -Path $path -Parent
+                while ($true) {
+                    if ([string]::IsNullOrWhiteSpace($dir)) {
+                        break
+                    }
+
+                    $indexCandidate = Join-Path -Path $dir -ChildPath "index.html"
+                    if (Test-Path -Path $indexCandidate) {
+                        $projectDirs[$dir] = $true
+                        break
+                    }
+
+                    $parent = Split-Path -Path $dir -Parent
+                    if ($parent -eq $dir) {
+                        break
+                    }
+                    $dir = $parent
+                }
+            }
+
+            Write-Host ""
+            Write-Host "Site links:"
+            Write-Host "  Root: $baseUrl"
+
+            $projectLinks = @($projectDirs.Keys | Sort-Object)
+            if ($projectLinks.Count -eq 0) {
+                $fallbackDir = $null
+                $preferredDir = ".sass\Imtihon"
+                $preferredIndex = Join-Path -Path $preferredDir -ChildPath "index.html"
+
+                if (Test-Path -Path $preferredIndex) {
+                    $fallbackDir = $preferredDir
+                }
+                else {
+                    $latestSassIndex = Get-ChildItem -Path ".sass" -Recurse -Filter "index.html" -File -ErrorAction SilentlyContinue |
+                        Sort-Object -Property LastWriteTime -Descending |
+                        Select-Object -First 1
+
+                    if ($latestSassIndex) {
+                        $latestDir = Split-Path -Path $latestSassIndex.FullName -Parent
+                        $workspaceRoot = (Get-Location).Path.TrimEnd("\")
+                        if ($latestDir.StartsWith($workspaceRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+                            $fallbackDir = $latestDir.Substring($workspaceRoot.Length).TrimStart("\")
+                        }
+                    }
+                }
+
+                if (-not [string]::IsNullOrWhiteSpace($fallbackDir)) {
+                    $projectLinks = @($fallbackDir)
+                }
+            }
+
+            foreach ($projectDir in $projectLinks) {
+                $urlPath = Convert-ToUrlPath -RelativePath $projectDir
+                Write-Host "  $projectDir => $baseUrl$urlPath"
+            }
+        }
+        catch {
+            Write-Warning "Site links could not be generated: $($_.Exception.Message)"
+        }
+    }
+
+    $repoMatch = [regex]::Match($RemoteUrl, "github\.com[/:](?<owner>[^/]+)/(?<repo>[^/.]+)(\.git)?$")
+    if ($repoMatch.Success) {
+        $owner = $repoMatch.Groups["owner"].Value
+        $repo = $repoMatch.Groups["repo"].Value
+        Write-Host ""
+        Write-Host "Workflow links:"
+        Write-Host "  Pages: https://github.com/$owner/$repo/actions/workflows/deploy-pages.yml"
+        Write-Host "  Vercel: https://github.com/$owner/$repo/actions/workflows/deploy-vercel.yml"
+    }
+}
+
 try {
     Invoke-CommandChecked -Executable "git" -Arguments @("rev-parse", "--is-inside-work-tree") | Out-Null
 }
@@ -65,9 +154,18 @@ catch {
     exit 1
 }
 
+$remoteUrl = (& git remote get-url origin 2>$null)
+if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace($remoteUrl)) {
+    $remoteUrl = $remoteUrl.Trim()
+}
+else {
+    $remoteUrl = ""
+}
+
 $changes = (& git status --porcelain)
 if (-not $changes) {
     Write-Host "No changes found. Nothing to deploy."
+    Show-DeployLinks -RemoteUrl $remoteUrl
     exit 0
 }
 
@@ -90,82 +188,4 @@ Write-Host "Pushing to remote..."
 Invoke-CommandChecked -Executable "git" -Arguments @("push")
 
 Write-Host "Deploy pipeline triggered successfully."
-
-$remoteUrl = (& git remote get-url origin).Trim()
-$baseUrl = Get-PagesBaseUrl -RemoteUrl $remoteUrl
-
-if ($baseUrl) {
-    try {
-        $projectDirs = @{}
-        foreach ($path in $changedPaths) {
-            $dir = Split-Path -Path $path -Parent
-            while ($true) {
-                if ([string]::IsNullOrWhiteSpace($dir)) {
-                    break
-                }
-
-                $indexCandidate = Join-Path -Path $dir -ChildPath "index.html"
-                if (Test-Path -Path $indexCandidate) {
-                    $projectDirs[$dir] = $true
-                    break
-                }
-
-                $parent = Split-Path -Path $dir -Parent
-                if ($parent -eq $dir) {
-                    break
-                }
-                $dir = $parent
-            }
-        }
-
-        Write-Host ""
-        Write-Host "Site links:"
-        Write-Host "  Root: $baseUrl"
-
-        $projectLinks = @($projectDirs.Keys | Sort-Object)
-        if ($projectLinks.Count -eq 0) {
-            $fallbackDir = $null
-            $preferredDir = ".sass\Imtihon"
-            $preferredIndex = Join-Path -Path $preferredDir -ChildPath "index.html"
-
-            if (Test-Path -Path $preferredIndex) {
-                $fallbackDir = $preferredDir
-            }
-            else {
-                $latestSassIndex = Get-ChildItem -Path ".sass" -Recurse -Filter "index.html" -File -ErrorAction SilentlyContinue |
-                    Sort-Object -Property LastWriteTime -Descending |
-                    Select-Object -First 1
-
-                if ($latestSassIndex) {
-                    $latestDir = Split-Path -Path $latestSassIndex.FullName -Parent
-                    $workspaceRoot = (Get-Location).Path.TrimEnd("\")
-                    if ($latestDir.StartsWith($workspaceRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
-                        $fallbackDir = $latestDir.Substring($workspaceRoot.Length).TrimStart("\")
-                    }
-                }
-            }
-
-            if (-not [string]::IsNullOrWhiteSpace($fallbackDir)) {
-                $projectLinks = @($fallbackDir)
-            }
-        }
-
-        foreach ($projectDir in $projectLinks) {
-            $urlPath = Convert-ToUrlPath -RelativePath $projectDir
-            Write-Host "  $projectDir => $baseUrl$urlPath"
-        }
-    }
-    catch {
-        Write-Warning "Site links could not be generated: $($_.Exception.Message)"
-    }
-}
-
-$repoMatch = [regex]::Match($remoteUrl, "github\.com[/:](?<owner>[^/]+)/(?<repo>[^/.]+)(\.git)?$")
-if ($repoMatch.Success) {
-    $owner = $repoMatch.Groups["owner"].Value
-    $repo = $repoMatch.Groups["repo"].Value
-    Write-Host ""
-    Write-Host "Workflow links:"
-    Write-Host "  Pages: https://github.com/$owner/$repo/actions/workflows/deploy-pages.yml"
-    Write-Host "  Vercel: https://github.com/$owner/$repo/actions/workflows/deploy-vercel.yml"
-}
+Show-DeployLinks -RemoteUrl $remoteUrl -ChangedPaths $changedPaths
