@@ -123,6 +123,33 @@ if ($baseUrl) {
         Write-Host "  Root: $baseUrl"
 
         $projectLinks = @($projectDirs.Keys | Sort-Object)
+        if ($projectLinks.Count -eq 0) {
+            $fallbackDir = $null
+            $preferredDir = ".sass\Imtihon"
+            $preferredIndex = Join-Path -Path $preferredDir -ChildPath "index.html"
+
+            if (Test-Path -Path $preferredIndex) {
+                $fallbackDir = $preferredDir
+            }
+            else {
+                $latestSassIndex = Get-ChildItem -Path ".sass" -Recurse -Filter "index.html" -File -ErrorAction SilentlyContinue |
+                    Sort-Object -Property LastWriteTime -Descending |
+                    Select-Object -First 1
+
+                if ($latestSassIndex) {
+                    $latestDir = Split-Path -Path $latestSassIndex.FullName -Parent
+                    $workspaceRoot = (Get-Location).Path.TrimEnd("\")
+                    if ($latestDir.StartsWith($workspaceRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+                        $fallbackDir = $latestDir.Substring($workspaceRoot.Length).TrimStart("\")
+                    }
+                }
+            }
+
+            if (-not [string]::IsNullOrWhiteSpace($fallbackDir)) {
+                $projectLinks = @($fallbackDir)
+            }
+        }
+
         foreach ($projectDir in $projectLinks) {
             $urlPath = Convert-ToUrlPath -RelativePath $projectDir
             Write-Host "  $projectDir => $baseUrl$urlPath"
