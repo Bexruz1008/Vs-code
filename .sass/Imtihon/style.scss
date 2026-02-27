@@ -109,7 +109,7 @@ header {
     font-size: 16px;
     color: $text;
     border: none;
-    border-radius: 999px;
+    border-radius: 50px;
     cursor: pointer;
     transition: transform 0.2s ease, filter 0.2s ease;
 
@@ -318,7 +318,7 @@ header {
     input {
       width: 100%;
       border: none;
-      border-radius: 999px;
+      border-radius: 50px;
       padding: 15.2px 24px;
       font-size: 15.2px;
       outline: none;
@@ -326,7 +326,7 @@ header {
 
     button {
       border: none;
-      border-radius: 999px;
+      border-radius: 50px;
       background: linear-gradient(to right, $accent-teal, $accent-cyan);
       color: $text;
       font-family: "Raleway", sans-serif;
@@ -334,9 +334,10 @@ header {
       padding: 15.2px 28.8px;
       cursor: pointer;
       transition: filter 0.2s ease;
-
+      
       &:hover {
         filter: brightness(1.08);
+        background: linear-gradient(to left, $accent-teal, $accent-cyan);
       }
     }
   }
