@@ -5,17 +5,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
-  <title>ASUS - Fylo Landing Page</title>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <title>Bexruz</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <div class="container">
     <header class="site-header" id="top">
-      <a href="#top" aria-label="Fylo home">
+      <a href="#top" >
         <img src="./images/logo.svg" alt="Fylo logo">
       </a>
-      <nav class="nav" aria-label="Primary">
+      <nav class="nav" >
         <a href="#features" class="nav__link">Features</a>
         <a href="#team" class="nav__link">Team</a>
         <a href="#sign-in" class="nav__link">Sign In</a>
@@ -23,8 +25,8 @@
     </header>
 
     <main>
-      <section class="hero hero1" aria-labelledby="hero-title">
-        <img src="./images/illustration-intro.png" alt="Illustration of secure cloud storage">
+      <section class="hero hero1" >
+        <img src="./images/illustration-intro.png" alt="">
         <h1 id="hero-title" class="hero__h1">
           All your files in one secure location, accessible anywhere.
         </h1>
@@ -36,12 +38,12 @@
           Get Started
         </button>
         <picture class="hero1__bg">
-          <source media="(max-width: 768px)" srcset="./images/bg-curvy-mobile.svg">
-          <img src="./images/bg-curvy-desktop.svg" alt="" class="bg__img" aria-hidden="true">
+    
+          <img src="./images/bg-curvy-desktop.svg" alt="" class="bg__img" >
         </picture>
       </section>
 
-      <section class="hero hero2" id="features" aria-label="Features">
+      <section class="hero hero2" id="features" >
         <div class="cards__wrapper">
           <div class="cards__card">
             <img src="./images/icon-access-anywhere.svg" alt="Access anywhere icon">
@@ -86,7 +88,7 @@
         </div>
       </section>
 
-      <section class="hero hero3" id="team" aria-labelledby="team-title">
+      <section class="hero hero3" id="team" >
         <img src="./images/illustration-stay-productive.png" alt="People staying productive" class="hero3__img">
         <div class="hero3__content">
           <h2 id="team-title">
@@ -107,7 +109,7 @@
         </div>
       </section>
 
-      <section class="hero hero4" aria-label="Testimonials">
+      <section class="hero hero4" >
         <div class="divs__wrapper">
           <div class="divs">
             <h5>
@@ -163,13 +165,13 @@
         </div>
       </section>
 
-      <section class="cta" id="sign-in" aria-labelledby="cta-title">
-        <h2 id="cta-title">Get early access today</h2>
+      <section class="contact" id="sign-in">
+        <h2 id="contact-title">Get early access today</h2>
         <p>
           It only takes a minute to sign up and our free starter tier is extremely generous.
           If you have any questions, our support team would be happy to help you.
         </p>
-        <form class="cta__form" action="#" method="post" novalidate>
+        <form class="contact__form">
           <label class="email" for="email">Email address</label>
           <input type="email" id="email" name="email" placeholder="email@example.com" required>
           <button type="submit">Get Started For Free</button>
@@ -178,7 +180,7 @@
     </main>
 
     <footer class="footer">
-      <img src="./images/logo.svg" alt="Fylo logo" class="footer__logo">
+      <img src="./images/logo.svg"  class="footer__logo">
       <div class="footer__content">
         <div class="footer__location">
           <img src="./images/icon-location.svg" alt="Location icon">
@@ -187,33 +189,33 @@
         </div>
 
         <div class="footer__contact">
-          <a href="tel:+15431234567">
-            <img src="./images/icon-phone.svg" alt="Phone icon">
+          <a href="">
+            <img src="./images/icon-phone.svg" alt="">
             +1-543-123-4567
           </a>
-          <a href="mailto:example@fylo.com">
-            <img src="./images/icon-email.svg" alt="Email icon">
+          <a href="">
+            <img src="./images/icon-email.svg" alt="">
             example@fylo.com
           </a>
         </div>
 
-        <nav class="footer__links" aria-label="Footer links column one">
+        <nav class="footer__links" >
           <a href="#">About Us</a>
           <a href="#">Jobs</a>
           <a href="#">Press</a>
           <a href="#">Blog</a>
         </nav>
 
-        <nav class="footer__links" aria-label="Footer links column two">
+        <nav class="footer__links" >
           <a href="#">Contact Us</a>
           <a href="#">Terms</a>
           <a href="#">Privacy</a>
         </nav>
 
-        <div class="footer__social" aria-label="Social links">
-          <a href="#" >F</a>
-          <a href="#" >T</a>
-          <a href="#" >I</a>
+        <div class="footer__social" >
+          <a href="#" ><ion-icon name="logo-facebook"></ion-icon></a>
+          <a href="#" ><ion-icon name="logo-twitter"></ion-icon></a>
+          <a href="#" ><ion-icon name="logo-instagram"></ion-icon></a>
         </div>
       </div>
     </footer>
