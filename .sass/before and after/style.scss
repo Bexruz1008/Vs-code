@@ -1,0 +1,32 @@
+body {
+  height: 97vh;
+  width: auto;
+  display: grid;
+  place-items: center;
+}
+
+.box {
+  width: 100px;
+  height: 100px;
+  background-color: navy;
+  position: relative;
+  opacity: 0;
+  &:hover{
+    opacity: 1;
+  }
+}
+
+.box::after {
+  content: '';
+  width: 20px;
+  height: 20px;
+  background-color: aquamarine;
+  position: absolute;
+  corner-shape: bevel;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+  bottom: -10px;
+  left: 40px;
+  z-index: -1;
+  
+}
