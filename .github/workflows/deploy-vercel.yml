@@ -77,8 +77,17 @@ jobs:
           VERCEL_ORG_ID: ${{ steps.ids.outputs.org_id }}
           VERCEL_PROJECT_ID: ${{ steps.ids.outputs.project_id }}
         run: |
+          set +e
           DEPLOY_OUTPUT="$(vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }} 2>&1)"
+          DEPLOY_EXIT=$?
+          set -e
+
           echo "$DEPLOY_OUTPUT"
+
+          if [ $DEPLOY_EXIT -ne 0 ]; then
+            echo "Vercel deploy command failed with exit code $DEPLOY_EXIT."
+            exit $DEPLOY_EXIT
+          fi
 
           DEPLOY_URL="$(printf "%s\n" "$DEPLOY_OUTPUT" | grep -Eo 'https://[a-zA-Z0-9.-]+\.vercel\.app' | tail -n 1)"
           if [ -z "$DEPLOY_URL" ]; then
