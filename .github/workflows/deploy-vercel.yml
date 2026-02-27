@@ -19,15 +19,13 @@ jobs:
         id: check
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
-          if [ -n "$VERCEL_TOKEN" ] && [ -n "$VERCEL_ORG_ID" ] && [ -n "$VERCEL_PROJECT_ID" ]; then
+          if [ -n "$VERCEL_TOKEN" ]; then
             echo "ready=true" >> "$GITHUB_OUTPUT"
-            echo "Vercel secrets are configured."
+            echo "Vercel token is configured."
           else
             echo "ready=false" >> "$GITHUB_OUTPUT"
-            echo "Missing Vercel secrets. Set VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID in GitHub."
+            echo "Missing Vercel secret. Set VERCEL_TOKEN in GitHub."
           fi
 
   deploy:
@@ -41,18 +39,28 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
-      - name: Normalize Vercel IDs
+      - name: Resolve Vercel IDs
         id: ids
         shell: bash
         run: |
           ORG_ID="$(printf '%s' '${{ secrets.VERCEL_ORG_ID }}' | tr -d '\r\n' | xargs)"
           PROJECT_ID="$(printf '%s' '${{ secrets.VERCEL_PROJECT_ID }}' | tr -d '\r\n' | xargs)"
+          SOURCE="secrets"
 
           if [ -z "$ORG_ID" ] || [ -z "$PROJECT_ID" ]; then
-            echo "Vercel IDs are empty after normalization."
+            if [ -f ".vercel/project.json" ]; then
+              ORG_ID="$(sed -n 's/.*"orgId":"\([^"]*\)".*/\1/p' .vercel/project.json | tr -d '\r\n' | xargs)"
+              PROJECT_ID="$(sed -n 's/.*"projectId":"\([^"]*\)".*/\1/p' .vercel/project.json | tr -d '\r\n' | xargs)"
+              SOURCE=".vercel/project.json"
+            fi
+          fi
+
+          if [ -z "$ORG_ID" ] || [ -z "$PROJECT_ID" ]; then
+            echo "Could not resolve Vercel org/project ID from secrets or .vercel/project.json."
             exit 1
           fi
 
+          echo "Using Vercel IDs from: $SOURCE"
           echo "org_id=$ORG_ID" >> "$GITHUB_OUTPUT"
           echo "project_id=$PROJECT_ID" >> "$GITHUB_OUTPUT"
 
@@ -94,5 +102,6 @@ jobs:
       - name: Explain missing setup
         run: |
           echo "### Vercel setup required" >> "$GITHUB_STEP_SUMMARY"
-          echo "Add repository secrets: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID." >> "$GITHUB_STEP_SUMMARY"
+          echo "Add repository secret: VERCEL_TOKEN." >> "$GITHUB_STEP_SUMMARY"
+          echo "VERCEL_ORG_ID/VERCEL_PROJECT_ID are optional if .vercel/project.json exists in the repo." >> "$GITHUB_STEP_SUMMARY"
           echo "After adding secrets, push again or run this workflow manually." >> "$GITHUB_STEP_SUMMARY"
