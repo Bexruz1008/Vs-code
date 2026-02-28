@@ -39,7 +39,7 @@
       }
     },
     {
-      "label": "Deploy: All projects (1-click)",
+      "label": "Deploy: Current project (1-click)",
       "type": "shell",
       "command": "powershell",
       "args": [
@@ -47,7 +47,10 @@
         "-ExecutionPolicy",
         "Bypass",
         "-File",
-        "${workspaceFolder}/scripts/deploy-all.ps1"
+        "${workspaceFolder}/scripts/deploy-all.ps1",
+        "-DeployDir",
+        "${relativeFileDirname}",
+        "-RequireDeployDir"
       ],
       "options": {
         "cwd": "${workspaceFolder}"

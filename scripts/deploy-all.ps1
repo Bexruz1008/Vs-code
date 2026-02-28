@@ -1,5 +1,7 @@
 param(
-    [string]$CommitMessage = ""
+    [string]$CommitMessage = "",
+    [string]$DeployDir = "",
+    [switch]$RequireDeployDir
 )
 
 $ErrorActionPreference = "Stop"
@@ -78,6 +80,50 @@ function Convert-ToRelativePath {
         return $absolute.Substring($workspaceRoot.Length).TrimStart("\")
     }
     return $null
+}
+
+function Resolve-DeployProjectDir {
+    param(
+        [string]$InputPath
+    )
+
+    if ([string]::IsNullOrWhiteSpace($InputPath)) {
+        return $null
+    }
+
+    try {
+        $raw = $InputPath.Trim().Trim('"') -replace '/', '\'
+        if (-not (Test-Path -LiteralPath $raw)) {
+            return $null
+        }
+
+        $resolved = (Resolve-Path -LiteralPath $raw).Path
+        if (Test-Path -LiteralPath $resolved -PathType Leaf) {
+            $resolved = Split-Path -Path $resolved -Parent
+        }
+
+        $current = $resolved
+        while (-not [string]::IsNullOrWhiteSpace($current)) {
+            if (Test-ProjectDirectory -DirPath $current) {
+                $relative = Convert-ToRelativePath -AbsolutePath $current
+                if ([string]::IsNullOrWhiteSpace($relative)) {
+                    return "."
+                }
+                return $relative
+            }
+
+            $parent = Split-Path -Path $current -Parent
+            if ([string]::IsNullOrWhiteSpace($parent) -or $parent -eq $current) {
+                break
+            }
+            $current = $parent
+        }
+
+        return $null
+    }
+    catch {
+        return $null
+    }
 }
 
 function Invoke-CommandChecked {
@@ -186,7 +232,6 @@ function Show-DeployLinks {
         Write-Host ""
         Write-Host "Workflow links:"
         Write-Host "  Pages: https://github.com/$owner/$repo/actions/workflows/deploy-pages.yml"
-        Write-Host "  Vercel: https://github.com/$owner/$repo/actions/workflows/deploy-vercel.yml"
     }
 }
 
@@ -206,11 +251,17 @@ else {
     $remoteUrl = ""
 }
 
-$changes = (& git status --porcelain)
-if (-not $changes) {
-    Write-Host "No changes found. Nothing to deploy."
-    Show-DeployLinks -RemoteUrl $remoteUrl
-    exit 0
+$changes = @(& git status --porcelain)
+$changes = $changes | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+
+$targetProjectDir = Resolve-DeployProjectDir -InputPath $DeployDir
+if ($RequireDeployDir -and [string]::IsNullOrWhiteSpace($targetProjectDir)) {
+    Write-Error "Current file folder is not deployable. Open a file inside a project folder that contains index.html."
+    exit 1
+}
+if (-not [string]::IsNullOrWhiteSpace($DeployDir) -and [string]::IsNullOrWhiteSpace($targetProjectDir)) {
+    Write-Error "DeployDir does not resolve to a folder containing index.html: $DeployDir"
+    exit 1
 }
 
 if ([string]::IsNullOrWhiteSpace($CommitMessage)) {
@@ -218,8 +269,30 @@ if ([string]::IsNullOrWhiteSpace($CommitMessage)) {
     $CommitMessage = "deploy: auto update $timestamp"
 }
 
-Write-Host "Staging all changes..."
-Invoke-CommandChecked -Executable "git" -Arguments @("add", "-A")
+if (-not [string]::IsNullOrWhiteSpace($targetProjectDir)) {
+    Write-Host "Deploy target folder: $targetProjectDir"
+    Write-Host "Staging selected folder changes..."
+    Invoke-CommandChecked -Executable "git" -Arguments @("add", "-A", "--", $targetProjectDir)
+
+    $stagedChanges = @(& git diff --cached --name-only)
+    $stagedChanges = $stagedChanges | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+    if ($stagedChanges.Count -eq 0) {
+        Write-Host "No changes found in selected folder. Nothing to deploy."
+        $linkHint = if ($targetProjectDir -eq ".") { "index.html" } else { Join-Path -Path $targetProjectDir -ChildPath "index.html" }
+        Show-DeployLinks -RemoteUrl $remoteUrl -ChangedPaths @($linkHint)
+        exit 0
+    }
+}
+else {
+    if ($changes.Count -eq 0) {
+        Write-Host "No changes found. Nothing to deploy."
+        Show-DeployLinks -RemoteUrl $remoteUrl
+        exit 0
+    }
+
+    Write-Host "Staging all changes..."
+    Invoke-CommandChecked -Executable "git" -Arguments @("add", "-A")
+}
 
 Write-Host "Creating commit..."
 Invoke-CommandChecked -Executable "git" -Arguments @("commit", "-m", $CommitMessage)
