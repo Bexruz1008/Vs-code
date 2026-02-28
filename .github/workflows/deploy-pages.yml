@@ -51,6 +51,59 @@ jobs:
             cp -a "_site/.sass" "_site/sass"
           fi
 
+          # Ensure root URL works by generating an index page when missing.
+          if [ ! -f "_site/index.html" ]; then
+            declare -A LINK_SET=()
+
+            while IFS= read -r index_file; do
+              rel="${index_file#_site/}"
+              dir="$(dirname "$rel")"
+              [ "$dir" = "." ] && continue
+
+              if [[ "$dir" == .sass* ]]; then
+                dir="sass${dir#.sass}"
+              fi
+
+              LINK_SET["${dir%/}/"]=1
+            done < <(
+              find _site \
+                -type f \
+                -iname 'index.html' \
+                -not -path '_site/.git/*' \
+                -not -path '_site/.github/*' \
+                -not -path '_site/.vscode/*' \
+                -not -path '_site/node_modules/*' \
+                | sort
+            )
+
+            {
+              echo '<!doctype html>'
+              echo '<html lang="en"><head>'
+              echo '  <meta charset="utf-8" />'
+              echo '  <meta name="viewport" content="width=device-width, initial-scale=1" />'
+              echo '  <title>Project Links</title>'
+              echo '  <style>'
+              echo '    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;margin:2rem;line-height:1.5}'
+              echo '    h1{margin:0 0 1rem;font-size:1.5rem}'
+              echo '    ul{padding-left:1.2rem}'
+              echo '    li{margin:.35rem 0}'
+              echo '    a{color:#0b57d0;text-decoration:none}'
+              echo '    a:hover{text-decoration:underline}'
+              echo '  </style>'
+              echo '</head><body>'
+              echo '  <h1>Available Projects</h1>'
+              echo '  <ul>'
+
+              mapfile -t LINKS < <(printf "%s\n" "${!LINK_SET[@]}" | sort)
+              for link in "${LINKS[@]}"; do
+                printf '    <li><a href="%s">%s</a></li>\n' "$link" "$link"
+              done
+
+              echo '  </ul>'
+              echo '</body></html>'
+            } > _site/index.html
+          fi
+
           touch _site/.nojekyll
 
       - name: Setup GitHub Pages

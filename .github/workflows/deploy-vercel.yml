@@ -1,21 +1,26 @@
-name: Deploy to Vercel (Optional)
+name: Deploy to Vercel (Auto by Folder)
 
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      deploy_dir:
+        description: Folder to deploy (optional, must contain index.html)
+        required: false
+        default: ""
 
 permissions:
   contents: read
 
 jobs:
-  check-secrets:
+  check-token:
     runs-on: ubuntu-latest
     outputs:
       ready: ${{ steps.check.outputs.ready }}
     steps:
-      - name: Check Vercel secrets
+      - name: Check Vercel token
         id: check
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
@@ -28,12 +33,93 @@ jobs:
             echo "Missing Vercel secret. Set VERCEL_TOKEN in GitHub."
           fi
 
-  deploy:
-    needs: check-secrets
-    if: ${{ needs.check-secrets.outputs.ready == 'true' }}
+  detect-folders:
     runs-on: ubuntu-latest
+    outputs:
+      has_folders: ${{ steps.detect.outputs.has_folders }}
+      folders_json: ${{ steps.detect.outputs.folders_json }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect deploy folders
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+          MANUAL_DIR="${{ github.event.inputs.deploy_dir || '' }}"
+          declare -A DIRS=()
+
+          normalize_dir() {
+            local dir="$1"
+            dir="${dir#./}"
+            dir="${dir%/}"
+            if [ -z "$dir" ]; then
+              dir="."
+            fi
+            printf "%s" "$dir"
+          }
+
+          add_folder_if_valid() {
+            local dir
+            dir="$(normalize_dir "$1")"
+            if find "$dir" -maxdepth 1 -type f -iname 'index.html' | grep -q .; then
+              DIRS["$dir"]=1
+            fi
+          }
+
+          if [ -n "$MANUAL_DIR" ]; then
+            add_folder_if_valid "$MANUAL_DIR"
+            if [ ${#DIRS[@]} -eq 0 ]; then
+              echo "Manual folder does not contain index.html: $MANUAL_DIR"
+              exit 1
+            fi
+          else
+            while IFS= read -r index_file; do
+              dir="$(dirname "$index_file")"
+              dir="$(normalize_dir "$dir")"
+              DIRS["$dir"]=1
+            done < <(
+              find . \
+                -type f \
+                -iname 'index.html' \
+                -not -path './.git/*' \
+                -not -path './.github/*' \
+                -not -path './.vscode/*' \
+                -not -path './node_modules/*' \
+                -not -path './scripts/*' \
+                -not -path './.devcontainer/*' \
+                | sort
+            )
+          fi
+
+          if [ ${#DIRS[@]} -eq 0 ]; then
+            echo "has_folders=false" >> "$GITHUB_OUTPUT"
+            echo "folders_json=[]" >> "$GITHUB_OUTPUT"
+            echo "No deployable folders found."
+            exit 0
+          fi
+
+          mapfile -t FOLDERS < <(printf "%s\n" "${!DIRS[@]}" | sort)
+          FOLDERS_JSON="$(printf "%s\n" "${FOLDERS[@]}" | jq -R . | jq -cs .)"
+
+          echo "has_folders=true" >> "$GITHUB_OUTPUT"
+          echo "folders_json=$FOLDERS_JSON" >> "$GITHUB_OUTPUT"
+          echo "Detected folders: $FOLDERS_JSON"
+
+  deploy:
+    needs:
+      - check-token
+      - detect-folders
+    if: ${{ needs.check-token.outputs.ready == 'true' && needs.detect-folders.outputs.has_folders == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        folder: ${{ fromJson(needs.detect-folders.outputs.folders_json) }}
     env:
-      DEPLOY_DIR: .sass/Imtihon
+      VERCEL_SCOPE: ${{ vars.VERCEL_SCOPE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,48 +127,52 @@ jobs:
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
-      - name: Resolve Vercel IDs
-        id: ids
+      - name: Compute Vercel project name
+        id: project
         shell: bash
         run: |
-          ORG_ID="$(printf '%s' '${{ secrets.VERCEL_ORG_ID }}' | tr -d '\r\n' | xargs)"
-          PROJECT_ID="$(printf '%s' '${{ secrets.VERCEL_PROJECT_ID }}' | tr -d '\r\n' | xargs)"
-          SOURCE="secrets"
-
-          if [ -z "$ORG_ID" ] || [ -z "$PROJECT_ID" ]; then
-            if [ -f ".vercel/project.json" ]; then
-              ORG_ID="$(sed -n 's/.*"orgId":"\([^"]*\)".*/\1/p' .vercel/project.json | tr -d '\r\n' | xargs)"
-              PROJECT_ID="$(sed -n 's/.*"projectId":"\([^"]*\)".*/\1/p' .vercel/project.json | tr -d '\r\n' | xargs)"
-              SOURCE=".vercel/project.json"
-            fi
+          set -euo pipefail
+          RAW="${{ matrix.folder }}"
+          NAME="$(printf "%s" "$RAW" | tr "[:upper:]" "[:lower:]" | sed -E 's#^[./]+##; s#[^a-z0-9]+#-#g; s#-+#-#g; s#(^-|-$)##g')"
+          if [ -z "$NAME" ]; then
+            NAME="site"
           fi
 
-          if [ -z "$ORG_ID" ] || [ -z "$PROJECT_ID" ]; then
-            echo "Could not resolve Vercel org/project ID from secrets or .vercel/project.json."
-            exit 1
+          PROJECT_NAME="vs-code-$NAME"
+          PROJECT_NAME="${PROJECT_NAME:0:90}"
+
+          echo "project_name=$PROJECT_NAME" >> "$GITHUB_OUTPUT"
+          echo "Using project: $PROJECT_NAME"
+
+      - name: Link folder to Vercel project
+        working-directory: ${{ matrix.folder }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          SCOPE_ARGS=()
+          if [ -n "${VERCEL_SCOPE:-}" ]; then
+            SCOPE_ARGS=(--scope "$VERCEL_SCOPE")
           fi
 
-          echo "Using Vercel IDs from: $SOURCE"
-          echo "org_id=$ORG_ID" >> "$GITHUB_OUTPUT"
-          echo "project_id=$PROJECT_ID" >> "$GITHUB_OUTPUT"
-
-      - name: Pull project settings
-        working-directory: ${{ env.DEPLOY_DIR }}
-        env:
-          VERCEL_ORG_ID: ${{ steps.ids.outputs.org_id }}
-          VERCEL_PROJECT_ID: ${{ steps.ids.outputs.project_id }}
-        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          vercel link \
+            --yes \
+            --project "${{ steps.project.outputs.project_name }}" \
+            --token "${{ secrets.VERCEL_TOKEN }}" \
+            --non-interactive \
+            "${SCOPE_ARGS[@]}"
 
       - name: Deploy
         id: deploy
         shell: bash
-        working-directory: ${{ env.DEPLOY_DIR }}
-        env:
-          VERCEL_ORG_ID: ${{ steps.ids.outputs.org_id }}
-          VERCEL_PROJECT_ID: ${{ steps.ids.outputs.project_id }}
+        working-directory: ${{ matrix.folder }}
         run: |
+          SCOPE_ARGS=()
+          if [ -n "${VERCEL_SCOPE:-}" ]; then
+            SCOPE_ARGS=(--scope "$VERCEL_SCOPE")
+          fi
+
           set +e
-          DEPLOY_OUTPUT="$(vercel deploy --prod --yes --token=${{ secrets.VERCEL_TOKEN }} 2>&1)"
+          DEPLOY_OUTPUT="$(vercel deploy --prod --yes --token "${{ secrets.VERCEL_TOKEN }}" --non-interactive "${SCOPE_ARGS[@]}" 2>&1)"
           DEPLOY_EXIT=$?
           set -e
 
@@ -105,17 +195,31 @@ jobs:
       - name: Summary
         run: |
           echo "### Vercel Deployment" >> "$GITHUB_STEP_SUMMARY"
-          echo "Directory: \`${{ env.DEPLOY_DIR }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Folder: \`${{ matrix.folder }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Project: \`${{ steps.project.outputs.project_name }}\`" >> "$GITHUB_STEP_SUMMARY"
           echo "${{ steps.deploy.outputs.url }}" >> "$GITHUB_STEP_SUMMARY"
 
   setup-required:
-    needs: check-secrets
-    if: ${{ needs.check-secrets.outputs.ready != 'true' }}
+    needs:
+      - check-token
+      - detect-folders
+    if: ${{ needs.check-token.outputs.ready != 'true' }}
     runs-on: ubuntu-latest
     steps:
       - name: Explain missing setup
         run: |
           echo "### Vercel setup required" >> "$GITHUB_STEP_SUMMARY"
           echo "Add repository secret: VERCEL_TOKEN." >> "$GITHUB_STEP_SUMMARY"
-          echo "VERCEL_ORG_ID/VERCEL_PROJECT_ID are optional if .vercel/project.json exists in the repo." >> "$GITHUB_STEP_SUMMARY"
-          echo "After adding secrets, push again or run this workflow manually." >> "$GITHUB_STEP_SUMMARY"
+          echo "Optional repository variable: VERCEL_SCOPE (team slug)." >> "$GITHUB_STEP_SUMMARY"
+
+  nothing-to-deploy:
+    needs:
+      - check-token
+      - detect-folders
+    if: ${{ needs.check-token.outputs.ready == 'true' && needs.detect-folders.outputs.has_folders != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Nothing changed
+        run: |
+          echo "### No deployable folders detected" >> "$GITHUB_STEP_SUMMARY"
+          echo "Add or modify files under a folder that contains index.html." >> "$GITHUB_STEP_SUMMARY"

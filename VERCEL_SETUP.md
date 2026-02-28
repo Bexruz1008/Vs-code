@@ -1,44 +1,46 @@
-# Vercel Setup (Additional)
+# Vercel Auto Deploy (Per Folder)
 
 This repository already deploys to GitHub Pages.  
-This guide adds Vercel as an extra deployment target.
+Now Vercel deploy is also automated per folder.
 
-## 1) Create/connect Vercel project (one time)
+## How it works
 
-1. Log in to Vercel.
-2. Create a new project and connect this GitHub repo (`shbehruz04-design/Vs-code`).
-3. Framework preset: `Other`.
-4. Build command: leave empty (or default).
-5. Output directory: leave empty.
+On every push to `main`, workflow:
 
-## 2) Get Vercel IDs locally (one time)
+1. Detects all folders that contain `index.html` (case-insensitive).
+2. Creates/links a Vercel project for each folder automatically.
+3. Deploys each detected folder to production.
 
-Run in this repository root:
+Project name pattern:
 
-```powershell
-vercel login
-vercel link
-```
+- `vs-code-<folder-path-normalized>`
 
-After linking, open `.vercel/project.json` and copy:
+Examples:
 
-- `orgId`
-- `projectId`
+- `.sass/Imtihon` -> `vs-code-sass-imtihon`
+- `Html v2/Ilmla copy` -> `vs-code-html-v2-ilmla-copy`
 
-## 3) Add GitHub repository secrets (one time)
+## Required one-time setup
 
-GitHub repo -> `Settings` -> `Secrets and variables` -> `Actions` -> `New repository secret`
+In GitHub repository:
 
-Add these three secrets:
+1. `Settings` -> `Secrets and variables` -> `Actions`
+2. Add secret:
+   - `VERCEL_TOKEN`
 
-- `VERCEL_TOKEN` (create token in Vercel account settings)
-- `VERCEL_ORG_ID` (from `.vercel/project.json`)
-- `VERCEL_PROJECT_ID` (from `.vercel/project.json`)
+Optional:
 
-## 4) Trigger deploy
+- Add repository variable `VERCEL_SCOPE` (team slug) if your token belongs to a team setup.
+  If omitted, Vercel CLI default scope is used.
 
-Push to `main` (your existing `Ctrl+Shift+B` flow already does this), or open:
+## Manual deploy for a specific folder
 
-- `Actions` -> `Deploy to Vercel (Optional)` -> `Run workflow`
+Open:
 
-If secrets are configured correctly, workflow deploys and prints the Vercel URL.
+- `Actions` -> `Deploy to Vercel (Auto by Folder)` -> `Run workflow`
+
+Set input:
+
+- `deploy_dir` = folder path (example: `.sass/Imtihon`)
+
+The folder must contain `index.html`.

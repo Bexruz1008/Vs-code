@@ -30,11 +30,15 @@ function Convert-ToUrlPath {
         [string]$RelativePath
     )
 
-    if ([string]::IsNullOrWhiteSpace($RelativePath)) {
+    if ([string]::IsNullOrWhiteSpace($RelativePath) -or $RelativePath -eq ".") {
         return ""
     }
 
-    $segments = $RelativePath -split "[/\\]+" | Where-Object { $_ -ne "" }
+    $segments = $RelativePath -split "[/\\]+" | Where-Object { $_ -ne "" -and $_ -ne "." }
+    if ($segments.Count -eq 0) {
+        return ""
+    }
+
     if ($segments.Count -gt 0 -and $segments[0] -eq ".sass") {
         # Dot-prefixed folders are not published by GitHub Pages artifact upload.
         # We deploy ".sass" as public "sass" alias in Pages workflow.
@@ -42,6 +46,38 @@ function Convert-ToUrlPath {
     }
     $encoded = $segments | ForEach-Object { [System.Uri]::EscapeDataString($_) }
     return (($encoded -join "/").Trim("/") + "/")
+}
+
+function Test-ProjectDirectory {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$DirPath
+    )
+
+    try {
+        $indexFile = Get-ChildItem -LiteralPath $DirPath -File -ErrorAction SilentlyContinue |
+            Where-Object { $_.Name -ieq "index.html" } |
+            Select-Object -First 1
+
+        return ($null -ne $indexFile)
+    }
+    catch {
+        return $false
+    }
+}
+
+function Convert-ToRelativePath {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$AbsolutePath
+    )
+
+    $workspaceRoot = (Get-Location).Path.TrimEnd("\")
+    $absolute = [System.IO.Path]::GetFullPath($AbsolutePath).TrimEnd("\")
+    if ($absolute.StartsWith($workspaceRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
+        return $absolute.Substring($workspaceRoot.Length).TrimStart("\")
+    }
+    return $null
 }
 
 function Invoke-CommandChecked {
@@ -74,13 +110,19 @@ function Show-DeployLinks {
             $projectDirs = @{}
             foreach ($path in $ChangedPaths) {
                 $dir = Split-Path -Path $path -Parent
+                if ([string]::IsNullOrWhiteSpace($dir)) {
+                    if (Test-ProjectDirectory -DirPath ".") {
+                        $projectDirs["."] = $true
+                    }
+                    continue
+                }
+
                 while ($true) {
                     if ([string]::IsNullOrWhiteSpace($dir)) {
                         break
                     }
 
-                    $indexCandidate = Join-Path -Path $dir -ChildPath "index.html"
-                    if (Test-Path -Path $indexCandidate) {
+                    if (Test-ProjectDirectory -DirPath $dir) {
                         $projectDirs[$dir] = $true
                         break
                     }
@@ -100,24 +142,21 @@ function Show-DeployLinks {
             $projectLinks = @($projectDirs.Keys | Sort-Object)
             if ($projectLinks.Count -eq 0) {
                 $fallbackDir = $null
-                $preferredDir = ".sass\Imtihon"
-                $preferredIndex = Join-Path -Path $preferredDir -ChildPath "index.html"
 
-                if (Test-Path -Path $preferredIndex) {
-                    $fallbackDir = $preferredDir
-                }
-                else {
-                    $latestSassIndex = Get-ChildItem -Path ".sass" -Recurse -Filter "index.html" -File -ErrorAction SilentlyContinue |
-                        Sort-Object -Property LastWriteTime -Descending |
-                        Select-Object -First 1
+                $latestIndex = Get-ChildItem -Path "." -Recurse -File -ErrorAction SilentlyContinue |
+                    Where-Object {
+                        $_.Name -ieq "index.html" -and
+                        $_.FullName -notmatch '[\\/]\.git[\\/]' -and
+                        $_.FullName -notmatch '[\\/]\.github[\\/]' -and
+                        $_.FullName -notmatch '[\\/]\.vscode[\\/]' -and
+                        $_.FullName -notmatch '[\\/]node_modules[\\/]'
+                    } |
+                    Sort-Object -Property LastWriteTime -Descending |
+                    Select-Object -First 1
 
-                    if ($latestSassIndex) {
-                        $latestDir = Split-Path -Path $latestSassIndex.FullName -Parent
-                        $workspaceRoot = (Get-Location).Path.TrimEnd("\")
-                        if ($latestDir.StartsWith($workspaceRoot, [System.StringComparison]::OrdinalIgnoreCase)) {
-                            $fallbackDir = $latestDir.Substring($workspaceRoot.Length).TrimStart("\")
-                        }
-                    }
+                if ($latestIndex) {
+                    $latestDir = Split-Path -Path $latestIndex.FullName -Parent
+                    $fallbackDir = Convert-ToRelativePath -AbsolutePath $latestDir
                 }
 
                 if (-not [string]::IsNullOrWhiteSpace($fallbackDir)) {
@@ -126,6 +165,11 @@ function Show-DeployLinks {
             }
 
             foreach ($projectDir in $projectLinks) {
+                if ($projectDir -eq ".") {
+                    Write-Host "  . => $baseUrl"
+                    continue
+                }
+
                 $urlPath = Convert-ToUrlPath -RelativePath $projectDir
                 Write-Host "  $projectDir => $baseUrl$urlPath"
             }
