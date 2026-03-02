@@ -21,10 +21,16 @@
       }
     },
     {
-      "label": "Sass: Watch .sass",
-      "type": "shell",
-      "command": "sass",
-      "args": ["--watch", ".sass:.sass"],
+      "label": "Sass: Watch workspace",
+      "type": "process",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$exclude=@(\".git\",\".github\",\".devcontainer\",\".vscode\",\".vercel\",\"node_modules\"); $pairs=Get-ChildItem -Path . -Directory | Where-Object { $exclude -notcontains $_.Name } | ForEach-Object { \"{0}:{0}\" -f $_.Name }; if(-not $pairs){ Write-Host \"No folders to watch.\"; exit 0 }; sass --watch @pairs"
+      ],
       "options": {
         "cwd": "${workspaceFolder}"
       },
