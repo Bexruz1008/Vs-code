@@ -1,13 +1,174 @@
-*, html {
+@import url("https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Commissioner:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Krona+One&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Orbitron:wght@400..900&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Sora:wght@100..800&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap");
+*,
+html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+body {
+  font-family: "Commissioner", sans-serif;
+  background-color: rgb(235, 232, 232);
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
 .hero__wrapper {
-  background-image: url("./images/image-hero-desktop.jpg");
-  background-position: center;
+  background-image: url(./images/image-hero-desktop.jpg);
   background-size: cover;
+  background-repeat: no-repeat;
+  height: 400px;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 50px;
+}
+
+#hamburger {
+  display: none;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+.menu__item {
+  text-decoration: none;
+  color: white;
+}
+
+.hero {
+  transform: translateX(70%);
+  display: grid;
+  background-color: white;
+  width: 40%;
+  border-radius: 18px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: 50%;
+  gap: 25px;
+  text-align: center;
+}
+.hero h1 {
+  margin-top: 50px;
+  font-size: 36px;
+}
+.hero__logo {
+  position: absolute;
+  bottom: 88%;
+  left: 45%;
+}
+
+.hero__actions {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 50px;
+  justify-content: space-around;
+}
+
+.bookmark {
+  display: flex;
+  background-color: gainsboro;
+  border: none;
+  border-radius: 50px;
+  align-items: center;
+  width: 150px;
+  cursor: pointer;
+  gap: 10px;
+}
+.bookmark__circle {
+  height: 50px;
+  z-index: 1;
+}
+.bookmark__circle img {
+  width: 50px;
+  overflow: hidden;
+}
+
+.btn__primary {
+  background-color: hsl(176, 50%, 47%);
+  color: white;
+}
+.btn__primary:hover {
+  background-color: hsl(176, 72%, 28%);
+}
+
+.btn__secondary {
+  background-color: hsl(0, 0%, 48%);
+  color: hsl(176, 50%, 47%);
+  border: 1px solid hsl(176, 50%, 47%);
+}
+
+.btn {
+  padding: 15px 30px;
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+}
+
+.basic__text {
+  color: hsl(0, 0%, 48%);
+  font-size: 16px;
+}
+
+.bookmarked #bookmark_text {
+  color: hsl(176, 50%, 47%);
+}
+
+.stats {
+  position: relative;
+  width: 40%;
+  background-color: white;
+  transform: translateX(-30px);
+  margin-top: 160px;
+  border-radius: 18px;
+  padding-bottom: 30px;
+  display: grid;
+  justify-content: center;
+}
+.stats__list {
+  display: flex;
+  gap: 50px;
+  justify-content: center;
+  padding: 20px 0;
+}
+.stats__item {
+  list-style: none;
+  padding-right: 20px;
+  border-right: 2px solid hsl(0, 0%, 48%);
+}
+.stats__item p {
+  font-size: 36px;
+  font-weight: 700;
+}
+.stats__item span {
+  font-size: 16px;
+  color: hsl(0, 0%, 48%);
+}
+.stats__item:last-child {
+  border: none;
+}
+.stats .progress {
+  width: 100%;
+  height: 12px;
+  background-color: rgb(191, 189, 189);
+  margin-top: 10px;
+  border-radius: 50px;
+}
+.stats .progress__level {
+  height: 100%;
+  width: 70%;
+  background-color: hsl(176, 50%, 47%);
+  border-radius: 50px;
 }
 
 /*# sourceMappingURL=style.css.map */
