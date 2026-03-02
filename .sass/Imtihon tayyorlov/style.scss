@@ -1,0 +1,10 @@
+*, html{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.hero__wrapper{
+  background-image: url("./images/image-hero-desktop.jpg");
+  background-position: center;
+  background-size: cover;
+}
