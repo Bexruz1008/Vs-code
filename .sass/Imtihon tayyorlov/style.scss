@@ -26,7 +26,7 @@ $white: hsl(0, 0%, 100%);
   }
 
   to {
-    width: 75%;
+    width: 70%;
   }
 }
 
@@ -150,7 +150,7 @@ a {
   z-index: 1;
 }
 
-.page > .card {
+.page>.card {
   animation: fade-in-up 500ms ease both;
 }
 
@@ -379,6 +379,7 @@ a {
 }
 
 @media (max-width: 768px) {
+
   .hero__wrapper,
   .hero-wrapper {
     min-height: 300px;
@@ -458,7 +459,7 @@ a {
       padding-left: 0;
     }
 
-    &__item + &__item {
+    &__item+&__item {
       border-top: 1px solid $card-border;
       padding-top: 24px;
     }
