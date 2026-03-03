@@ -26,7 +26,7 @@ $white: hsl(0, 0%, 100%);
   }
 
   to {
-    width: 70%;
+    width: 75%;
   }
 }
 
@@ -301,10 +301,10 @@ a {
   overflow: hidden;
 
   &__level {
-    width: 70%;
+    width: 75%;
     height: 100%;
     background: $green400;
-    border-radius: 18px;
+    border-radius: 999px;
     animation: progress-fill 2s ease forwards;
   }
 }

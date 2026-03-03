@@ -14,7 +14,7 @@
     width: 0;
   }
   to {
-    width: 70%;
+    width: 75%;
   }
 }
 * {
@@ -275,10 +275,10 @@ a {
   overflow: hidden;
 }
 .progress__level {
-  width: 70%;
+  width: 75%;
   height: 100%;
   background: hsl(176, 50%, 47%);
-  border-radius: 18px;
+  border-radius: 999px;
   animation: progress-fill 2s ease forwards;
 }
 
