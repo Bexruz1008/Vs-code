@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;700&display=swap");
+﻿@import url("https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;700&display=swap");
 
 $green400: hsl(176, 50%, 47%);
 $green700: hsl(176, 72%, 28%);
@@ -12,6 +12,7 @@ $white: hsl(0, 0%, 100%);
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  scroll-behavior: smooth;
 }
 
 body {
