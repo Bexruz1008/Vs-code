@@ -26,14 +26,13 @@
         type="button"
         aria-label="Open menu"
         aria-controls="mobileMenu"
-        aria-expanded="false"
       >
         <img src="./images/icon-hamburger.svg" alt="Open menu" id="menuIcon">
       </button>
     </header>
 
-    <div class="menu-overlay menu__overlay" id="menuOverlay" hidden></div>
-    <nav class="mobile-menu menu__mobile" id="mobileMenu" aria-label="Mobile navigation" hidden>
+    <div class="menu-overlay menu__overlay" id="menuOverlay"></div>
+    <nav class="mobile-menu menu__mobile" id="mobileMenu" aria-label="Mobile navigation">
       <a href="#" class="mobile-menu__item menu__item">About</a>
       <a href="#" class="mobile-menu__item menu__item">Discover</a>
       <a href="#" class="mobile-menu__item menu__item">Get Started</a>
@@ -50,9 +49,9 @@
 
       <div class="hero__actions project-card__actions">
         <button class="btn btn__primary btn--primary" type="button">Back this project</button>
-        <button class="bookmark" id="bookmark" type="button" aria-pressed="false">
+        <button class="bookmark" id="bookmark" type="button">
           <span class="bookmark__circle">
-            <img src="./images/icon-bookmark.svg" alt="" aria-hidden="true">
+            <img src="./images/icon-bookmark.svg" alt="">
           </span>
           <span class="bookmark__text" id="bookmark_text">Bookmark</span>
         </button>
@@ -156,48 +155,45 @@
     const mobileMenu = document.getElementById("mobileMenu");
     const menuOverlay = document.getElementById("menuOverlay");
 
-    const openMenu = () => {
-      mobileMenu.removeAttribute("hidden");
-      menuOverlay.removeAttribute("hidden");
-      menuToggle.setAttribute("aria-expanded", "true");
-      menuToggle.setAttribute("aria-label", "Close menu");
-      menuIcon.src = "./images/icon-close-menu.svg";
-      menuIcon.alt = "Close menu";
-    };
-
-    const closeMenu = () => {
-      mobileMenu.setAttribute("hidden", "");
-      menuOverlay.setAttribute("hidden", "");
-      menuToggle.setAttribute("aria-expanded", "false");
-      menuToggle.setAttribute("aria-label", "Open menu");
+    function closeMenu() {
+      mobileMenu.style.display = "none";
+      menuOverlay.style.display = "none";
       menuIcon.src = "./images/icon-hamburger.svg";
       menuIcon.alt = "Open menu";
+    }
+
+    function toggleMenu() {
+      if (mobileMenu.style.display === "none") {
+        mobileMenu.style.display = "block";
+        menuOverlay.style.display = "block";
+        menuIcon.src = "./images/icon-close-menu.svg";
+        menuIcon.alt = "Close menu";
+      } else {
+        closeMenu();
+      }
+    }
+
+    bookmarkBtn.onclick = function () {
+      bookmarkBtn.classList.toggle("bookmarked");
+      bookmarkBtn.classList.toggle("bookmark--active");
+      bookmarkText.textContent = bookmarkBtn.classList.contains("bookmarked") ? "Bookmarked" : "Bookmark";
     };
 
-    bookmarkBtn.addEventListener("click", () => {
-      const isBookmarked = bookmarkBtn.classList.toggle("bookmarked");
-      bookmarkBtn.classList.toggle("bookmark--active", isBookmarked);
-      bookmarkBtn.setAttribute("aria-pressed", String(isBookmarked));
-      bookmarkText.textContent = isBookmarked ? "Bookmarked" : "Bookmark";
-    });
+    menuToggle.onclick = toggleMenu;
+    menuOverlay.onclick = closeMenu;
 
-    menuToggle.addEventListener("click", () => {
-      const isOpen = !mobileMenu.hasAttribute("hidden");
-      if (isOpen) {
-        closeMenu();
-      } else {
-        openMenu();
-      }
-    });
+    const menuLinks = mobileMenu.querySelectorAll("a");
+    for (let i = 0; i < menuLinks.length; i++) {
+      menuLinks[i].onclick = closeMenu;
+    }
 
-    menuOverlay.addEventListener("click", closeMenu);
-    mobileMenu.querySelectorAll("a").forEach((link) => link.addEventListener("click", closeMenu));
-
-    window.addEventListener("resize", () => {
+    window.onresize = function () {
       if (window.innerWidth > 767) {
         closeMenu();
       }
-    });
+    };
+
+    closeMenu();
   </script>
 </body>
 </html>

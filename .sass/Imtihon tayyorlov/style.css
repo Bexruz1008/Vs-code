@@ -69,6 +69,7 @@ a {
 
 .menu-overlay,
 .menu__overlay {
+  display: none;
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
@@ -77,6 +78,7 @@ a {
 
 .mobile-menu,
 .menu__mobile {
+  display: none;
   width: min(330px, 100% - 48px);
   position: absolute;
   left: 50%;
