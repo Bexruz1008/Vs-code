@@ -8,6 +8,28 @@ $card-border: hsl(0, 0%, 88%);
 $bg: hsl(0, 0%, 95%);
 $white: hsl(0, 0%, 100%);
 
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes progress-fill {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 75%;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -46,7 +68,8 @@ a {
 }
 
 .header {
-  width: min(1100px, calc(100% - 48px));
+  width: 100%;
+  max-width: 1100px;
   margin: 0 auto;
   padding-top: 48px;
   display: flex;
@@ -58,12 +81,12 @@ a {
 
 .menu {
   display: flex;
-  gap: 2rem;
+  gap: 32px;
 
   &__item {
     color: $white;
     text-decoration: none;
-    font-size: 0.875rem;
+    font-size: 14px;
 
     &:hover {
       text-decoration: underline;
@@ -79,7 +102,6 @@ a {
   cursor: pointer;
 }
 
-.menu-overlay,
 .menu__overlay {
   display: none;
   position: fixed;
@@ -91,7 +113,8 @@ a {
 .mobile-menu,
 .menu__mobile {
   display: none;
-  width: min(330px, calc(100% - 48px));
+  width: 100%;
+  max-width: 330px;
   position: absolute;
   left: 50%;
   top: 86px;
@@ -104,9 +127,9 @@ a {
 
   .mobile-menu__item {
     display: block;
-    padding: 1.5rem;
+    padding: 24px;
     text-decoration: none;
-    font-size: 1.125rem;
+    font-size: 18px;
     font-weight: 500;
     border-bottom: 1px solid $card-border;
     color: $black;
@@ -118,26 +141,31 @@ a {
 }
 
 .page {
-  width: min(730px, calc(100% - 48px));
-  margin: -92px auto 4rem;
+  width: 100%;
+  max-width: 730px;
+  margin: -92px auto 64px;
   display: grid;
-  gap: 1.5rem;
+  gap: 24px;
   position: relative;
   z-index: 1;
+}
+
+.page > .card {
+  animation: fade-in-up 500ms ease both;
 }
 
 .card {
   background: $white;
   border: 1px solid $card-border;
   border-radius: 10px;
-  padding: 3rem;
+  padding: 48px;
 }
 
 .hero,
 .project-card {
   text-align: center;
   position: relative;
-  padding-top: 3.5rem;
+  padding-top: 56px;
 }
 
 .hero__logo,
@@ -150,13 +178,13 @@ a {
 
 .hero__title,
 .project-card__title {
-  font-size: 1.75rem;
+  font-size: 28px;
   line-height: 1.25;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
 .project-card__desc {
-  margin-bottom: 2rem;
+  margin-bottom: 32px;
 }
 
 .hero__actions,
@@ -164,7 +192,7 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .text-muted,
@@ -176,25 +204,22 @@ a {
 .btn {
   border: 0;
   border-radius: 999px;
-  padding: 1rem 2rem;
-  font-size: 0.95rem;
+  padding: 16px 32px;
+  font-size: 15.2px;
   font-weight: 700;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease, opacity 0.2s ease;
 }
 
-.btn--primary,
 .btn__primary {
   background: $green400;
   color: $white;
 }
 
-.btn--primary:hover,
 .btn__primary:hover {
   background: $green700;
 }
 
-.btn--disabled,
 .btn__disabled {
   background: hsl(0, 0%, 76%);
   color: $white;
@@ -207,8 +232,8 @@ a {
   background: hsl(0, 0%, 95%);
   display: inline-flex;
   align-items: center;
-  gap: 1rem;
-  padding-right: 1.5rem;
+  gap: 16px;
+  padding-right: 24px;
   cursor: pointer;
   color: $gray500;
   font-weight: 700;
@@ -224,12 +249,12 @@ a {
   }
 }
 
-.bookmark--active,
+.bookmark__active,
 .bookmarked {
   color: $green700;
 }
 
-.bookmark--active .bookmark__circle,
+.bookmark__active .bookmark__circle,
 .bookmarked .bookmark__circle {
   background: $green700;
 }
@@ -239,17 +264,17 @@ a {
     list-style: none;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-bottom: 2.25rem;
+    margin-bottom: 36px;
   }
 
   &__item {
-    padding-right: 1.5rem;
+    padding-right: 24px;
     border-right: 1px solid $card-border;
   }
 
   &__item:nth-child(2),
   &__item:nth-child(3) {
-    padding-left: 2rem;
+    padding-left: 32px;
   }
 
   &__item:last-child {
@@ -258,9 +283,9 @@ a {
 
   &__value,
   &__title {
-    font-size: 2rem;
+    font-size: 32px;
     font-weight: 700;
-    margin-bottom: 0.4rem;
+    margin-bottom: 6.4px;
   }
 
   &__label,
@@ -271,23 +296,25 @@ a {
 
 .progress {
   height: 12px;
-  border-radius: 999px;
+  border-radius: 18px;
   background: hsl(0, 0%, 92%);
   overflow: hidden;
 
   &__level {
-    width: 89%;
+    width: 70%;
     height: 100%;
     background: $green400;
+    border-radius: 18px;
+    animation: progress-fill 2s ease forwards;
   }
 }
 
 .about {
   display: grid;
-  gap: 1.8rem;
+  gap: 29px;
 
   &__heading {
-    font-size: 1.25rem;
+    font-size: 20px;
   }
 }
 
@@ -295,16 +322,16 @@ a {
 .reward__list {
   list-style: none;
   display: grid;
-  gap: 1.5rem;
+  gap: 24px;
 }
 
 .reward-card,
 .reward__item {
   border: 1px solid $card-border;
   border-radius: 8px;
-  padding: 2rem;
+  padding: 32px;
   display: grid;
-  gap: 1.5rem;
+  gap: 24px;
 }
 
 .reward-card__top,
@@ -313,12 +340,12 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: 16px;
 }
 
 .reward-card__title,
 .reward__title {
-  font-size: 1.15rem;
+  font-size: 18px;
 }
 
 .reward-card__price,
@@ -329,24 +356,24 @@ a {
 
 .reward-card__stock,
 .reward__stock {
-  font-size: 2rem;
+  font-size: 32px;
   font-weight: 700;
   line-height: 1;
   display: flex;
   align-items: flex-end;
-  gap: 0.45rem;
+  gap: 7.2px;
 }
 
 .reward-card__stock span,
 .reward__stock .small,
 .small {
-  font-size: 1rem;
+  font-size: 16px;
   color: $gray500;
   font-weight: 400;
-  padding-bottom: 0.2rem;
+  padding-bottom: 3px;
 }
 
-.reward-card--disabled,
+.reward-card__disabled,
 .reward__empty {
   opacity: 0.45;
 }
@@ -359,8 +386,10 @@ a {
   }
 
   .header {
-    width: calc(100% - 48px);
-    padding-top: 2rem;
+    width: 100%;
+    padding: 0 24px;
+    padding-top: 32px;
+
   }
 
   .menu {
@@ -377,29 +406,27 @@ a {
   }
 
   .page {
-    width: calc(100% - 48px);
+    width: 100%;
     margin-top: -72px;
-    margin-bottom: 3rem;
+    margin-bottom: 48px;
   }
 
   .card {
-    padding: 2rem 1.5rem;
+    padding: 32px 24px;
   }
 
   .hero__title,
   .project-card__title {
-    font-size: 1.3rem;
+    font-size: 20.8px;
   }
 
   .hero__actions,
   .project-card__actions {
-    gap: 0.7rem;
+    gap: 11.2px;
   }
 
   .hero .btn__primary,
-  .hero .btn--primary,
-  .project-card .btn__primary,
-  .project-card .btn--primary {
+  .project-card .btn__primary {
     flex: 1;
   }
 
@@ -418,12 +445,12 @@ a {
     &__list {
       grid-template-columns: 1fr;
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 32px;
     }
 
     &__item {
       border-right: 0;
-      padding: 0 0 1.5rem;
+      padding: 0 0 24px;
     }
 
     &__item:nth-child(2),
@@ -433,13 +460,13 @@ a {
 
     &__item + &__item {
       border-top: 1px solid $card-border;
-      padding-top: 1.5rem;
+      padding-top: 24px;
     }
   }
 
   .reward-card,
   .reward__item {
-    padding: 1.5rem;
+    padding: 24px;
   }
 
   .reward-card__top,

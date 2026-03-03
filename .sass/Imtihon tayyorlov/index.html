@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <section class="hero__wrapper hero-wrapper">
+  <section class="hero__wrapper ">
     <header class="header">
       <a href="/" class="header__logo">
         <img src="./images/logo.svg" alt="Crowdfund logo" class="header__logo__img header__logo-img">
@@ -27,11 +27,11 @@
         aria-label="Open menu"
         aria-controls="mobileMenu"
       >
-        <img src="./images/icon-hamburger.svg" alt="Open menu" id="menuIcon">
+        <img src="./images/icon-hamburger.svg" alt="Hamburger" id="menuIcon">
       </button>
     </header>
 
-    <div class="menu-overlay menu__overlay" id="menuOverlay"></div>
+    <div class="menu__overlay" id="menuOverlay"></div>
     <nav class="mobile-menu menu__mobile" id="mobileMenu" aria-label="Mobile navigation">
       <a href="#" class="mobile-menu__item menu__item">About</a>
       <a href="#" class="mobile-menu__item menu__item">Discover</a>
@@ -48,10 +48,10 @@
       </p>
 
       <div class="hero__actions project-card__actions">
-        <button class="btn btn__primary btn--primary" type="button">Back this project</button>
+        <button class="btn btn__primary" type="button">Back this project</button>
         <button class="bookmark" id="bookmark" type="button">
           <span class="bookmark__circle">
-            <img src="./images/icon-bookmark.svg" alt="">
+            <img src="./images/icon-bookmark.svg" alt="Bookmark icon">
           </span>
           <span class="bookmark__text" id="bookmark_text">Bookmark</span>
         </button>
@@ -106,7 +106,7 @@
 
           <div class="reward__wrap reward-card__bottom">
             <p class="reward__stock reward-card__stock">101 <span class="small">left</span></p>
-            <button class="btn btn__primary btn--primary" type="button">Select Reward</button>
+            <button class="btn btn__primary" type="button">Select Reward</button>
           </div>
         </li>
 
@@ -123,11 +123,11 @@
 
           <div class="reward__wrap reward-card__bottom">
             <p class="reward__stock reward-card__stock">64 <span class="small">left</span></p>
-            <button class="btn btn__primary btn--primary" type="button">Select Reward</button>
+            <button class="btn btn__primary" type="button">Select Reward</button>
           </div>
         </li>
 
-        <li class="reward__item reward-card reward__empty reward-card--disabled">
+        <li class="reward__item reward-card reward__empty reward-card__disabled">
           <div class="reward__wrap reward-card__top">
             <h3 class="reward__title reward-card__title">Mahogany Special Edition</h3>
             <p class="reward__price reward-card__price">Pledge $200 or more</p>
@@ -140,7 +140,7 @@
 
           <div class="reward__wrap reward-card__bottom">
             <p class="reward__stock reward-card__stock">0 <span class="small">left</span></p>
-            <button class="btn btn__disabled btn--disabled" type="button" disabled>Out of Stock</button>
+            <button class="btn btn__disabled" type="button" disabled>Out of Stock</button>
           </div>
         </li>
       </ul>
@@ -150,7 +150,7 @@
   <script>
     const bookmarkBtn = document.getElementById("bookmark");
     const bookmarkText = document.getElementById("bookmark_text");
-    const menuToggle = document.getElementById("hamburger");
+    const hamburger = document.getElementById("hamburger");
     const menuIcon = document.getElementById("menuIcon");
     const mobileMenu = document.getElementById("mobileMenu");
     const menuOverlay = document.getElementById("menuOverlay");
@@ -167,31 +167,25 @@
         mobileMenu.style.display = "block";
         menuOverlay.style.display = "block";
         menuIcon.src = "./images/icon-close-menu.svg";
-        menuIcon.alt = "Close menu";
       } else {
         closeMenu();
       }
     }
 
-    bookmarkBtn.onclick = function () {
-      bookmarkBtn.classList.toggle("bookmarked");
-      bookmarkBtn.classList.toggle("bookmark--active");
-      bookmarkText.textContent = bookmarkBtn.classList.contains("bookmarked") ? "Bookmarked" : "Bookmark";
-    };
-
-    menuToggle.onclick = toggleMenu;
-    menuOverlay.onclick = closeMenu;
-
-    const menuLinks = mobileMenu.querySelectorAll("a");
-    for (let i = 0; i < menuLinks.length; i++) {
-      menuLinks[i].onclick = closeMenu;
-    }
-
-    window.onresize = function () {
-      if (window.innerWidth > 767) {
-        closeMenu();
+    bookmarkBtn.addEventListener("click", function () {
+      const isBookmarked = bookmarkBtn.classList.toggle("bookmarked");
+      bookmarkBtn.classList.toggle("bookmark__active", isBookmarked);
+      if (isBookmarked) {
+        bookmarkText.textContent = "Bookmarked";
+      } else {
+        bookmarkText.textContent = "Bookmark";
       }
-    };
+    });
+
+    hamburger.addEventListener("click", toggleMenu);
+    menuOverlay.addEventListener("click", closeMenu);
+
+
 
     closeMenu();
   </script>
