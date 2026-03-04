@@ -156,7 +156,6 @@
       mobileMenu.style.display = "none";
       menuOverlay.style.display = "none";
       menuIcon.src = "./images/icon-hamburger.svg";
-      menuIcon.alt = "Open menu";
     }
 
     function toggleMenu() {
@@ -170,9 +169,9 @@
     }
 
     bookmarkBtn.addEventListener("click", function () {
-      const isBookmarked = bookmarkBtn.classList.toggle("bookmarked");
-      bookmarkBtn.classList.toggle("bookmark__active", isBookmarked);
-      if (isBookmarked) {
+      const Bookmarked = bookmarkBtn.classList.toggle("bookmarked");
+      bookmarkBtn.classList.toggle("bookmark__active");
+      if (Bookmarked) {
         bookmarkText.textContent = "Bookmarked";
       } else {
         bookmarkText.textContent = "Bookmark";
