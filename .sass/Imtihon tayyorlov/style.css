@@ -85,6 +85,7 @@ a {
   width: 100%;
   max-width: 1100px;
   margin: 0 auto;
+  padding: 0 50px;
   padding-top: 48px;
   display: flex;
   justify-content: space-between;
