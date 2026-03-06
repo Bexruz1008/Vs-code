@@ -235,6 +235,52 @@ function Show-DeployLinks {
     }
 }
 
+function Show-NoChangesDiagnostics {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$TargetProjectDir
+    )
+
+    $allChanges = @(& git status --porcelain)
+    $allChanges = $allChanges | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+    if ($allChanges.Count -gt 0) {
+        Write-Host ""
+        Write-Host "Working tree has changes, but not in selected folder:"
+        $preview = @($allChanges | Select-Object -First 10)
+        foreach ($line in $preview) {
+            Write-Host "  $line"
+        }
+
+        if ($allChanges.Count -gt $preview.Count) {
+            Write-Host "  ... and $($allChanges.Count - $preview.Count) more"
+        }
+
+        Write-Host "Tip: open a file inside '$TargetProjectDir' and rerun this task, or run deploy without -DeployDir."
+        return
+    }
+
+    $ignoredInTarget = @(& git status --porcelain --ignored -- "$TargetProjectDir")
+    $ignoredInTarget = $ignoredInTarget | Where-Object { $_ -like "!! *" }
+    if ($ignoredInTarget.Count -gt 0) {
+        Write-Host ""
+        Write-Host "Only ignored files changed in selected folder:"
+        $preview = @($ignoredInTarget | Select-Object -First 10)
+        foreach ($line in $preview) {
+            Write-Host "  $line"
+        }
+
+        if ($ignoredInTarget.Count -gt $preview.Count) {
+            Write-Host "  ... and $($ignoredInTarget.Count - $preview.Count) more"
+        }
+
+        Write-Host "Tip: remove or adjust .gitignore rules if these files should deploy."
+        return
+    }
+
+    Write-Host "Git sees no saved file changes."
+    Write-Host "Tip: save edited files and verify they are inside '$TargetProjectDir'."
+}
+
 try {
     Invoke-CommandChecked -Executable "git" -Arguments @("rev-parse", "--is-inside-work-tree") | Out-Null
 }
@@ -278,6 +324,7 @@ if (-not [string]::IsNullOrWhiteSpace($targetProjectDir)) {
     $stagedChanges = $stagedChanges | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
     if ($stagedChanges.Count -eq 0) {
         Write-Host "No changes found in selected folder. Nothing to deploy."
+        Show-NoChangesDiagnostics -TargetProjectDir $targetProjectDir
         $linkHint = if ($targetProjectDir -eq ".") { "index.html" } else { Join-Path -Path $targetProjectDir -ChildPath "index.html" }
         Show-DeployLinks -RemoteUrl $remoteUrl -ChangedPaths @($linkHint)
         exit 0
