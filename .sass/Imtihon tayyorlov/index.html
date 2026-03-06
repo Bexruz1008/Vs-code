@@ -16,23 +16,115 @@
         <img src="./images/logo.svg" alt="Crowdfund logo" class="header__logo__img header__logo-img">
       </a>
 
-      <nav class="menu" aria-label="Primary navigation">
+      <nav class="menu" >
         <a href="#" class="menu__item">About</a>
         <a href="#" class="menu__item">Discover</a>
         <a href="#" class="menu__item">Get Started</a>
       </nav>
 
-      <button class="menu-toggle" id="hamburger" type="button" aria-label="Open menu" aria-controls="mobileMenu">
+      <button class="menu-toggle" id="hamburger" type="button">
         <img src="./images/icon-hamburger.svg" alt="Hamburger" id="menuIcon">
       </button>
     </header>
 
     <div class="menu__overlay" id="menuOverlay"></div>
-    <nav class="mobile-menu menu__mobile" id="mobileMenu" aria-label="Mobile navigation">
+    <nav class="mobile-menu menu__mobile" id="mobileMenu">
       <a href="#" class="mobile-menu__item menu__item">About</a>
       <a href="#" class="mobile-menu__item menu__item">Discover</a>
       <a href="#" class="mobile-menu__item menu__item">Get Started</a>
     </nav>
+
+    <div class="modal__overlay" id="modalOverlay"></div>
+    <section class="modal" id="modal">
+      <div class="modal__top">
+        <h4>Back this project</h4>
+        <button class="close__modal" id="closeModal" type="button" >
+          <img src="./images/icon-close-modal.svg" >
+        </button>
+        <p class="basic__text">
+          Want to support us bringing Mastercraft Bamboo Monitor Riser out in the world?
+        </p>
+      </div>
+
+      <div class="back__cards--wrapper">
+        <div class="back__card" id="cardNoReward">
+          <input class="radio pledge-radio" id="radioNoReward" type="radio" name="pledge-option">
+          <div class="back__content">
+            <h5>Pledge with no reward</h5>
+            <p class="basic__text">
+              Choose to support us without a reward if you simply believe in our project. As a
+              backer, you will be signed up to receive product updates via email.
+            </p>
+          </div>
+        </div>
+
+        <div class="back__card" id="cardBamboo">
+          <input class="radio pledge-radio" id="radioBamboo" type="radio" name="pledge-option">
+          <div class="back__content">
+            <h5>Bamboo Stand <span>Pledge $25 or more</span></h5>
+            <p class="basic__text">
+              You get an ergonomic stand made of natural bamboo. You have helped us launch our
+              promotional campaign, and you will be added to a special Backer member list.
+            </p>
+            <div id="pledge" class="enter__pledge">
+              <p class="basic__text">Enter your pledge</p>
+              <div class="enter__wrap">
+                <div class="enter__btns">
+                  <button class="enter__btn enter__btn--secondary" type="button"><span class="basic__text">$</span> 25</button>
+                  <button class="enter__btn enter__btn--primary" id="continue1" type="button">Continue</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="back__card" id="cardBlack">
+          <input class="radio pledge-radio" id="radioBlack" type="radio" name="pledge-option">
+          <div class="back__content">
+            <h5>Black Edition Stand <span>Pledge $75 or more</span></h5>
+            <p class="basic__text">
+              You get a Black Special Edition computer stand and a personal thank you. You will be
+              added to our Backer member list. Shipping is included.
+            </p>
+            <div id="pledge2" class="enter__pledge">
+              <p class="basic__text">Enter your pledge</p>
+              <div class="enter__wrap">
+                <div class="enter__btns">
+                  <button class="enter__btn enter__btn--secondary" type="button"><span class="basic__text">$</span> 75</button>
+                  <button class="enter__btn enter__btn--primary" id="continue2" type="button">Continue</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="back__card reward__empty back__card--disabled" id="cardMahogany">
+          <div class="back__content back__content--full">
+            <h5>Mahogany Special Edition <span>Pledge $200 or more</span></h5>
+            <p class="basic__text">
+              You get two Special Edition Mahogany stands, a Backer T-Shirt, and a personal thank you.
+              You will be added to our Backer member list. Shipping is included.
+            </p>
+            <div class="back__meta">
+              <p class="reward__stock">0 <span class="small">left</span></p>
+              <button class="btn btn__disabled" type="button" disabled>Out of Stock</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="done" id="done">
+      <img src="./images/icon-check.svg" alt="Success icon" class="done__icon">
+      <h4>Thanks for your support!</h4>
+      <p class="basic__text">
+        Your pledge brings us one step closer to sharing Mastercraft Bamboo Monitor Riser worldwide.
+        You will get an email once our campaign is completed.
+      </p>
+      <button class="btn btn__primary" id="gotBtn" type="button">Got it!</button>
+    </section>
+
+
   </section>
 
   <main class="page">
@@ -44,7 +136,7 @@
       </p>
 
       <div class="hero__actions project-card__actions">
-        <button class="btn btn__primary" type="button">Back this project</button>
+        <button class="btn btn__primary" type="button" id="backMenu">Back this project</button>
         <button class="bookmark" id="bookmark" type="button">
           <span class="bookmark__circle">
             <img src="./images/icon-bookmark.svg" alt="Bookmark icon">
@@ -140,7 +232,7 @@
         </li>
       </ul>
 
-      
+
     </section>
   </main>
 
@@ -151,20 +243,100 @@
     const menuIcon = document.getElementById("menuIcon");
     const mobileMenu = document.getElementById("mobileMenu");
     const menuOverlay = document.getElementById("menuOverlay");
+    const backMenu = document.getElementById("backMenu");
+    const modal = document.getElementById("modal");
+    const closeModalBtn = document.getElementById("closeModal");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const pledge = document.getElementById("pledge");
+    const pledge2 = document.getElementById("pledge2");
+    const cardNoReward = document.getElementById("cardNoReward");
+    const cardBamboo = document.getElementById("cardBamboo");
+    const cardBlack = document.getElementById("cardBlack");
+    const radioNoReward = document.getElementById("radioNoReward");
+    const radioBamboo = document.getElementById("radioBamboo");
+    const radioBlack = document.getElementById("radioBlack");
+    const continue1 = document.getElementById("continue1");
+    const continue2 = document.getElementById("continue2");
+    const done = document.getElementById("done");
+    const gotBtn = document.getElementById("gotBtn");
+
+    function openMenu() {
+      mobileMenu.classList.add("menu__mobile--open");
+      menuOverlay.classList.add("menu__overlay--open");
+      menuIcon.src = "./images/icon-close-menu.svg";
+    }
 
     function closeMenu() {
-      mobileMenu.style.display = "none";
-      menuOverlay.style.display = "none";
+      mobileMenu.classList.remove("menu__mobile--open");
+      menuOverlay.classList.remove("menu__overlay--open");
       menuIcon.src = "./images/icon-hamburger.svg";
     }
 
     function toggleMenu() {
-      if (mobileMenu.style.display === "none") {
-        mobileMenu.style.display = "block";
-        menuOverlay.style.display = "block";
-        menuIcon.src = "./images/icon-close-menu.svg";
-      } else {
+      const menuIsOpen = mobileMenu.classList.contains("menu__mobile--open");
+      if (menuIsOpen) {
         closeMenu();
+      } else {
+        openMenu();
+      }
+    }
+
+    function openModal() {
+      modal.classList.add("modal--open");
+      modalOverlay.classList.add("modal__overlay--open");
+    }
+
+    function closeModal() {
+      modal.classList.remove("modal--open");
+      modalOverlay.classList.remove("modal__overlay--open");
+      closePledges();
+      radioNoReward.checked = false;
+      radioBamboo.checked = false;
+      radioBlack.checked = false;
+    }
+
+    function openDone() {
+      closeModal();
+      done.classList.add("done--open");
+      modalOverlay.classList.add("modal__overlay--open");
+    }
+
+    function closeDone() {
+      done.classList.remove("done--open");
+      modalOverlay.classList.remove("modal__overlay--open");
+    }
+
+    function closeAll() {
+      closeModal();
+      closeDone();
+    }
+
+    function closePledges() {
+      pledge.classList.remove("enter__pledge--open");
+      pledge2.classList.remove("enter__pledge--open");
+      cardNoReward.classList.remove("back__card--active");
+      cardBamboo.classList.remove("back__card--active");
+      cardBlack.classList.remove("back__card--active");
+    }
+
+    function openPledge() {
+      closePledges();
+
+      if (radioNoReward.checked) {
+        cardNoReward.classList.add("back__card--active");
+        radioNoReward.checked = true;
+      }
+
+      if (radioBamboo.checked) {
+        cardBamboo.classList.add("back__card--active");
+        pledge.classList.add("enter__pledge--open");
+        radioBamboo.checked = true;
+      }
+
+      if (radioBlack.checked) {
+        cardBlack.classList.add("back__card--active");
+        pledge2.classList.add("enter__pledge--open");
+        radioBlack.checked = true;
       }
     }
 
@@ -180,6 +352,15 @@
 
     hamburger.addEventListener("click", toggleMenu);
     menuOverlay.addEventListener("click", closeMenu);
+    backMenu.addEventListener("click", openModal);
+    closeModalBtn.addEventListener("click", closeModal);
+    modalOverlay.addEventListener("click", closeAll);
+    radioNoReward.addEventListener("change", openPledge);
+    radioBamboo.addEventListener("change", openPledge);
+    radioBlack.addEventListener("change", openPledge);
+    continue1.addEventListener("click", openDone);
+    continue2.addEventListener("click", openDone);
+    gotBtn.addEventListener("click", closeDone);
 
   </script>
 </body>
