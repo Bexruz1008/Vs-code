@@ -104,6 +104,7 @@ a {
 }
 .menu__item:hover {
   text-decoration: underline;
+  padding-bottom: 2px;
 }
 
 .menu-toggle,
