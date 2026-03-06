@@ -662,7 +662,9 @@ a {
 
   .hero__wrapper {
     min-height: 300px;
-    background-image: url("./images/image-hero-mobile.jpg");
+    background:
+      linear-gradient(rgba(0, 0, 0, 0.405)),
+      url("./images/image-hero-mobile.jpg");
   }
 
   .header {
