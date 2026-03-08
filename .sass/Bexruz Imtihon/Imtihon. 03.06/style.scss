@@ -1,0 +1,314 @@
+$red500: hsl(356, 100%, 66%);
+$red400: hsl(355, 100%, 74%);
+$blue900: hsl(208, 49%, 24%);
+$white: hsl(0, 100%, 100%);
+$gray600: hsl(207, 13%, 34%);
+$gray900: hsl(240, 10%, 16%);
+$orange300: hsl(13, 100%, 72%);
+$red550: hsl(353, 100%, 62%);
+$muted: rgb(241, 238, 238);
+$overpassFont: "Overpass", sans-serif;
+$ubutunFont: "Ubuntu", sans-serif;
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Commissioner:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Krona+One&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Orbitron:wght@400..900&family=Outfit:wght@100..900&family=Overpass:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Sora:wght@100..800&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Commissioner:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Krona+One&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Orbitron:wght@400..900&family=Outfit:wght@100..900&family=Overpass:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Sora:wght@100..800&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+*,
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  // background-color: rgba(255, 0, 0, 0.301);
+}
+
+body {
+  background-color: $white;
+  font-size: 16px;
+}
+
+.wrapper {
+  max-width: 1920px;
+  margin: 0 auto;
+  background-image: url(./images/bg-pattern-intro-desktop.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  border-bottom-left-radius: 50px;
+  background-color: $red550 ;
+}
+.wrapper-all{
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+header {
+  display: flex;
+  font-family: $overpassFont;
+  max-width: 1400px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 50px;
+
+  .logoNav {
+    display: flex;
+    align-items: center;
+    gap: 70px;
+  }
+
+  .nav {
+    display: flex;
+    gap: 20px;
+
+    &__link {
+      text-decoration: none;
+      font-size: 18px;
+      color: $white;
+      position: relative;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &::after {
+        position: absolute;
+        margin-left: auto;
+        content: ">";
+        transform: rotate(90deg);
+        color: rgb(216, 215, 215);
+      }
+    }
+
+  }
+}
+
+.btns {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.btn {
+  padding: 12px 30px;
+  border-radius: 90px;
+  font-weight: 600;
+  border: none;
+  font-size: 17px;
+
+  &--primary {
+    background-color: $white;
+    color: $red400;
+
+    &:hover {
+      background-color: $red400;
+      color: $white;
+    }
+  }
+
+  &--login {
+    background-color: transparent;
+    color: $white;
+  }
+
+  &--secondary {
+    background-color: transparent;
+    border: 2px solid $white;
+    color: $white;
+
+    &:hover {
+      background-color: $white;
+      color: $red500;
+    }
+  }
+}
+
+.hero {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  font-family: $overpassFont;
+  padding: 50px;
+  position: relative;
+  z-index: 10;
+
+  h1 {
+    color: $white;
+    font-size: 46px;
+    font-weight: 500;
+  }
+
+  p {
+    color: $muted;
+    margin-bottom: 5vh;
+    font-size: 18px;
+  }
+}
+
+h2 {
+  position: absolute;
+  left: 50%;
+  top: 65%;
+  transform: translateX(-50%);
+  font-size: 36px;
+  font-family: $overpassFont;
+  color: $gray600;
+}
+
+.hero2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+  font-family: $overpassFont;
+  color: $gray600;
+  overflow: hidden;
+
+  .content {
+    display: grid;
+
+    h3 {
+      font-size: 30px;
+    }
+
+    p {
+      margin: 20px 0;
+    }
+  }
+
+  &__img {
+    position: relative;
+    left: 10%;
+  }
+}
+
+.hero3Cont {
+  background-image: url(./images/bg-pattern-circles.svg);
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: 700px;
+  background-color: $blue900;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom-left-radius: 100px;
+  border-top-right-radius: 100px;
+  height: 400px;
+}
+
+.hero3__content {
+  color: white;
+  font-family: $overpassFont;
+  line-height: 20px;
+
+  h3 {
+    font-size: 30px;
+    padding-bottom: 20px;
+  }
+
+  p {
+    width: 500px;
+    font-size: 18px;
+  }
+
+}
+
+.hero4 {
+  padding-top: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    position: relative;
+    right: 50px;
+    width: 50%;
+  }
+}
+
+.hero4__cont {
+  color: $blue900;
+  font-family: $overpassFont;
+
+  h3 {
+    font-size: 30px;
+  }
+
+  p {
+    width: 500px;
+  }
+}
+
+footer {
+  font-family: $overpassFont;
+  background-color: $gray900;
+  padding: 50px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  border-top-right-radius: 100px;
+
+  .footer__cont {
+    display: grid;
+  }
+}
+
+.footer__link {
+  text-decoration: none;
+  color: $white;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+
+@media (max-width:768px) {
+  * {
+    padding: 0;
+    margin: 0;
+    // background-color: rgba(255, 0, 0, 0.259);
+  }
+
+  .wrapper {
+    background-image: none;
+  }
+
+  header {
+    .nav {
+      display: none;
+    }
+  }
+
+  .hero3 {
+    background-image: none;
+
+    img {
+      width: 80%;
+    }
+  }
+  .hero2__img{
+    display: none;
+  }
+  h2{
+    position: relative;
+text-align: center;
+padding: 20px 0;
+  }
+
+  .hero4 {
+    justify-content: center;
+    flex-direction: column;
+
+    img {
+      width: 100%;
+    }
+
+    padding-bottom: 50px;
+
+  }
+
+  .hero3Cont {
+    flex-direction: column;
+    height: 700px;
+    background-image: none;
+  }
+}
