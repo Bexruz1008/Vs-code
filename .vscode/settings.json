@@ -1,5 +1,7 @@
 {
   "editor.tabMovesFocus": false,
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 700,
   "[scss]": {
     "editor.tabSize": 2,
     "editor.insertSpaces": true

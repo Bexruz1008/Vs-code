@@ -152,6 +152,89 @@ function Invoke-CommandChecked {
     }
 }
 
+function Get-BranchSyncState {
+    $result = [PSCustomObject]@{
+        HasUpstream = $false
+        Upstream = ""
+        Ahead = 0
+        Behind = 0
+    }
+
+    $upstreamRaw = (& git rev-parse --abbrev-ref --symbolic-full-name "@{u}" 2>$null)
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($upstreamRaw)) {
+        return $result
+    }
+
+    $upstream = $upstreamRaw.Trim()
+    $countsRaw = (& git rev-list --left-right --count "HEAD...$upstream" 2>$null)
+    if ($LASTEXITCODE -ne 0 -or [string]::IsNullOrWhiteSpace($countsRaw)) {
+        return $result
+    }
+
+    $parts = $countsRaw.Trim() -split "\s+"
+    if ($parts.Count -lt 2) {
+        return $result
+    }
+
+    $ahead = 0
+    $behind = 0
+    if (-not [int]::TryParse($parts[0], [ref]$ahead)) {
+        $ahead = 0
+    }
+    if (-not [int]::TryParse($parts[1], [ref]$behind)) {
+        $behind = 0
+    }
+
+    return [PSCustomObject]@{
+        HasUpstream = $true
+        Upstream = $upstream
+        Ahead = $ahead
+        Behind = $behind
+    }
+}
+
+function Try-PushPendingCommits {
+    param(
+        [string]$RemoteUrl,
+        [string[]]$FallbackChangedPaths = @()
+    )
+
+    $result = [PSCustomObject]@{
+        Pushed = $false
+        Diverged = $false
+        Ahead = 0
+        Behind = 0
+    }
+
+    $syncState = Get-BranchSyncState
+    $result.Ahead = $syncState.Ahead
+    $result.Behind = $syncState.Behind
+
+    if (-not $syncState.HasUpstream -or $syncState.Ahead -le 0) {
+        return $result
+    }
+
+    if ($syncState.Behind -gt 0) {
+        $result.Diverged = $true
+        return $result
+    }
+
+    Write-Host "No new file changes detected, but local branch is ahead by $($syncState.Ahead) commit(s)."
+    Write-Host "Pushing pending commits..."
+    Invoke-CommandChecked -Executable "git" -Arguments @("push")
+    Write-Host "Deploy pipeline triggered successfully."
+
+    $changedPaths = @(& git diff --name-only "$($syncState.Upstream)..HEAD")
+    $changedPaths = $changedPaths | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+    if ($changedPaths.Count -eq 0) {
+        $changedPaths = $FallbackChangedPaths
+    }
+
+    Show-DeployLinks -RemoteUrl $RemoteUrl -ChangedPaths $changedPaths
+    $result.Pushed = $true
+    return $result
+}
+
 function Show-DeployLinks {
     param(
         [string]$RemoteUrl,
@@ -341,15 +424,33 @@ if (-not [string]::IsNullOrWhiteSpace($targetProjectDir)) {
     $stagedChanges = @(& git diff --cached --name-only -- "$targetProjectDirGit")
     $stagedChanges = $stagedChanges | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
     if ($stagedChanges.Count -eq 0) {
+        $linkHint = if ($targetProjectDir -eq ".") { "index.html" } else { Join-Path -Path $targetProjectDir -ChildPath "index.html" }
+        $pendingPush = Try-PushPendingCommits -RemoteUrl $remoteUrl -FallbackChangedPaths @($linkHint)
+        if ($pendingPush.Diverged) {
+            Write-Error "Branch diverged from upstream (ahead $($pendingPush.Ahead), behind $($pendingPush.Behind)). Run 'git pull --rebase' and rerun deploy."
+            exit 1
+        }
+        if ($pendingPush.Pushed) {
+            exit 0
+        }
+
         Write-Host "No changes found in selected folder. Nothing to deploy."
         Show-NoChangesDiagnostics -TargetProjectDir $targetProjectDir
-        $linkHint = if ($targetProjectDir -eq ".") { "index.html" } else { Join-Path -Path $targetProjectDir -ChildPath "index.html" }
         Show-DeployLinks -RemoteUrl $remoteUrl -ChangedPaths @($linkHint)
         exit 0
     }
 }
 else {
     if ($changes.Count -eq 0) {
+        $pendingPush = Try-PushPendingCommits -RemoteUrl $remoteUrl
+        if ($pendingPush.Diverged) {
+            Write-Error "Branch diverged from upstream (ahead $($pendingPush.Ahead), behind $($pendingPush.Behind)). Run 'git pull --rebase' and rerun deploy."
+            exit 1
+        }
+        if ($pendingPush.Pushed) {
+            exit 0
+        }
+
         Write-Host "No changes found. Nothing to deploy."
         Show-DeployLinks -RemoteUrl $remoteUrl
         exit 0
