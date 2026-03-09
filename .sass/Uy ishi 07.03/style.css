@@ -176,7 +176,7 @@ img {
 }
 
 .section4 {
-  width: 80%;
+  width: 100%;
   margin: 0 auto 90px;
   text-align: center;
 }
@@ -188,7 +188,7 @@ img {
 .section4__text {
   font-size: 16px;
   color: rgb(34, 34, 34);
-  width: 75%;
+  width: 65%;
   margin: 0 auto;
   line-height: 1.6;
   padding: 6px 0;
