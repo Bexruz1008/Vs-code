@@ -82,6 +82,19 @@ function Convert-ToRelativePath {
     return $null
 }
 
+function Convert-ToGitPath {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$RelativePath
+    )
+
+    if ([string]::IsNullOrWhiteSpace($RelativePath) -or $RelativePath -eq ".") {
+        return "."
+    }
+
+    return $RelativePath.Replace('\', '/')
+}
+
 function Resolve-DeployProjectDir {
     param(
         [string]$InputPath
@@ -259,7 +272,8 @@ function Show-NoChangesDiagnostics {
         return
     }
 
-    $ignoredInTarget = @(& git status --porcelain --ignored -- "$TargetProjectDir")
+    $targetProjectDirGit = Convert-ToGitPath -RelativePath $TargetProjectDir
+    $ignoredInTarget = @(& git status --porcelain --ignored -- "$targetProjectDirGit")
     $ignoredInTarget = $ignoredInTarget | Where-Object { $_ -like "!! *" }
     if ($ignoredInTarget.Count -gt 0) {
         Write-Host ""
@@ -301,6 +315,10 @@ $changes = @(& git status --porcelain)
 $changes = $changes | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
 
 $targetProjectDir = Resolve-DeployProjectDir -InputPath $DeployDir
+$targetProjectDirGit = $null
+if (-not [string]::IsNullOrWhiteSpace($targetProjectDir)) {
+    $targetProjectDirGit = Convert-ToGitPath -RelativePath $targetProjectDir
+}
 if ($RequireDeployDir -and [string]::IsNullOrWhiteSpace($targetProjectDir)) {
     Write-Error "Current file folder is not deployable. Open a file inside a project folder that contains index.html."
     exit 1
@@ -318,9 +336,9 @@ if ([string]::IsNullOrWhiteSpace($CommitMessage)) {
 if (-not [string]::IsNullOrWhiteSpace($targetProjectDir)) {
     Write-Host "Deploy target folder: $targetProjectDir"
     Write-Host "Staging selected folder changes..."
-    Invoke-CommandChecked -Executable "git" -Arguments @("add", "-A", "--", $targetProjectDir)
+    Invoke-CommandChecked -Executable "git" -Arguments @("add", "-A", "--", $targetProjectDirGit)
 
-    $stagedChanges = @(& git diff --cached --name-only)
+    $stagedChanges = @(& git diff --cached --name-only -- "$targetProjectDirGit")
     $stagedChanges = $stagedChanges | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
     if ($stagedChanges.Count -eq 0) {
         Write-Host "No changes found in selected folder. Nothing to deploy."
