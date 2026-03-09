@@ -1,0 +1,635 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Commissioner:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Krona+One&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Orbitron:wght@400..900&family=Outfit:wght@100..900&family=Overpass:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Sora:wght@100..800&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+$fontCl: rgba(34, 34, 34, 1);
+$black: rgba(0, 0, 0, 1);
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Nunito", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-weight: 400;
+  
+}
+
+body {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 20px 4vw 70px;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+}
+
+.header {
+  justify-content: space-between;
+  border-bottom: 2px solid $fontCl;
+  padding-bottom: 10px;
+
+  &--first {
+    gap: 3vw;
+  }
+
+  &__btn {
+    padding: 7px 25px;
+    margin-left: 3vw;
+    background-color: transparent;
+    border: 1.7px solid $black;
+    color: $fontCl;
+    font-size: 18px;
+    border-radius: 50px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $black;
+      color: #fff;
+      transition: all 0.4s ease-in;
+    }
+  }
+}
+
+.nav {
+  gap: 3vw;
+
+  &__link {
+    font-size: 16px;
+    color: $fontCl;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline 2px solid $fontCl;
+    }
+  }
+}
+
+.play {
+  gap: .5vw;
+  padding: 15px 0;
+  animation: fadeInUp 1.6s ease-in-out;
+}
+
+.section1 {
+  margin: 50px 0 0 0;
+
+  &__left {
+    width: 50%;
+
+    &-title {
+      font-size: 40px;
+      color: $fontCl;
+      animation: fadeInUp 1.4s ease-in-out;
+    }
+
+    &-text {
+      font-size: 16px;
+      color: $fontCl;
+      width: 65%;
+      padding: 10px 0;
+      animation: fadeInUp 1.3s ease-in-out;
+      line-height: 1.5;
+    }
+
+    &-downloads {
+      animation: fadeInUp 1.1s ease-in-out;
+    }
+  }
+}
+
+.section1__right {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeInUp 1s ease-in-out;
+
+  .phone {
+    width: 90%;
+  }
+}
+
+.section2 {
+  gap: 5vw;
+  margin: 50px 0 100px;
+
+  &__left {
+    width: 50%;
+    animation: fadeInUp 1.4s ease-in-out;
+  }
+
+  &__right {
+    width: 50%;
+    animation: fadeInUp 1.3s ease-in-out;
+
+    &-title {
+      font-size: 40px;
+      color: $fontCl;
+    }
+
+    &-text {
+      font-size: 16px;
+      color: $fontCl;
+      width: 80%;
+      padding: 10px 0;
+      line-height: 1.5;
+    }
+  }
+}
+
+.section3 {
+  gap: 5vw;
+  margin: 40px 0 110px;
+
+  &__left {
+    width: 45%;
+
+    &-title {
+      font-size: 44px;
+      color: $fontCl;
+      padding-bottom: 10px;
+    }
+
+    &-text {
+      font-size: 16px;
+      color: $fontCl;
+      width: 95%;
+      line-height: 1.6;
+      padding: 8px 0;
+    }
+  }
+
+  &__right {
+    width: 55%;
+    display: flex;
+    justify-content: flex-end;
+
+    img {
+      width: 88%;
+      max-width: 520px;
+    }
+  }
+}
+
+.section4 {
+  width: 80%;
+  margin: 0 auto 90px;
+  text-align: center;
+
+  &__title {
+    font-size: 48px;
+    color: $fontCl;
+    padding-bottom: 8px;
+  }
+
+  &__text {
+    font-size: 16px;
+    color: $fontCl;
+    width: 75%;
+    margin: 0 auto;
+    line-height: 1.6;
+    padding: 6px 0;
+  }
+
+  &__btn {
+    margin-top: 20px;
+    padding: 10px 32px;
+    border: 1.7px solid $black;
+    background-color: transparent;
+    border-radius: 50px;
+    color: $black;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $black;
+      border-color: $black;
+      color: #fff;
+      transition: all 0.4s ease;
+    }
+  }
+
+  &__logos {
+    width: 100%;
+    margin-top: 46px;
+  }
+}
+
+.section5 {
+  gap: 5vw;
+
+  &__left {
+    width: 45%;
+
+    &-title {
+      font-size: 42px;
+      color: $fontCl;
+      padding-bottom: 10px;
+
+      span {
+        font-size: 24px;
+        vertical-align: top;
+      }
+    }
+
+    &-text {
+      font-size: 16px;
+      color: $fontCl;
+      width: 95%;
+      line-height: 1.6;
+      padding: 8px 0;
+    }
+
+    &-pay {
+      margin-top: 14px;
+      gap: 12px;
+    }
+  }
+
+  &__right {
+    width: 55%;
+    display: flex;
+    justify-content: flex-end;
+
+    img {
+      width: 88%;
+      max-width: 520px;
+    }
+  }
+}
+
+.section6 {
+  gap: 5vw;
+  margin: 20px 0 110px;
+
+  &__left {
+    width: 55%;
+
+    img {
+      width: 88%;
+      max-width: 540px;
+    }
+  }
+
+  &__right {
+    width: 45%;
+
+    &-title {
+      font-size: 44px;
+      color: $fontCl;
+      padding-bottom: 10px;
+    }
+
+    &-text {
+      font-size: 16px;
+      color: $fontCl;
+      width: 95%;
+      line-height: 1.6;
+      padding: 8px 0;
+    }
+  }
+}
+
+.section7 {
+  gap: 5vw;
+  margin: 0 0 110px;
+
+  &__left {
+    width: 45%;
+
+    &-title {
+      font-size: 44px;
+      color: $fontCl;
+      padding-bottom: 10px;
+    }
+
+    &-text {
+      font-size: 16px;
+      color: $fontCl;
+      width: 95%;
+      line-height: 1.6;
+      padding: 8px 0;
+    }
+  }
+
+  &__right {
+    width: 55%;
+    display: flex;
+    justify-content: flex-end;
+
+    img {
+      width: 88%;
+      max-width: 540px;
+    }
+  }
+}
+
+.section8 {
+  gap: 5vw;
+  margin: 0;
+  padding-bottom: 40px;
+  border-bottom: 2px solid rgba(227, 227, 227, 1);
+
+  &__left {
+    width: 55%;
+
+    img {
+      width: 88%;
+      max-width: 540px;
+    }
+  }
+
+  &__right {
+    width: 45%;
+
+    &-title {
+      font-size: 44px;
+      color: $fontCl;
+      padding-bottom: 10px;
+    }
+
+    &-text {
+      font-size: 16px;
+      color: $fontCl;
+      width: 95%;
+      line-height: 1.6;
+      padding: 8px 0;
+    }
+
+    &-downloads {
+      margin-top: 14px;
+      gap: 12px;
+
+      .download {
+        img {
+          height: 50px;
+          width: auto;
+        }
+      }
+    }
+  }
+}
+
+.footer {
+  padding: 70px 0 10px;
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 22px;
+    padding-bottom: 48px;
+  }
+
+  &__col {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  &__title {
+    font-size: 16px;
+    color: $fontCl;
+    padding-bottom: 6px;
+  }
+
+  &__link {
+    text-decoration: none;
+    color: rgba(75, 75, 75, 1);
+    font-size: 14px;
+    line-height: 1.3;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &--mail {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+  }
+
+  &__social {
+    img {
+      width: 40px;
+    }
+  }
+
+  &__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+  }
+
+  &__info {
+    width: 78%;
+  }
+
+  &__logo {
+    width: 180px;
+    margin-bottom: 16px;
+  }
+
+  &__text {
+    font-size: 12px;
+    color: rgba(145, 145, 145, 1);
+    line-height: 1.6;
+    padding-bottom: 4px;
+  }
+
+  &__pci {
+    width: 176px;
+    height: auto;
+  }
+}
+
+.pay {
+  img {
+    height: 40px;
+    width: auto;
+  }
+}
+
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.scroll-animate.show {
+  animation: fadeInUp 1.4s ease-in-out forwards;
+}
+
+@media (max-width: 992px) {
+  .section1,
+  .section2,
+  .section3,
+  .section5,
+  .section6,
+  .section7,
+  .section8 {
+    gap: 3vw;
+  }
+
+  .section1__left-title,
+  .section2__right-title {
+    font-size: 34px;
+  }
+
+  .section3__left-title,
+  .section5__left-title,
+  .section6__right-title,
+  .section7__left-title,
+  .section8__right-title,
+  .section4__title {
+    font-size: 36px;
+  }
+
+  .section4 {
+    width: 92%;
+
+    &__text {
+      width: 90%;
+    }
+  }
+
+  .footer {
+    &__top {
+      flex-wrap: wrap;
+      row-gap: 30px;
+    }
+
+    &__col {
+      width: 30%;
+      min-width: 170px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    gap: 18px;
+    align-items: flex-start;
+
+    &__btn {
+      margin-left: 0;
+    }
+  }
+  .nav{
+    display: none;
+  }
+
+  .section1,
+  .section2,
+  .section3,
+  .section5,
+  .section6,
+  .section7,
+  .section8 {
+    flex-direction: column-reverse;
+    margin-top: 50px;
+
+    &__left,
+    &__right {
+      width: 100%;
+    }
+  }
+  .section2,
+  .section6
+  {
+    flex-direction: column;
+  }
+
+  .section1__left-text,
+  .section2__right-text,
+  .section3__left-text,
+  .section5__left-text,
+  .section6__right-text,
+  .section7__left-text,
+  .section8__right-text,
+  .section4__text {
+    width: 100%;
+  }
+
+  .section3,
+  .section5,
+  .section6,
+  .section7,
+  .section8 {
+    margin-bottom: 30px;
+  }
+
+  .section4 {
+    margin-bottom: 50px;
+  }
+
+  .section8__right-downloads {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .footer {
+    padding-top: 40px;
+
+    &__top {
+      gap: 20px;
+      padding-bottom: 30px;
+    }
+
+    &__col {
+      width: 47%;
+      min-width: 130px;
+    }
+
+    &__bottom {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    &__info {
+      width: 100%;
+    }
+
+    &__logo {
+      width: 150px;
+      margin-bottom: 12px;
+    }
+
+    &__text {
+      font-size: 11px;
+    }
+
+    &__pci {
+      width: 150px;
+      margin-top: 10px;
+    }
+  }
+}
