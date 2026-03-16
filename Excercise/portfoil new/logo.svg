@@ -1,0 +1,83 @@
+<svg width="240" height="100" viewBox="0 0 240 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Luxury gold metallic gradient -->
+    <linearGradient id="goldMain" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#FFF1C0"/>
+      <stop offset="18%"  stop-color="#E8C84A"/>
+      <stop offset="42%"  stop-color="#D4AF37"/>
+      <stop offset="68%"  stop-color="#B8941F"/>
+      <stop offset="85%"  stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#A07818"/>
+    </linearGradient>
+
+    <!-- Lighter shimmer for top edge -->
+    <linearGradient id="goldShimmer" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#FFF8DC" stop-opacity="0"/>
+      <stop offset="40%"  stop-color="#FFFFFF"  stop-opacity="0.25"/>
+      <stop offset="60%"  stop-color="#FFD700"  stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#FFF8DC" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Group text gradient -->
+    <linearGradient id="goldGroup" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#E8C84A"/>
+      <stop offset="50%"  stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#B8941F"/>
+    </linearGradient>
+
+    <!-- Glow filter -->
+    <filter id="glow" x="-20%" y="-30%" width="140%" height="160%">
+      <feGaussianBlur stdDeviation="1.2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle drop shadow -->
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#7A5C00" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- BDEX - large luxury serif lettering -->
+  <text
+    x="120"
+    y="57"
+    font-family="Georgia, 'Times New Roman', 'Garamond', serif"
+    font-size="52"
+    font-weight="700"
+    text-anchor="middle"
+    fill="url(#goldMain)"
+    filter="url(#glow)"
+    letter-spacing="4">BDEX</text>
+
+  <!-- Shimmer overlay on BDEX -->
+  <text
+    x="120"
+    y="57"
+    font-family="Georgia, 'Times New Roman', 'Garamond', serif"
+    font-size="52"
+    font-weight="700"
+    text-anchor="middle"
+    fill="url(#goldShimmer)"
+    letter-spacing="4"
+    opacity="0.55">BDEX</text>
+
+  <!-- Decorative rule left -->
+  <line x1="36" y1="73" x2="73" y2="73" stroke="url(#goldGroup)" stroke-width="0.8" stroke-linecap="round"/>
+  <!-- Decorative rule right -->
+  <line x1="167" y1="73" x2="204" y2="73" stroke="url(#goldGroup)" stroke-width="0.8" stroke-linecap="round"/>
+
+  <!-- GROUP text centered between rules -->
+  <text
+    x="120"
+    y="80"
+    font-family="'Arial', 'Helvetica', sans-serif"
+    font-size="13"
+    font-weight="600"
+    text-anchor="middle"
+    fill="url(#goldGroup)"
+    letter-spacing="5"
+    filter="url(#shadow)">GROUP</text>
+</svg>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="BDex Group — Full Stack Agency. We build, develop and explore cutting-edge digital experiences.">
+    <meta name="theme-color" content="#0f1419">
+    <meta property="og:title" content="BDex Group — Portfolio">
+    <meta property="og:description" content="We build, develop and explore. Full Stack Agency crafting exceptional digital experiences.">
+    <meta name="robots" content="index, follow">
+    <title>BDex Group — Portfolio</title>
+
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Premium Font Stack: Cormorant Garamond + JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Single CSS source — style-premium.css is canonical -->
+    <link rel="stylesheet" href="style-premium.css">
+    <link rel="icon" type="image/svg+xml" href="./logo.svg">
+</head>
+
+<body>
+
+    <!-- ─── Loading Screen ─────────────────────────── -->
+    <div id="loadingScreen" class="loading-screen" aria-hidden="true">
+        <div class="loader-logo">
+            <img src="./logo.svg" alt="BDex Group" width="160">
+        </div>
+        <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+
+    <!-- ─── Custom Cursor ──────────────────────────── -->
+    <div class="cursor-ring" aria-hidden="true"></div>
+    <div class="cursor-dot"  aria-hidden="true"></div>
+
+    <!-- ─── Particle Canvas ────────────────────────── -->
+    <canvas id="particleCanvas" aria-hidden="true"></canvas>
+
+    <!-- ─── Header Navigation ──────────────────────── -->
+    <header id="header">
+        <div class="container">
+            <div class="logo">
+                <a href="#home" aria-label="BDex Group — Home">
+                    <img src="./logo.svg" alt="BDex Group" class="logo-svg">
+                </a>
+            </div>
+            <div class="links" id="navLinks">
+                <nav aria-label="Main navigation">
+                    <a href="#home"     class="list">Home</a>
+                    <a href="#about"    class="list">About</a>
+                    <a href="#skills"   class="list">Skills</a>
+                    <a href="#projects" class="list">Projects</a>
+                    <a href="#contact"  class="list">Contact</a>
+                </nav>
+                <a href="#contact" class="contact-btn">Let's Talk</a>
+                <a href="admin.html" class="admin-link" title="Admin Panel" aria-label="Admin Panel">🔐</a>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ─── Hero Section ───────────────────────────── -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="grid-pattern"></div>
+            <div class="glow-effect glow-top-right"></div>
+            <div class="glow-effect glow-bottom-left"></div>
+        </div>
+        <div class="container hero-content">
+            <div class="hero-text">
+                <p class="eyebrow-label">Full Stack Agency</p>
+                <h1 class="hero-title">
+                    <span class="greeting">Hi, I'm</span>
+                    <span class="name gradient-text" id="heroNameDisplay">Bexruz</span>
+                    <span class="brand-name">BDex Group</span>
+                </h1>
+                <p class="hero-motto" id="heroMottoDisplay">We build, develop and explore</p>
+                <h2 class="hero-role">
+                    <span class="typing-text">Full Stack Developer</span><span class="cursor" aria-hidden="true">|</span>
+                </h2>
+                <p class="hero-description" id="heroDescDisplay">
+                    Crafting extraordinary digital experiences with cutting-edge technology.
+                    Specialized in building scalable web applications and innovative solutions
+                    that stand the test of time.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">
+                        <span>View Our Work</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                </div>
+                <div class="hero-social">
+                    <a href="#" aria-label="GitHub"   class="social-link" id="linkGitHub">GitHub</a>
+                    <a href="#" aria-label="LinkedIn"  class="social-link" id="linkLinkedIn">LinkedIn</a>
+                    <a href="#" aria-label="Twitter"   class="social-link" id="linkTwitter">Twitter</a>
+                </div>
+            </div>
+            <div class="hero-visual" aria-hidden="true">
+                <div class="floating-card">
+                    <div class="card-header">
+                        <span class="card-dot red"></span>
+                        <span class="card-dot amber"></span>
+                        <span class="card-dot green"></span>
+                        <span class="card-filename">bdex.js</span>
+                    </div>
+                    <div class="code-snippet">
+                        <div class="code-line"><span class="code-comment">// BDex Group Agency</span></div>
+                        <div class="code-line"><span class="code-keyword">const</span> agency = {</div>
+                        <div class="code-line">&nbsp;&nbsp;name: <span class="code-string">'BDex Group'</span>,</div>
+                        <div class="code-line">&nbsp;&nbsp;motto: <span class="code-string">'Build · Develop · Explore'</span>,</div>
+                        <div class="code-line">&nbsp;&nbsp;stack: [<span class="code-string">'React'</span>, <span class="code-string">'Node'</span>, <span class="code-string">'Java'</span>],</div>
+                        <div class="code-line">&nbsp;&nbsp;deliver: <span class="code-keyword">async</span> () =&gt; {</div>
+                        <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">await</span> craftExcellence();</div>
+                        <div class="code-line">&nbsp;&nbsp;}</div>
+                        <div class="code-line">};</div>
+                        <div class="code-line code-active"><span class="code-cursor-blink">█</span></div>
+                    </div>
+                </div>
+                <!-- Floating stat chips -->
+                <div class="stat-chip chip-1">
+                    <span class="chip-number">50+</span>
+                    <span class="chip-label">Projects</span>
+                </div>
+                <div class="stat-chip chip-2">
+                    <span class="chip-number">5★</span>
+                    <span class="chip-label">Rating</span>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator" aria-hidden="true">
+            <div class="mouse"><div class="mouse-wheel"></div></div>
+            <span class="scroll-text">scroll</span>
+        </div>
+    </section>
+
+    <!-- ─── About Section ──────────────────────────── -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number" aria-hidden="true">01</span>
+                <h2 class="section-title">About Us</h2>
+                <div class="section-line" aria-hidden="true"></div>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <p class="about-intro" id="aboutIntroDisplay">
+                        We're a passionate development agency with a love for creating elegant solutions to complex problems.
+                    </p>
+                    <p id="aboutBodyDisplay">
+                        With over 5 years of experience in full-stack development, we specialize in building modern,
+                        responsive applications using the latest technologies. Our approach combines clean code,
+                        user-centered design, and performance optimization to deliver results that exceed expectations.
+                    </p>
+                    <p>
+                        When we're not coding, you'll find us exploring new frameworks, contributing to open-source
+                        projects, or sharing knowledge with the developer community.
+                    </p>
+                    <div class="about-stats">
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="50" id="statProjects">0</div>
+                            <div class="stat-label">Projects Completed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="5" id="statYears">0</div>
+                            <div class="stat-label">Years Experience</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="30" id="statClients">0</div>
+                            <div class="stat-label">Happy Clients</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="image-wrapper">
+                        <div class="image-glow" aria-hidden="true"></div>
+                        <div class="placeholder-image">
+                            <img src="./image.png" alt="BDex Group team at work" loading="lazy">
+                        </div>
+                        <div class="image-badge">
+                            <span class="badge-icon">✦</span>
+                            <span>Est. 2019</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── Skills Section ─────────────────────────── -->
+    <section id="skills" class="skills">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number" aria-hidden="true">02</span>
+                <h2 class="section-title">Skills &amp; Technologies</h2>
+                <div class="section-line" aria-hidden="true"></div>
+            </div>
+            <div class="skills-grid" id="skillsDisplay">
+                <!-- Frontend -->
+                <div class="skill-category">
+                    <h3 class="category-title">Frontend</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">React / Next.js</span>
+                                <span class="skill-percent">90%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="90"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">TypeScript</span>
+                                <span class="skill-percent">85%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="85"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">CSS / Tailwind</span>
+                                <span class="skill-percent">92%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="92"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">Vue.js</span>
+                                <span class="skill-percent">78%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="78"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Backend -->
+                <div class="skill-category">
+                    <h3 class="category-title">Backend</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">Node.js / Express</span>
+                                <span class="skill-percent">88%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="88"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">Java / Spring Boot</span>
+                                <span class="skill-percent">82%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="82"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">PostgreSQL / MongoDB</span>
+                                <span class="skill-percent">85%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="85"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">REST / GraphQL APIs</span>
+                                <span class="skill-percent">90%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="90"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- DevOps -->
+                <div class="skill-category">
+                    <h3 class="category-title">DevOps &amp; Tools</h3>
+                    <div class="skill-items">
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">Docker / Kubernetes</span>
+                                <span class="skill-percent">75%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="75"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">AWS / Cloud</span>
+                                <span class="skill-percent">72%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="72"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">CI/CD / Git</span>
+                                <span class="skill-percent">88%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="88"></div></div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-header">
+                                <span class="skill-name">Linux / Bash</span>
+                                <span class="skill-percent">80%</span>
+                            </div>
+                            <div class="skill-bar"><div class="skill-progress" data-width="80"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── Projects Section ───────────────────────── -->
+    <section id="projects" class="projects">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number" aria-hidden="true">03</span>
+                <h2 class="section-title">Featured Projects</h2>
+                <div class="section-line" aria-hidden="true"></div>
+            </div>
+            <div class="projects-grid" id="projectsDisplay">
+
+                <article class="project-card">
+                    <div class="project-image">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="#" class="project-link" aria-label="View live project">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                    Live
+                                </a>
+                                <a href="#" class="project-link" aria-label="View source code">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 3L1 7l3 4M10 3l3 4-3 4M8 1l-2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                    Code
+                                </a>
+                            </div>
+                        </div>
+                        <div class="project-placeholder">
+                            <img src="./image.png" alt="E-Commerce Platform preview" loading="lazy">
+                        </div>
+                        <div class="project-number" aria-hidden="true">01</div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">E-Commerce Platform</h3>
+                        <p class="project-description">
+                            A high-performance e-commerce solution with real-time inventory,
+                            secure Stripe payments, advanced search, and an intuitive admin dashboard.
+                        </p>
+                        <div class="project-tech">
+                            <span>React</span><span>Node.js</span><span>MongoDB</span><span>Stripe</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-image">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="#" class="project-link" aria-label="View live project">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                    Live
+                                </a>
+                                <a href="#" class="project-link" aria-label="View source code">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 3L1 7l3 4M10 3l3 4-3 4M8 1l-2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                    Code
+                                </a>
+                            </div>
+                        </div>
+                        <div class="project-placeholder">
+                            <img src="./image.png" alt="Task Management App preview" loading="lazy">
+                        </div>
+                        <div class="project-number" aria-hidden="true">02</div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Task Management App</h3>
+                        <p class="project-description">
+                            A collaborative task management application with real-time updates,
+                            drag-and-drop functionality, and team collaboration features.
+                        </p>
+                        <div class="project-tech">
+                            <span>Vue.js</span><span>Socket.io</span><span>PostgreSQL</span><span>Express</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-image">
+                        <div class="project-overlay">
+                            <div class="project-links">
+                                <a href="#" class="project-link" aria-label="View live project">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                    Live
+                                </a>
+                                <a href="#" class="project-link" aria-label="View source code">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 3L1 7l3 4M10 3l3 4-3 4M8 1l-2 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                                    Code
+                                </a>
+                            </div>
+                        </div>
+                        <div class="project-placeholder">
+                            <img src="./ultra-luxury-minimalist-logo-design-for-_etERw6aKRQeaHF5kdm6wXA_XCLn4cQGTP-qC87BsU5z7Q_sd.jpeg" alt="Analytics Dashboard preview" loading="lazy">
+                        </div>
+                        <div class="project-number" aria-hidden="true">03</div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Analytics Dashboard</h3>
+                        <p class="project-description">
+                            A comprehensive analytics dashboard with data visualization,
+                            custom reports, and real-time metrics tracking.
+                        </p>
+                        <div class="project-tech">
+                            <span>React</span><span>D3.js</span><span>Python</span><span>FastAPI</span>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── Contact Section ────────────────────────── -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number" aria-hidden="true">04</span>
+                <h2 class="section-title">Get In Touch</h2>
+                <div class="section-line" aria-hidden="true"></div>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3 class="contact-subtitle">Let's work together</h3>
+                    <p class="contact-description" id="contactDescDisplay">
+                        We're always open to discussing new projects, creative ideas, or opportunities
+                        to be part of your vision. Feel free to reach out — we'd love to hear from you.
+                    </p>
+                    <div class="contact-details">
+                        <div class="contact-item">
+                            <div class="contact-icon" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 5l8 5 8-5M2 5h16v12H2V5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            </div>
+                            <div>
+                                <h4>Email</h4>
+                                <a href="mailto:hello@bdexgroup.com" id="contactEmailDisplay">hello@bdexgroup.com</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5a2 2 0 012-2h2l2 4-1.5 1.5c1 2 2.5 3.5 4.5 4.5L13.5 11l4 2v2a2 2 0 01-2 2C7.163 17 3 12.837 3 7V5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                            </div>
+                            <div>
+                                <h4>Phone</h4>
+                                <a href="tel:+998901234567" id="contactPhoneDisplay">+998 90 123 45 67</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-icon" aria-hidden="true">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2C6.686 2 4 4.686 4 8c0 5 6 11 6 11s6-6 6-11c0-3.314-2.686-6-6-6zm0 8a2 2 0 110-4 2 2 0 010 4z" stroke="currentColor" stroke-width="1.5"/></svg>
+                            </div>
+                            <div>
+                                <h4>Location</h4>
+                                <span id="contactLocationDisplay">Tashkent, Uzbekistan</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-social">
+                        <a href="#" class="social-icon" id="socialGitHubDisplay" aria-label="GitHub">GitHub</a>
+                        <a href="#" class="social-icon" id="socialLinkedInDisplay" aria-label="LinkedIn">LinkedIn</a>
+                        <a href="#" class="social-icon" id="socialTwitterDisplay" aria-label="Twitter">Twitter</a>
+                        <a href="#" class="social-icon" id="socialDribbbleDisplay" aria-label="Dribbble">Dribbble</a>
+                    </div>
+                </div>
+                <form class="contact-form" id="contactForm" novalidate>
+                    <div class="form-success" id="formSuccess" role="alert" aria-live="polite"></div>
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" placeholder="John Doe" required autocomplete="name">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="john@example.com" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" placeholder="Project Inquiry">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" placeholder="Tell us about your project…" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <span>Send Message</span>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M1 8L14 1l-5 14-2-6-6-1z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── Footer ─────────────────────────────────── -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="#home" aria-label="BDex Group — Back to top">
+                        <img src="./logo.svg" alt="BDex Group" class="logo-svg" width="140">
+                    </a>
+                </div>
+                <p class="footer-motto">We build, develop and explore</p>
+                <p class="footer-text">
+                    <span class="brand-footer">BDex Group</span> — Built with passion and modern web technologies.
+                    © 2026 All rights reserved.
+                </p>
+                <nav class="footer-links" aria-label="Footer navigation">
+                    <a href="#home">Home</a>
+                    <a href="#about">About</a>
+                    <a href="#skills">Skills</a>
+                    <a href="#projects">Projects</a>
+                    <a href="#contact">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ─── Scripts ────────────────────────────────── -->
+    <script src="script.js"></script>
+</body>
+</html>
