@@ -451,12 +451,13 @@ img {
 
   &__link {
     text-decoration: none;
-    color: gainsboro;
+    color: rgb(143, 141, 141);
     font-size: 14px;
     line-height: 1.3;
 
     &:hover {
       text-decoration: underline;
+      color: rgb(46, 45, 45);
     }
 
     &--mail {

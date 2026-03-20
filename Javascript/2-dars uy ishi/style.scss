@@ -1,0 +1,122 @@
+$pink: rgba(226, 26, 67, 0.1);
+$red: rgba(226, 26, 67, 1);
+$gary: rgba(136, 136, 136, 1);
+$bg: rgba(247, 247, 247, 1);
+$font: poppins, sans-serif;
+
+*,
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+}
+
+body {
+  font-family: $font;
+  background-color: white;
+}
+
+header {
+  padding: 20px 20px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100dvw;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  .logo{
+    &:hover {
+      transform: scale(1.1);
+
+    }
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    &__link {
+      text-decoration: none;
+      color: $gary;
+      font-size: 16px;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &--active {
+        color: $red;
+
+        span {
+          font-size: 16px;
+          color: $red;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+.header__btns {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.input {
+  display: flex;
+  align-items: center;
+  background-color: $bg;
+  border-radius: 5px;
+
+  input {
+    border: none;
+    background-color: $pink;
+    outline: none;
+    font-size: 16px;
+    padding: 11px 10px;
+  }
+
+  input::-webkit-input-placeholder {
+    color: $gary;
+  }
+
+  .search--btn {
+    background-color: $red;
+    border: none;
+    cursor: pointer;
+    padding: 10px 10px;
+
+    &:active {
+      background-color: $pink;
+    }
+  }
+}
+
+.vectors {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 20px;
+
+  .vector {
+    padding: 10px 10px;
+    background-color: $pink;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    color: $red;
+    cursor: pointer;
+    border: none;
+
+    &:hover {
+
+      transform: scale(1.1);
+    }
+  }
+}

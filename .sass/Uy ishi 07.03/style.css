@@ -389,12 +389,13 @@ img {
 }
 .footer__link {
   text-decoration: none;
-  color: gainsboro;
+  color: rgb(143, 141, 141);
   font-size: 14px;
   line-height: 1.3;
 }
 .footer__link:hover {
   text-decoration: underline;
+  color: rgb(46, 45, 45);
 }
 .footer__link--mail {
   text-decoration: underline;

@@ -1,0 +1,103 @@
+*,
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
+}
+
+body {
+  font-family: poppins, sans-serif;
+  background-color: white;
+}
+
+header {
+  padding: 20px 20px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100dvw;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+header .logo:hover {
+  transform: scale(1.1);
+}
+header .nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+header .nav__link {
+  text-decoration: none;
+  color: rgb(136, 136, 136);
+  font-size: 16px;
+  font-weight: 500;
+}
+header .nav__link:hover {
+  text-decoration: underline;
+}
+header .nav__link--active {
+  color: rgb(226, 26, 67);
+}
+header .nav__link--active span {
+  font-size: 16px;
+  color: rgb(226, 26, 67);
+  font-weight: 600;
+}
+
+.header__btns {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.input {
+  display: flex;
+  align-items: center;
+  background-color: rgb(247, 247, 247);
+  border-radius: 5px;
+}
+.input input {
+  border: none;
+  background-color: rgba(226, 26, 67, 0.1);
+  outline: none;
+  font-size: 16px;
+  padding: 11px 10px;
+}
+.input input::-webkit-input-placeholder {
+  color: rgb(136, 136, 136);
+}
+.input .search--btn {
+  background-color: rgb(226, 26, 67);
+  border: none;
+  cursor: pointer;
+  padding: 10px 10px;
+}
+.input .search--btn:active {
+  background-color: rgba(226, 26, 67, 0.1);
+}
+
+.vectors {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 20px;
+}
+.vectors .vector {
+  padding: 10px 10px;
+  background-color: rgba(226, 26, 67, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  color: rgb(226, 26, 67);
+  cursor: pointer;
+  border: none;
+}
+.vectors .vector:hover {
+  transform: scale(1.1);
+}
+
+/*# sourceMappingURL=style.css.map */

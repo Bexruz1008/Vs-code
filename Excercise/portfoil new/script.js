@@ -1,20 +1,100 @@
-// ============================================================
-//  BDEX GROUP — PORTFOLIO JAVASCRIPT  v2.0
-//  Loading Screen · Custom Cursor · Particles · Admin Sync
+﻿// ============================================================
+// BDEX GROUP PORTFOLIO JAVASCRIPT
+// Modern interactions, data sync, and UI behaviors
 // ============================================================
 'use strict';
 
 const CONFIG = {
-    API_BASE_URL:         'http://localhost:8080/api',
-    TYPING_SPEED:         90,
-    TYPING_DELAY:         2200,
-    ANIMATION_THRESHOLD:  0.18,
-    STORAGE_KEY:          'portfolioData',
-    PARTICLE_COUNT:       55,
-    PARTICLE_SPEED:       0.35,
+    STORAGE_KEY: 'portfolioData',
+    TYPING_SPEED: 90,
+    TYPING_DELAY: 2200,
+    ANIMATION_THRESHOLD: 0.18,
+    PARTICLE_COUNT: 48,
+    PARTICLE_SPEED: 0.35,
 };
 
-// ── Utility helpers ─────────────────────────────────────────
+const DEFAULT_DATA = {
+    hero: {
+        name: 'Bexruz',
+        motto: 'Build. Develop. Explore.',
+        roles: ['Full Stack Developer', 'Product Engineer', 'UI Systems Builder', 'Problem Solver'],
+        description: 'Crafting high performance digital products with rigorous engineering, human centered design, and a taste for bold ideas.'
+    },
+    about: {
+        intro: 'We are a senior focused studio turning ambitious ideas into reliable digital products.',
+        body: 'Our work blends strategy, design, and engineering to ship experiences that look sharp and perform even sharper. We love complex problems, fast iterations, and clean systems.',
+        extra: 'When we are not shipping, we are exploring new stacks, open sourcing tools, and mentoring the next generation of builders.',
+        stats: {
+            projects: 50,
+            years: 5,
+            clients: 30
+        }
+    },
+    skills: [
+        {
+            category: 'Frontend',
+            items: [
+                { name: 'React', percent: 90 },
+                { name: 'TypeScript', percent: 85 },
+                { name: 'Design Systems', percent: 88 },
+                { name: 'CSS Architecture', percent: 92 }
+            ]
+        },
+        {
+            category: 'Backend',
+            items: [
+                { name: 'Node.js', percent: 86 },
+                { name: 'Python', percent: 82 },
+                { name: 'PostgreSQL', percent: 80 },
+                { name: 'API Design', percent: 88 }
+            ]
+        },
+        {
+            category: 'Tooling',
+            tags: ['Git', 'Docker', 'CI/CD', 'Cloud Deploy', 'Figma', 'Testing', 'Analytics', 'Performance']
+        }
+    ],
+    projects: [
+        {
+            title: 'E-Commerce Platform',
+            description: 'A scalable commerce platform with headless architecture, intelligent search, and a fast checkout flow.',
+            tech: ['React', 'Node.js', 'PostgreSQL', 'Stripe'],
+            viewUrl: '',
+            codeUrl: '',
+            featured: true
+        },
+        {
+            title: 'Analytics Command Center',
+            description: 'A data rich dashboard with real time insights, configurable reports, and fine grained access control.',
+            tech: ['Next.js', 'D3.js', 'Python', 'FastAPI'],
+            viewUrl: '',
+            codeUrl: '',
+            featured: true
+        },
+        {
+            title: 'Team Workflow Suite',
+            description: 'Collaborative task management with real time updates, automation rules, and integrated knowledge base.',
+            tech: ['Vue', 'Node.js', 'PostgreSQL', 'Redis'],
+            viewUrl: '',
+            codeUrl: '',
+            featured: false
+        }
+    ],
+    contact: {
+        email: 'hello@bdexgroup.com',
+        phone: '+998 90 123 45 67',
+        location: 'Tashkent, Uzbekistan',
+        description: 'We are ready to talk through your next project, audit an existing product, or co build a new idea.',
+        social: {
+            github: '',
+            linkedin: '',
+            twitter: '',
+            dribbble: ''
+        }
+    },
+    messages: []
+};
+
 const utils = {
     prefersReducedMotion() {
         return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -34,105 +114,333 @@ const utils = {
     },
     smoothScrollTo(el) {
         if (!el) return;
-        const top = el.getBoundingClientRect().top + window.scrollY - 80;
+        const top = el.getBoundingClientRect().top + window.scrollY - 90;
         window.scrollTo({ top, behavior: 'smooth' });
     },
-    // Load portfolio data saved by the admin panel
-    loadPortfolioData() {
-        try {
-            const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
-            return raw ? JSON.parse(raw) : null;
-        } catch { return null; }
+    deepMerge(base, override) {
+        if (Array.isArray(base)) return Array.isArray(override) ? override : base;
+        if (typeof base !== 'object' || base === null) return override ?? base;
+        const output = { ...base };
+        Object.keys(override || {}).forEach(key => {
+            const baseVal = base[key];
+            const overrideVal = override[key];
+            output[key] = utils.deepMerge(baseVal, overrideVal);
+        });
+        return output;
     },
+    hexToRgb(hex) {
+        if (!hex) return null;
+        const clean = hex.replace('#', '').trim();
+        if (![3, 6].includes(clean.length)) return null;
+        const full = clean.length === 3 ? clean.split('').map(c => c + c).join('') : clean;
+        const num = parseInt(full, 16);
+        if (Number.isNaN(num)) return null;
+        return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+    }
 };
 
-// ── Loading Screen ──────────────────────────────────────────
+function normalizeData(data) {
+    let merged = utils.deepMerge(DEFAULT_DATA, data || {});
+
+    if (merged.about) {
+        if (!merged.about.body && merged.about.text1) merged.about.body = merged.about.text1;
+        if (!merged.about.extra && merged.about.text2) merged.about.extra = merged.about.text2;
+        delete merged.about.text1;
+        delete merged.about.text2;
+    }
+
+    if (merged.hero && typeof merged.hero.roles === 'string') {
+        merged.hero.roles = merged.hero.roles.split(',').map(r => r.trim()).filter(Boolean);
+    }
+
+    if (!Array.isArray(merged.skills)) merged.skills = DEFAULT_DATA.skills;
+    if (!Array.isArray(merged.projects)) merged.projects = DEFAULT_DATA.projects;
+    if (!merged.contact) merged.contact = DEFAULT_DATA.contact;
+    if (!merged.contact.social) merged.contact.social = DEFAULT_DATA.contact.social;
+    if (!Array.isArray(merged.messages)) merged.messages = [];
+
+    return merged;
+}
+
+function getPortfolioData() {
+    try {
+        const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : null;
+        return normalizeData(parsed);
+    } catch {
+        return normalizeData(null);
+    }
+}
+
+function savePortfolioData(data) {
+    try {
+        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el && value !== undefined && value !== null) el.textContent = value;
+}
+
+function setLink(id, href, text) {
+    const el = document.getElementById(id);
+    if (el && text) {
+        el.href = href;
+        el.textContent = text;
+    }
+}
+
+function setDataTarget(id, value) {
+    const el = document.getElementById(id);
+    if (el && value !== undefined && value !== null) {
+        el.dataset.target = value;
+        el.textContent = '0';
+    }
+}
+
+function updateSocialLinks(social) {
+    document.querySelectorAll('[data-social]').forEach(el => {
+        const key = el.dataset.social;
+        const url = social && social[key] ? social[key] : '';
+        if (url) {
+            el.href = url;
+            el.classList.remove('is-disabled');
+        } else {
+            el.removeAttribute('href');
+            el.classList.add('is-disabled');
+        }
+    });
+}
+
+function renderSkills(skills) {
+    const container = document.getElementById('skillsGrid');
+    if (!container) return;
+
+    container.innerHTML = '';
+    skills.forEach(category => {
+        const card = document.createElement('div');
+        card.className = 'skill-category';
+
+        const title = document.createElement('h3');
+        title.textContent = category.category || 'Skills';
+        card.appendChild(title);
+
+        if (Array.isArray(category.items)) {
+            category.items.forEach(item => {
+                const wrap = document.createElement('div');
+                wrap.className = 'skill-item';
+
+                const name = document.createElement('div');
+                name.className = 'skill-name';
+                const left = document.createElement('span');
+                left.textContent = item.name || 'Skill';
+                const right = document.createElement('span');
+                right.textContent = `${item.percent || 0}%`;
+                name.appendChild(left);
+                name.appendChild(right);
+
+                const bar = document.createElement('div');
+                bar.className = 'skill-bar';
+                const progress = document.createElement('div');
+                progress.className = 'skill-progress';
+                progress.dataset.width = item.percent || 0;
+                bar.appendChild(progress);
+
+                wrap.appendChild(name);
+                wrap.appendChild(bar);
+                card.appendChild(wrap);
+            });
+        }
+
+        if (Array.isArray(category.tags)) {
+            const tagsWrap = document.createElement('div');
+            tagsWrap.className = 'skill-tags';
+            category.tags.forEach(tag => {
+                const tagEl = document.createElement('span');
+                tagEl.className = 'skill-tag';
+                tagEl.textContent = tag;
+                tagsWrap.appendChild(tagEl);
+            });
+            card.appendChild(tagsWrap);
+        }
+
+        container.appendChild(card);
+    });
+}
+
+function renderProjects(projects) {
+    const container = document.getElementById('projectsGrid');
+    if (!container) return;
+
+    container.innerHTML = '';
+    projects.forEach(project => {
+        const card = document.createElement('article');
+        card.className = `project-card${project.featured ? ' featured' : ''}`;
+
+        const title = document.createElement('h3');
+        title.className = 'project-title';
+        title.textContent = project.title || 'Project';
+
+        const desc = document.createElement('p');
+        desc.textContent = project.description || '';
+
+        const tech = document.createElement('div');
+        tech.className = 'project-tech';
+        const techList = Array.isArray(project.tech)
+            ? project.tech
+            : (project.tech ? String(project.tech).split(',').map(t => t.trim()).filter(Boolean) : []);
+        techList.forEach(t => {
+            const tag = document.createElement('span');
+            tag.textContent = t;
+            tech.appendChild(tag);
+        });
+
+        const links = document.createElement('div');
+        links.className = 'project-links';
+        if (project.viewUrl) {
+            const live = document.createElement('a');
+            live.href = project.viewUrl;
+            live.target = '_blank';
+            live.rel = 'noopener';
+            live.textContent = 'Live';
+            links.appendChild(live);
+        }
+        if (project.codeUrl) {
+            const code = document.createElement('a');
+            code.href = project.codeUrl;
+            code.target = '_blank';
+            code.rel = 'noopener';
+            code.textContent = 'Code';
+            links.appendChild(code);
+        }
+
+        card.appendChild(title);
+        card.appendChild(desc);
+        card.appendChild(tech);
+        if (links.children.length) card.appendChild(links);
+
+        container.appendChild(card);
+    });
+}
+
+function applyPortfolioData(data) {
+    setText('heroNameDisplay', data.hero.name);
+    setText('heroMottoDisplay', data.hero.motto);
+    setText('heroDescDisplay', data.hero.description);
+    setText('aboutIntroDisplay', data.about.intro);
+    setText('aboutBodyDisplay', data.about.body);
+    setText('aboutExtraDisplay', data.about.extra);
+    setText('contactDescDisplay', data.contact.description);
+
+    setLink('contactEmailDisplay', `mailto:${data.contact.email}`, data.contact.email);
+    setLink('contactPhoneDisplay', `tel:${data.contact.phone}`, data.contact.phone);
+    setText('contactLocationDisplay', data.contact.location);
+
+    setDataTarget('statProjects', data.about.stats.projects);
+    setDataTarget('statYears', data.about.stats.years);
+    setDataTarget('statClients', data.about.stats.clients);
+
+    updateSocialLinks(data.contact.social);
+
+    renderSkills(data.skills);
+    renderProjects(data.projects);
+
+    if (Array.isArray(data.hero.roles) && data.hero.roles.length) {
+        window._heroRoles = data.hero.roles;
+    }
+}
+
 class LoadingScreen {
     constructor() {
         this.el = document.getElementById('loadingScreen');
         if (!this.el) return;
-        // Hide after 1.6 s (just after loader bar animation ends)
-        setTimeout(() => this.hide(), 1600);
+        setTimeout(() => this.hide(), 1400);
     }
     hide() {
         this.el.classList.add('hidden');
     }
 }
 
-// ── Custom Cursor ───────────────────────────────────────────
 class CustomCursor {
     constructor() {
         this.ring = document.querySelector('.cursor-ring');
-        this.dot  = document.querySelector('.cursor-dot');
+        this.dot = document.querySelector('.cursor-dot');
         if (!this.ring || !this.dot) return;
-        // Skip on touch devices
-        if (window.matchMedia('(hover: none)').matches) return;
+        if (window.matchMedia('(hover: none)').matches || utils.prefersReducedMotion()) return;
 
-        this.rx = 0; this.ry = 0; // ring position
-        this.dx = 0; this.dy = 0; // dot position
+        this.rx = 0; this.ry = 0;
+        this.dx = 0; this.dy = 0;
+        this.scale = 1;
         this.init();
     }
     init() {
         document.addEventListener('mousemove', e => {
             this.dx = e.clientX;
             this.dy = e.clientY;
-            // Dot follows instantly
+            this.dot.style.opacity = '1';
+            this.ring.style.opacity = '1';
             this.dot.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
         });
 
-        // Ring lags slightly for elegance
+        const hoverTargets = 'a, button, .project-card, .skill-category, input, textarea, .btn';
+        document.querySelectorAll(hoverTargets).forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                this.scale = 1.6;
+                this.ring.classList.add('hovering');
+            });
+            el.addEventListener('mouseleave', () => {
+                this.scale = 1;
+                this.ring.classList.remove('hovering');
+            });
+        });
+
         const animateRing = () => {
             this.rx += (this.dx - this.rx) * 0.12;
             this.ry += (this.dy - this.ry) * 0.12;
-            this.ring.style.transform = `translate(calc(${this.rx}px - 50%), calc(${this.ry}px - 50%))`;
+            this.ring.style.transform = `translate(calc(${this.rx}px - 50%), calc(${this.ry}px - 50%)) scale(${this.scale})`;
             requestAnimationFrame(animateRing);
         };
         requestAnimationFrame(animateRing);
 
-        // Expand ring on interactive elements
-        const hoverTargets = 'a, button, .project-card, .skill-category, input, textarea, .btn';
-        document.querySelectorAll(hoverTargets).forEach(el => {
-            el.addEventListener('mouseenter', () => this.ring.classList.add('hovering'));
-            el.addEventListener('mouseleave', () => this.ring.classList.remove('hovering'));
-        });
-
         document.addEventListener('mouseleave', () => {
             this.ring.style.opacity = '0';
-            this.dot.style.opacity  = '0';
-        });
-        document.addEventListener('mouseenter', () => {
-            this.ring.style.opacity = '';
-            this.dot.style.opacity  = '';
+            this.dot.style.opacity = '0';
         });
     }
 }
 
-// ── Particle System ─────────────────────────────────────────
 class ParticleSystem {
     constructor() {
         this.canvas = document.getElementById('particleCanvas');
         if (!this.canvas || utils.prefersReducedMotion()) return;
         this.ctx = this.canvas.getContext('2d');
         this.particles = [];
+        this.color = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#b88a2b';
+        const rgb = utils.hexToRgb(this.color);
+        this.rgb = rgb ? `${rgb.r}, ${rgb.g}, ${rgb.b}` : '184, 138, 43';
         this.resize();
         this.createParticles();
         this.animate();
         window.addEventListener('resize', utils.debounce(() => this.resize(), 200));
     }
     resize() {
-        this.canvas.width  = window.innerWidth;
+        this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
     }
     createParticles() {
         this.particles = [];
         for (let i = 0; i < CONFIG.PARTICLE_COUNT; i++) {
             this.particles.push({
-                x:   Math.random() * this.canvas.width,
-                y:   Math.random() * this.canvas.height,
-                r:   Math.random() * 1.4 + 0.4,
-                vx:  (Math.random() - 0.5) * CONFIG.PARTICLE_SPEED,
-                vy:  (Math.random() - 0.5) * CONFIG.PARTICLE_SPEED,
-                a:   Math.random() * 0.5 + 0.15,
+                x: Math.random() * this.canvas.width,
+                y: Math.random() * this.canvas.height,
+                r: Math.random() * 1.6 + 0.4,
+                vx: (Math.random() - 0.5) * CONFIG.PARTICLE_SPEED,
+                vy: (Math.random() - 0.5) * CONFIG.PARTICLE_SPEED,
+                a: Math.random() * 0.5 + 0.15,
             });
         }
     }
@@ -140,34 +448,30 @@ class ParticleSystem {
         const { ctx, canvas, particles } = this;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw connection lines
         for (let i = 0; i < particles.length; i++) {
             for (let j = i + 1; j < particles.length; j++) {
                 const dx = particles[i].x - particles[j].x;
                 const dy = particles[i].y - particles[j].y;
                 const dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 120) {
+                if (dist < 130) {
                     ctx.beginPath();
                     ctx.moveTo(particles[i].x, particles[i].y);
                     ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(212, 175, 55, ${(1 - dist / 120) * 0.07})`;
-                    ctx.lineWidth = 0.6;
+                    ctx.strokeStyle = `rgba(${this.rgb}, ${(1 - dist / 130) * 0.08})`;
+                    ctx.lineWidth = 0.7;
                     ctx.stroke();
                 }
             }
         }
 
-        // Draw and move particles
         particles.forEach(p => {
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(212, 175, 55, ${p.a})`;
+            ctx.fillStyle = `rgba(${this.rgb}, ${p.a})`;
             ctx.fill();
-
             p.x += p.vx;
             p.y += p.vy;
-
-            if (p.x < 0 || p.x > canvas.width)  p.vx *= -1;
+            if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
             if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
         });
 
@@ -175,12 +479,51 @@ class ParticleSystem {
     }
 }
 
-// ── Mobile Menu ──────────────────────────────────────────────
+class MagneticButtons {
+    constructor() {
+        this.items = document.querySelectorAll('.magnetic');
+        if (!this.items.length || utils.prefersReducedMotion()) return;
+        this.items.forEach(item => this.bind(item));
+    }
+    bind(item) {
+        item.addEventListener('mousemove', e => {
+            const rect = item.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            item.style.transform = `translate(${x * 0.12}px, ${y * 0.12}px)`;
+        });
+        item.addEventListener('mouseleave', () => {
+            item.style.transform = 'translate(0, 0)';
+        });
+    }
+}
+
+class TiltCards {
+    constructor() {
+        this.items = document.querySelectorAll('[data-tilt]');
+        if (!this.items.length || utils.prefersReducedMotion()) return;
+        this.items.forEach(item => this.bind(item));
+    }
+    bind(item) {
+        item.addEventListener('mousemove', e => {
+            const rect = item.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            const rotateX = (y * -10).toFixed(2);
+            const rotateY = (x * 10).toFixed(2);
+            item.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+        item.addEventListener('mouseleave', () => {
+            item.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg)';
+        });
+    }
+}
+
 class MobileMenu {
     constructor() {
         this.toggle = document.querySelector('.mobile-menu-toggle');
-        this.menu   = document.querySelector('.links');
-        this.links  = document.querySelectorAll('.links nav a');
+        this.menu = document.querySelector('.links');
+        this.links = document.querySelectorAll('.links nav a');
         this.init();
     }
     init() {
@@ -203,7 +546,6 @@ class MobileMenu {
     }
 }
 
-// ── Header Scroll ────────────────────────────────────────────
 class HeaderScroll {
     constructor() {
         this.header = document.getElementById('header');
@@ -212,24 +554,23 @@ class HeaderScroll {
     init() {
         if (!this.header) return;
         window.addEventListener('scroll', utils.throttle(() => {
-            this.header.classList.toggle('scrolled', window.scrollY > 50);
+            this.header.classList.toggle('scrolled', window.scrollY > 40);
         }, 100));
     }
 }
 
-// ── Active Navigation ────────────────────────────────────────
 class ActiveNavigation {
     constructor() {
         this.sections = document.querySelectorAll('section[id]');
-        this.links    = document.querySelectorAll('.links nav a');
+        this.links = document.querySelectorAll('.links nav a');
         this.init();
     }
     init() {
         if (!this.sections.length || !this.links.length) return;
-        window.addEventListener('scroll', utils.throttle(() => this.update(), 100));
+        window.addEventListener('scroll', utils.throttle(() => this.update(), 120));
     }
     update() {
-        const pos = window.scrollY + 120;
+        const pos = window.scrollY + 140;
         this.sections.forEach(sec => {
             if (pos >= sec.offsetTop && pos < sec.offsetTop + sec.offsetHeight) {
                 this.links.forEach(l => {
@@ -240,7 +581,6 @@ class ActiveNavigation {
     }
 }
 
-// ── Typing Effect ─────────────────────────────────────────────
 class TypingEffect {
     constructor(el, texts, speed = 90, delay = 2200) {
         this.el = el;
@@ -274,7 +614,6 @@ class TypingEffect {
     }
 }
 
-// ── Scroll Reveal ─────────────────────────────────────────────
 class ScrollReveal {
     constructor() {
         this.sections = document.querySelectorAll('section');
@@ -297,7 +636,6 @@ class ScrollReveal {
     }
 }
 
-// ── Stat Counter ──────────────────────────────────────────────
 class StatCounter {
     constructor() {
         this.counters = document.querySelectorAll('.stat-number[data-target]');
@@ -317,7 +655,7 @@ class StatCounter {
     }
     animate(el) {
         const target = +el.dataset.target;
-        const duration = 1800;
+        const duration = 1600;
         const step = 16;
         const steps = duration / step;
         const inc = target / steps;
@@ -330,11 +668,10 @@ class StatCounter {
     }
 }
 
-// ── Skill Bars ────────────────────────────────────────────────
 class SkillBars {
     constructor() {
         this.items = document.querySelectorAll('.skill-item');
-        this.bars  = document.querySelectorAll('.skill-progress[data-width]');
+        this.bars = document.querySelectorAll('.skill-progress[data-width]');
         this.init();
     }
     init() {
@@ -356,7 +693,6 @@ class SkillBars {
     }
 }
 
-// ── Contact Form ──────────────────────────────────────────────
 class ContactForm {
     constructor() {
         this.form = document.getElementById('contactForm');
@@ -366,12 +702,12 @@ class ContactForm {
         if (!this.form) return;
         this.form.addEventListener('submit', e => this.handleSubmit(e));
         this.form.querySelectorAll('input, textarea').forEach(inp => {
-            inp.addEventListener('blur',  () => this.validateField(inp));
+            inp.addEventListener('blur', () => this.validateField(inp));
             inp.addEventListener('input', () => this.clearError(inp));
         });
     }
     validateField(field) {
-        const val  = field.value.trim();
+        const val = field.value.trim();
         const name = field.name;
         let msg = '';
         if (field.required && !val) msg = 'This field is required.';
@@ -393,7 +729,7 @@ class ContactForm {
         let err = group.querySelector('.form-error');
         if (!err) { err = document.createElement('div'); err.className = 'form-error'; group.appendChild(err); }
         if (msg) { field.classList.add('error'); err.textContent = msg; err.classList.add('show'); }
-        else     { field.classList.remove('error'); err.classList.remove('show'); }
+        else { field.classList.remove('error'); err.classList.remove('show'); }
     }
     clearError(field) {
         field.classList.remove('error');
@@ -407,6 +743,12 @@ class ContactForm {
         el.classList.add('show');
         setTimeout(() => el.classList.remove('show'), 5000);
     }
+    saveMessage(data) {
+        const saved = getPortfolioData();
+        saved.messages = saved.messages || [];
+        saved.messages.push({ ...data, date: new Date().toISOString() });
+        savePortfolioData(saved);
+    }
     async handleSubmit(e) {
         e.preventDefault();
         if (!this.validateForm()) return;
@@ -414,25 +756,16 @@ class ContactForm {
         const btnText = btn.querySelector('span') || btn;
         const original = btnText.textContent;
         btn.disabled = true;
-        btnText.textContent = 'Sending…';
+        btnText.textContent = 'Sending...';
 
         const data = Object.fromEntries(new FormData(this.form));
 
         try {
-            const res = await fetch(`${CONFIG.API_BASE_URL}/contact`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-            if (!res.ok) throw new Error('Network error');
-            this.showSuccess('✓ Message sent successfully! We\'ll get back to you soon.');
+            this.saveMessage(data);
+            this.showSuccess('Message saved. We will get back to you soon.');
             this.form.reset();
         } catch {
-            // Save locally as fallback
-            const messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
-            messages.push({ ...data, date: new Date().toISOString() });
-            localStorage.setItem('contactMessages', JSON.stringify(messages));
-            this.showSuccess('✓ Message saved! We\'ll get back to you soon.');
+            this.showSuccess('Message saved locally. We will get back to you soon.');
             this.form.reset();
         } finally {
             btn.disabled = false;
@@ -441,7 +774,6 @@ class ContactForm {
     }
 }
 
-// ── Smooth Scroll ─────────────────────────────────────────────
 class SmoothScroll {
     constructor() {
         document.querySelectorAll('a[href^="#"]').forEach(link => {
@@ -455,62 +787,6 @@ class SmoothScroll {
     }
 }
 
-// ── Admin Data Sync ───────────────────────────────────────────
-// Reads data saved by admin.html → localStorage and populates the portfolio
-class AdminDataSync {
-    constructor() {
-        this.data = utils.loadPortfolioData();
-        if (this.data) this.apply();
-    }
-    apply() {
-        const d = this.data;
-        this.set('heroNameDisplay',    d.hero?.name);
-        this.set('heroMottoDisplay',   d.hero?.motto);
-        this.set('heroDescDisplay',    d.hero?.description);
-        this.set('aboutIntroDisplay',  d.about?.intro);
-        this.set('aboutBodyDisplay',   d.about?.body);
-        this.set('contactDescDisplay', d.contact?.description);
-        this.setLink('contactEmailDisplay', `mailto:${d.contact?.email}`, d.contact?.email);
-        this.setLink('contactPhoneDisplay', `tel:${d.contact?.phone}`,  d.contact?.phone);
-        this.setText('contactLocationDisplay', d.contact?.location);
-
-        // Social links
-        ['GitHub', 'LinkedIn', 'Twitter', 'Dribbble'].forEach(name => {
-            const url = d.contact?.social?.[name.toLowerCase()];
-            const el  = document.getElementById(`social${name}Display`);
-            if (el && url) el.href = url;
-        });
-
-        // Stats
-        this.setData('statProjects', d.about?.stats?.projects);
-        this.setData('statYears',    d.about?.stats?.years);
-        this.setData('statClients',  d.about?.stats?.clients);
-
-        // Typing roles
-        if (d.hero?.roles) {
-            const roles = d.hero.roles.split(',').map(r => r.trim()).filter(Boolean);
-            if (roles.length) window._heroRoles = roles;
-        }
-    }
-    set(id, val) {
-        const el = document.getElementById(id);
-        if (el && val) el.textContent = val;
-    }
-    setText(id, val) { this.set(id, val); }
-    setLink(id, href, text) {
-        const el = document.getElementById(id);
-        if (el && text) { el.href = href; el.textContent = text; }
-    }
-    setData(id, val) {
-        const el = document.getElementById(id);
-        if (el && val !== undefined && val !== '') {
-            el.dataset.target = val;
-            el.textContent = '0';
-        }
-    }
-}
-
-// ── App Bootstrap ─────────────────────────────────────────────
 class App {
     constructor() {
         if (document.readyState === 'loading') {
@@ -520,13 +796,15 @@ class App {
         }
     }
     boot() {
-        // Sync admin data first (before typing effect picks up roles)
-        new AdminDataSync();
+        document.body.classList.remove('no-js');
+        const data = getPortfolioData();
+        applyPortfolioData(data);
 
-        // UI modules
         new LoadingScreen();
         new CustomCursor();
-        if (!utils.prefersReducedMotion()) new ParticleSystem();
+        new ParticleSystem();
+        new MagneticButtons();
+        new TiltCards();
         new MobileMenu();
         new HeaderScroll();
         new ActiveNavigation();
@@ -536,21 +814,12 @@ class App {
         new ContactForm();
         new SmoothScroll();
 
-        // Typing effect
         const typingEl = document.querySelector('.typing-text');
         if (typingEl) {
-            const roles = window._heroRoles || [
-                'Full Stack Developer',
-                'UI/UX Enthusiast',
-                'Problem Solver',
-                'Tech Explorer',
-            ];
+            const roles = window._heroRoles || DEFAULT_DATA.hero.roles;
             new TypingEffect(typingEl, roles, CONFIG.TYPING_SPEED, CONFIG.TYPING_DELAY);
         }
-
-        console.log('%c✦ BDex Group Portfolio v2.0', 'color:#d4af37;font-weight:700;font-size:14px;');
     }
 }
 
-// ── Start ─────────────────────────────────────────────────────
 new App();

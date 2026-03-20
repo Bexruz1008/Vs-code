@@ -152,6 +152,83 @@ function Invoke-CommandChecked {
     }
 }
 
+function Compile-SassIfNeeded {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ProjectDir
+    )
+
+    $compiledCss = @()
+    $sassFiles = @(Get-ChildItem -LiteralPath $ProjectDir -Recurse -File -Filter "*.scss" -ErrorAction SilentlyContinue |
+        Where-Object {
+            $_.Name -notlike "_*" -and
+            $_.FullName -notmatch '[\\/](node_modules|\.git|\.github|\.vscode)[\\/]'
+        })
+
+    if ($sassFiles.Count -eq 0) {
+        return $compiledCss
+    }
+
+    $sassCmd = Get-Command -Name "sass" -ErrorAction SilentlyContinue
+    if (-not $sassCmd) {
+        Write-Error "Sass CLI not found. Install sass or run the 'Sass: Watch workspace' task before deploy."
+        exit 1
+    }
+
+    foreach ($scss in $sassFiles) {
+        $cssPath = [System.IO.Path]::ChangeExtension($scss.FullName, ".css")
+        Write-Host "Compiling Sass: $($scss.FullName) -> $cssPath"
+        Invoke-CommandChecked -Executable "sass" -Arguments @($scss.FullName, $cssPath)
+        $compiledCss += $cssPath
+    }
+
+    return $compiledCss
+}
+
+function Update-CacheBusters {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$ProjectDir,
+        [string[]]$CssPaths = @()
+    )
+
+    if ($CssPaths.Count -eq 0) {
+        return
+    }
+
+    $indexPath = Join-Path -Path $ProjectDir -ChildPath "index.html"
+    if (-not (Test-Path -LiteralPath $indexPath)) {
+        return
+    }
+
+    $content = Get-Content -LiteralPath $indexPath -Raw
+    if ([string]::IsNullOrWhiteSpace($content)) {
+        return
+    }
+
+    $updated = $false
+    foreach ($cssPath in $CssPaths) {
+        if (-not (Test-Path -LiteralPath $cssPath)) {
+            continue
+        }
+
+        $cssFile = [System.IO.Path]::GetFileName($cssPath)
+        $hash = (Get-FileHash -Algorithm SHA1 -LiteralPath $cssPath).Hash.Substring(0, 8).ToLowerInvariant()
+        $pattern = [regex]::Escape($cssFile) + '(?!\.)' + '(\?v=[^"''\s>]*)?'
+        $replacement = "${cssFile}?v=$hash"
+        $newContent = [regex]::Replace($content, $pattern, $replacement)
+        if ($newContent -ne $content) {
+            $content = $newContent
+            $updated = $true
+        }
+    }
+
+    if ($updated) {
+        Write-Host "Updating cache busters in $indexPath"
+        Set-Content -LiteralPath $indexPath -Value $content -Encoding UTF8
+    }
+}
+
 function Get-BranchSyncState {
     $result = [PSCustomObject]@{
         HasUpstream = $false
@@ -418,6 +495,8 @@ if ([string]::IsNullOrWhiteSpace($CommitMessage)) {
 
 if (-not [string]::IsNullOrWhiteSpace($targetProjectDir)) {
     Write-Host "Deploy target folder: $targetProjectDir"
+    $compiledCss = Compile-SassIfNeeded -ProjectDir $targetProjectDir
+    Update-CacheBusters -ProjectDir $targetProjectDir -CssPaths $compiledCss
     Write-Host "Staging selected folder changes..."
     Invoke-CommandChecked -Executable "git" -Arguments @("add", "-A", "--", $targetProjectDirGit)
 

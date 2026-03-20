@@ -1,0 +1,17 @@
+body {
+    display: grid;
+    place-items: center;
+    height: 100vh;
+}
+
+button {
+    
+    position: relative;
+    anchor-name: --my-button;
+}
+
+#Nimadir {
+    position: absolute;
+    position-anchor: --my-button;
+    position-area: bottom center;
+}
