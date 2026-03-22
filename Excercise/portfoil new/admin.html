@@ -1,244 +1,214 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Admin panel for BDex Group portfolio management">
     <meta name="robots" content="noindex, nofollow">
     <title>Admin Panel | BDex Group</title>
-
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
     <link rel="icon" type="image/svg+xml" href="./logo.svg">
 </head>
 <body class="admin-body">
 
-    <div id="loginScreen" class="login-screen" role="main">
-        <div class="login-panel">
-            <a class="admin-brand" href="index.html" aria-label="Back to portfolio">
-                <img src="./logo.svg" alt="BDex Group" width="180" height="48">
-                <span>BDex Group</span>
-            </a>
-            <h1>Admin Control</h1>
-            <p>Manage your portfolio content, skills, and projects.</p>
-
-            <form id="loginForm" class="login-form" novalidate>
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        required
-                        autocomplete="username"
-                        placeholder="Enter your username"
-                        aria-required="true">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        required
-                        autocomplete="current-password"
-                        placeholder="Enter your password"
-                        aria-required="true">
-                </div>
-                <button type="submit" class="btn btn-primary" aria-label="Login to admin panel">
-                    Login
-                </button>
-                <div id="loginError" class="error-message" role="alert" aria-live="polite"></div>
-            </form>
-        </div>
-    </div>
-
-    <div id="dashboard" class="dashboard hidden">
-        <header class="admin-header">
-            <div class="admin-header-content">
-                <div class="admin-brand">
-                    <img src="./logo.svg" alt="BDex Group" class="header-logo" width="160" height="40">
-                    <span>Admin Panel</span>
-                </div>
-                <nav class="admin-actions" aria-label="Admin actions">
-                    <button id="saveAllBtn" class="btn btn-primary btn-sm" aria-label="Save all changes">
-                        Save All
-                    </button>
-                    <button id="logoutBtn" class="btn btn-secondary btn-sm" aria-label="Logout">
-                        Logout
-                    </button>
-                </nav>
+<div id="loginScreen" class="login-screen" role="main">
+    <div class="login-panel">
+        <a class="admin-brand" href="index.html">
+            <img src="./logo.svg" alt="BDex Group" width="140" height="38">
+            <span>BDex Group</span>
+        </a>
+        <h1>ADMIN CONTROL</h1>
+        <p>Manage your portfolio content, skills, and projects.</p>
+        <form id="loginForm" class="login-form" novalidate>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required autocomplete="username" placeholder="admin">
             </div>
-        </header>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="••••••••">
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+            <div id="loginError" class="error-message" role="alert" aria-live="polite"></div>
+        </form>
+    </div>
+</div>
 
-        <div class="admin-shell">
-            <aside class="admin-sidebar">
-                <div class="sidebar-card">
-                    <h3>Quick Actions</h3>
-                    <p>Use Ctrl + S to save from anywhere.</p>
-                    <button id="saveAllBtnSecondary" class="btn btn-ghost btn-sm" type="button">
-                        Save Now
-                    </button>
+<div id="dashboard" class="dashboard hidden">
+    <header class="admin-header">
+        <div class="admin-header-content">
+            <div class="admin-brand">
+                <img src="./logo.svg" alt="BDex Group" class="header-logo" width="120" height="32">
+                <span>Admin Panel</span>
+            </div>
+            <nav class="admin-actions">
+                <button id="saveAllBtn" class="btn btn-primary btn-sm">Save All</button>
+                <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <div class="admin-shell">
+        <aside class="admin-sidebar">
+            <div class="sidebar-card">
+                <h3>QUICK ACTIONS</h3>
+                <p>Ctrl + S to save anywhere.</p>
+                <button id="saveAllBtnSecondary" class="btn btn-ghost btn-sm" type="button">Save Now</button>
+            </div>
+            <nav class="admin-nav">
+                <a href="#section-hero">Hero</a>
+                <a href="#section-about">About</a>
+                <a href="#section-skills">Skills</a>
+                <a href="#section-projects">Projects</a>
+                <a href="#section-contact">Contact</a>
+                <a href="#section-messages">Messages</a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <section id="section-hero" class="admin-section">
+                <div class="section-head">
+                    <h2>HERO SECTION</h2>
+                    <p>Update the headline, roles, and intro copy.</p>
                 </div>
-                <nav class="admin-nav" aria-label="Section navigation">
-                    <a href="#section-hero">Hero</a>
-                    <a href="#section-about">About</a>
-                    <a href="#section-skills">Skills</a>
-                    <a href="#section-projects">Projects</a>
-                    <a href="#section-contact">Contact</a>
-                    <a href="#section-messages">Messages</a>
-                </nav>
-            </aside>
+                <div class="editor-card">
+                    <div class="form-group">
+                        <label for="heroName">Name</label>
+                        <input type="text" id="heroName" placeholder="Bexruz">
+                    </div>
+                    <div class="form-group">
+                        <label for="heroMotto">Tagline</label>
+                        <input type="text" id="heroMotto" placeholder="Build. Develop. Explore.">
+                    </div>
+                    <div class="form-group">
+                        <label for="heroRole">Roles (comma separated)</label>
+                        <input type="text" id="heroRole" placeholder="Full Stack Developer, UI Systems, Product Strategy">
+                    </div>
+                    <div class="form-group">
+                        <label for="heroDescription">Hero Description</label>
+                        <textarea id="heroDescription" rows="3" placeholder="A brief introduction…"></textarea>
+                    </div>
+                </div>
+            </section>
 
-            <main class="admin-main">
-                <section id="section-hero" class="admin-section" aria-labelledby="hero-title">
-                    <div class="section-head">
-                        <h2 id="hero-title">Hero Section</h2>
-                        <p>Update the headline, roles, and intro copy.</p>
+            <section id="section-about" class="admin-section">
+                <div class="section-head">
+                    <h2>ABOUT SECTION</h2>
+                    <p>Control the long-form narrative and stats.</p>
+                </div>
+                <div class="editor-card">
+                    <div class="form-group">
+                        <label for="aboutIntro">Intro</label>
+                        <textarea id="aboutIntro" rows="2" placeholder="We are a senior focused studio…"></textarea>
                     </div>
-                    <div class="editor-card">
-                        <div class="form-group">
-                            <label for="heroName">Name</label>
-                            <input type="text" id="heroName" placeholder="Bexruz" aria-describedby="heroName-help">
-                            <small id="heroName-help">Displayed as the main name in the hero section.</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="heroMotto">Tagline</label>
-                            <input type="text" id="heroMotto" placeholder="Build. Develop. Explore.">
-                        </div>
-                        <div class="form-group">
-                            <label for="heroRole">Roles (comma separated)</label>
-                            <input type="text" id="heroRole" placeholder="Full Stack Developer, UI Systems, Product Strategy">
-                        </div>
-                        <div class="form-group">
-                            <label for="heroDescription">Hero Description</label>
-                            <textarea id="heroDescription" rows="3" placeholder="A brief introduction shown in the hero section."></textarea>
-                        </div>
+                    <div class="form-group">
+                        <label for="aboutBody">Body Paragraph</label>
+                        <textarea id="aboutBody" rows="3" placeholder="Our work blends strategy…"></textarea>
                     </div>
-                </section>
-
-                <section id="section-about" class="admin-section" aria-labelledby="about-title">
-                    <div class="section-head">
-                        <h2 id="about-title">About Section</h2>
-                        <p>Control the long form narrative and stats.</p>
+                    <div class="form-group">
+                        <label for="aboutExtra">Extra Paragraph</label>
+                        <textarea id="aboutExtra" rows="3" placeholder="When we are not shipping…"></textarea>
                     </div>
-                    <div class="editor-card">
-                        <div class="form-group">
-                            <label for="aboutIntro">Intro</label>
-                            <textarea id="aboutIntro" rows="2" placeholder="We are a senior focused studio..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="aboutBody">Body Paragraph</label>
-                            <textarea id="aboutBody" rows="3" placeholder="Our work blends strategy, design, and engineering..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="aboutExtra">Extra Paragraph</label>
-                            <textarea id="aboutExtra" rows="3" placeholder="When we are not shipping..."></textarea>
-                        </div>
-                        <div class="stats-editor">
-                            <h3>Statistics</h3>
-                            <div class="stats-grid">
-                                <div class="stat-editor">
-                                    <label for="statProjects">Projects Completed</label>
-                                    <input type="number" id="statProjects" min="0" placeholder="50">
-                                </div>
-                                <div class="stat-editor">
-                                    <label for="statYears">Years Experience</label>
-                                    <input type="number" id="statYears" min="0" placeholder="5">
-                                </div>
-                                <div class="stat-editor">
-                                    <label for="statClients">Happy Clients</label>
-                                    <input type="number" id="statClients" min="0" placeholder="30">
-                                </div>
+                    <div class="stats-editor">
+                        <h3>STATISTICS</h3>
+                        <div class="stats-grid">
+                            <div class="stat-editor">
+                                <label for="statProjects">Projects</label>
+                                <input type="number" id="statProjects" min="0" placeholder="50">
+                            </div>
+                            <div class="stat-editor">
+                                <label for="statYears">Years</label>
+                                <input type="number" id="statYears" min="0" placeholder="5">
+                            </div>
+                            <div class="stat-editor">
+                                <label for="statClients">Clients</label>
+                                <input type="number" id="statClients" min="0" placeholder="30">
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <section id="section-skills" class="admin-section" aria-labelledby="skills-title">
-                    <div class="section-head">
-                        <h2 id="skills-title">Skills</h2>
-                        <p>Edit skill categories, percentages, and tags.</p>
-                    </div>
-                    <div class="editor-card">
-                        <div id="skillsEditor" class="skills-editor" role="region" aria-label="Skills editor"></div>
-                    </div>
-                </section>
+            <section id="section-skills" class="admin-section">
+                <div class="section-head">
+                    <h2>SKILLS</h2>
+                    <p>Edit skill categories, percentages, and tags.</p>
+                </div>
+                <div class="editor-card">
+                    <div id="skillsEditor" class="skills-editor"></div>
+                </div>
+            </section>
 
-                <section id="section-projects" class="admin-section" aria-labelledby="projects-title">
-                    <div class="section-head">
-                        <h2 id="projects-title">Projects</h2>
-                        <p>Add, edit, or remove portfolio projects.</p>
-                    </div>
-                    <div class="editor-card">
-                        <div id="projectsEditor" class="projects-editor" role="region" aria-label="Projects editor"></div>
-                        <button id="addProjectBtn" class="btn btn-secondary btn-sm" type="button">
-                            Add New Project
-                        </button>
-                    </div>
-                </section>
+            <section id="section-projects" class="admin-section">
+                <div class="section-head">
+                    <h2>PROJECTS</h2>
+                    <p>Add, edit, or remove portfolio projects.</p>
+                </div>
+                <div class="editor-card">
+                    <div id="projectsEditor" class="projects-editor"></div>
+                    <button id="addProjectBtn" class="btn btn-secondary btn-sm" type="button">Add New Project</button>
+                </div>
+            </section>
 
-                <section id="section-contact" class="admin-section" aria-labelledby="contact-title">
-                    <div class="section-head">
-                        <h2 id="contact-title">Contact Section</h2>
-                        <p>Update public contact details and social links.</p>
+            <section id="section-contact" class="admin-section">
+                <div class="section-head">
+                    <h2>CONTACT SECTION</h2>
+                    <p>Update public contact details and social links.</p>
+                </div>
+                <div class="editor-card">
+                    <div class="form-group">
+                        <label for="contactEmail">Email</label>
+                        <input type="email" id="contactEmail" placeholder="hello@bdexgroup.com">
                     </div>
-                    <div class="editor-card">
-                        <div class="form-group">
-                            <label for="contactEmail">Email Address</label>
-                            <input type="email" id="contactEmail" placeholder="hello@bdexgroup.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="contactPhone">Phone Number</label>
-                            <input type="tel" id="contactPhone" placeholder="+998 90 123 45 67">
-                        </div>
-                        <div class="form-group">
-                            <label for="contactLocation">Location</label>
-                            <input type="text" id="contactLocation" placeholder="Tashkent, Uzbekistan">
-                        </div>
-                        <div class="form-group">
-                            <label for="contactDescription">Contact Description</label>
-                            <textarea id="contactDescription" rows="3" placeholder="We are ready to talk through your next project..."></textarea>
-                        </div>
+                    <div class="form-group">
+                        <label for="contactPhone">Phone</label>
+                        <input type="tel" id="contactPhone" placeholder="+998 90 123 45 67">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactLocation">Location</label>
+                        <input type="text" id="contactLocation" placeholder="Tashkent, Uzbekistan">
+                    </div>
+                    <div class="form-group">
+                        <label for="contactDescription">Description</label>
+                        <textarea id="contactDescription" rows="3"></textarea>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="form-group">
+                        <label for="socialGitHub">GitHub URL</label>
+                        <input type="url" id="socialGitHub" placeholder="https://github.com/bdexgroup">
+                    </div>
+                    <div class="form-group">
+                        <label for="socialLinkedIn">LinkedIn URL</label>
+                        <input type="url" id="socialLinkedIn" placeholder="https://linkedin.com/company/bdexgroup">
+                    </div>
+                    <div class="form-group">
+                        <label for="socialTwitter">Twitter URL</label>
+                        <input type="url" id="socialTwitter" placeholder="https://twitter.com/bdexgroup">
+                    </div>
+                    <div class="form-group">
+                        <label for="socialDribbble">Dribbble URL</label>
+                        <input type="url" id="socialDribbble" placeholder="https://dribbble.com/bdexgroup">
+                    </div>
+                </div>
+            </section>
 
-                        <div class="divider"></div>
-                        <h3>Social Media Links</h3>
-                        <div class="form-group">
-                            <label for="socialGitHub">GitHub URL</label>
-                            <input type="url" id="socialGitHub" placeholder="https://github.com/bdexgroup">
-                        </div>
-                        <div class="form-group">
-                            <label for="socialLinkedIn">LinkedIn URL</label>
-                            <input type="url" id="socialLinkedIn" placeholder="https://linkedin.com/company/bdexgroup">
-                        </div>
-                        <div class="form-group">
-                            <label for="socialTwitter">Twitter URL</label>
-                            <input type="url" id="socialTwitter" placeholder="https://twitter.com/bdexgroup">
-                        </div>
-                        <div class="form-group">
-                            <label for="socialDribbble">Dribbble URL</label>
-                            <input type="url" id="socialDribbble" placeholder="https://dribbble.com/bdexgroup">
-                        </div>
+            <section id="section-messages" class="admin-section">
+                <div class="section-head">
+                    <h2>MESSAGES</h2>
+                    <p>Contact form submissions appear here.</p>
+                </div>
+                <div class="editor-card">
+                    <div id="messagesList" class="messages-list">
+                        <p class="empty-state">No messages yet.</p>
                     </div>
-                </section>
-
-                <section id="section-messages" class="admin-section" aria-labelledby="messages-title">
-                    <div class="section-head">
-                        <h2 id="messages-title">Contact Messages</h2>
-                        <p>Messages submitted through the contact form appear here.</p>
-                    </div>
-                    <div class="editor-card">
-                        <div id="messagesList" class="messages-list" role="region" aria-label="Contact messages">
-                            <p class="empty-state">No messages yet.</p>
-                        </div>
-                    </div>
-                </section>
-            </main>
-        </div>
+                </div>
+            </section>
+        </main>
     </div>
+</div>
 
-    <script src="admin.js"></script>
+<script src="admin.js"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-﻿// ============================================================
+ // ============================================================
 // BDEX GROUP PORTFOLIO JAVASCRIPT
 // Modern interactions, data sync, and UI behaviors
 // ============================================================
@@ -200,6 +200,65 @@ function setDataTarget(id, value) {
         el.dataset.target = value;
         el.textContent = '0';
     }
+}
+
+async function copyToClipboard(text) {
+    if (!text) return false;
+    try {
+        await navigator.clipboard.writeText(text);
+        return true;
+    } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+            const ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+            return ok;
+        } catch {
+            document.body.removeChild(ta);
+            return false;
+        }
+    }
+}
+
+let copyToastEl;
+function showCopyToast(message) {
+    if (!copyToastEl) {
+        copyToastEl = document.createElement('div');
+        copyToastEl.className = 'copy-toast';
+        copyToastEl.setAttribute('role', 'status');
+        copyToastEl.setAttribute('aria-live', 'polite');
+        document.body.appendChild(copyToastEl);
+    }
+    copyToastEl.textContent = message;
+    copyToastEl.classList.add('copy-toast--visible');
+    clearTimeout(showCopyToast._hide);
+    showCopyToast._hide = setTimeout(() => {
+        copyToastEl.classList.remove('copy-toast--visible');
+    }, 2200);
+}
+
+function initContactCopyLinks() {
+    const items = [
+        { id: 'contactEmailDisplay', toast: 'Email nusxa olindi' },
+        { id: 'contactPhoneDisplay', toast: 'Telefon raqami nusxa olindi' }
+    ];
+    items.forEach(({ id, toast }) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.add('contact-copy-link');
+        el.setAttribute('title', 'Bosib nusxalang');
+        el.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const text = el.textContent.trim();
+            if (await copyToClipboard(text)) showCopyToast(toast);
+        });
+    });
 }
 
 function updateSocialLinks(social) {
@@ -799,6 +858,7 @@ class App {
         document.body.classList.remove('no-js');
         const data = getPortfolioData();
         applyPortfolioData(data);
+        initContactCopyLinks();
 
         new LoadingScreen();
         new CustomCursor();
@@ -819,6 +879,208 @@ class App {
             const roles = window._heroRoles || DEFAULT_DATA.hero.roles;
             new TypingEffect(typingEl, roles, CONFIG.TYPING_SPEED, CONFIG.TYPING_DELAY);
         }
+        new AIChatAssistant();
+    }
+}
+
+// ═══════════════════════════════════════════════════════════
+// AI CHAT ASSISTANT — Powered by Claude (claude-sonnet-4-20250514)
+// ═══════════════════════════════════════════════════════════
+class AIChatAssistant {
+    constructor() {
+        this.STORAGE_KEY = 'bdex_ai_key';
+        this.apiKey = localStorage.getItem(this.STORAGE_KEY) || '';
+        this.conversations = {};
+        this.isTyping = {};
+        this.SYSTEM_PROMPT = `You are the official AI assistant for BDex Group, a senior full-stack development studio based in Tashkent, Uzbekistan. Be friendly, professional, and concise.
+
+About BDex Group:
+- Boutique full-stack studio: premium web experiences, scalable platforms, product systems
+- Founded and led by Bexruz, a senior full-stack developer
+- 50+ projects, 30+ happy clients, 5+ years of experience
+- Location: Tashkent, Uzbekistan | Email: hello@bdexgroup.com | Phone: +998 90 123 45 67
+
+Services:
+- Frontend: React, TypeScript, Next.js, Design Systems (90%+)
+- Backend: Node.js, Python, PostgreSQL, FastAPI, API Design
+- Tooling: Git, Docker, CI/CD, Cloud, Figma, Testing, Performance
+- AI Integration: Claude API, OpenAI, custom AI features
+
+Process: Discovery -> Design -> Build -> Launch (2-6 weeks per phase)
+
+Pricing (approximate):
+- Landing pages/branding: from $800
+- Web apps/dashboards: from $2,500
+- Full product builds: from $6,000
+- Monthly retainer: from $1,500/month
+
+Keep responses concise and helpful. Ask clarifying questions for project estimates.`;
+        this.initPanels();
+        this.initFloatButton();
+    }
+
+    initPanels() {
+        const main = {
+            panel:    document.getElementById('mainChatPanel'),
+            messages: document.getElementById('mainChatMessages'),
+            input:    document.getElementById('mainChatInput'),
+            send:     document.getElementById('mainChatSend'),
+            keyBtn:   document.getElementById('mainKeyBtn'),
+            keyModal: document.getElementById('mainKeyModal'),
+            keyInput: document.getElementById('mainApiKeyInput'),
+            saveKey:  document.getElementById('mainSaveKey'),
+            skipKey:  document.getElementById('mainSkipKey'),
+        };
+        if (main.panel) this.initPanel('main', main);
+    }
+
+    initPanel(id, els) {
+        if (!els.panel) return;
+        this.conversations[id] = [];
+        this.isTyping[id] = false;
+        this.addMessage(id, els.messages, 'ai',
+            `👋 Hey! I'm the BDex AI assistant — powered by Claude.\n\nAsk me anything about our **services**, **tech stack**, **process**, or **pricing**. I'm here to help!`
+        );
+        if (els.send) els.send.addEventListener('click', () => this.send(id, els));
+        if (els.input) els.input.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); this.send(id, els); }
+        });
+        if (els.keyBtn) els.keyBtn.addEventListener('click', () => {
+            if (els.keyModal) els.keyModal.classList.remove('hidden');
+            if (els.keyInput) els.keyInput.value = this.apiKey;
+        });
+        if (els.saveKey) els.saveKey.addEventListener('click', () => {
+            const val = (els.keyInput?.value || '').trim();
+            if (val) {
+                this.apiKey = val;
+                localStorage.setItem(this.STORAGE_KEY, val);
+                if (els.keyModal) els.keyModal.classList.add('hidden');
+                this.addMessage(id, els.messages, 'ai', '✅ API key saved! You can now chat with me.');
+            }
+        });
+        if (els.skipKey) els.skipKey.addEventListener('click', () => {
+            if (els.keyModal) els.keyModal.classList.add('hidden');
+        });
+    }
+
+    initFloatButton() {
+        const btn = document.getElementById('aiFloatBtn');
+        if (!btn) return;
+        btn.addEventListener('click', () => {
+            const sec = document.getElementById('ai-section');
+            if (sec) {
+                const top = sec.getBoundingClientRect().top + window.scrollY - 90;
+                window.scrollTo({ top, behavior: 'smooth' });
+                setTimeout(() => {
+                    const inp = document.getElementById('mainChatInput');
+                    if (inp) inp.focus();
+                }, 700);
+            }
+        });
+    }
+
+    async send(id, els) {
+        if (!els.input || !els.messages) return;
+        const text = els.input.value.trim();
+        if (!text || this.isTyping[id]) return;
+        if (!this.apiKey) {
+            if (els.keyModal) {
+                els.keyModal.classList.remove('hidden');
+                if (els.keyInput) els.keyInput.focus();
+            }
+            this.addMessage(id, els.messages, 'ai', '⚠️ Please set your Anthropic API key first — click the ⚙ **API Key** button above.');
+            return;
+        }
+        els.input.value = '';
+        els.input.disabled = true;
+        if (els.send) els.send.disabled = true;
+        this.addMessage(id, els.messages, 'user', text);
+        this.conversations[id].push({ role: 'user', content: text });
+        this.isTyping[id] = true;
+        const typingEl = this.addTypingIndicator(els.messages);
+        try {
+            const res = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': this.apiKey,
+                    'anthropic-version': '2023-06-01',
+                    'anthropic-dangerous-direct-browser-access': 'true'
+                },
+                body: JSON.stringify({
+                    model: 'claude-sonnet-4-20250514',
+                    max_tokens: 600,
+                    system: this.SYSTEM_PROMPT,
+                    messages: this.conversations[id].slice(-12)
+                })
+            });
+            typingEl.remove();
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                if (res.status === 401) {
+                    this.addMessage(id, els.messages, 'ai', `❌ Invalid API key. Click ⚙ API Key to update. Get yours at **console.anthropic.com**`);
+                    this.apiKey = ''; localStorage.removeItem(this.STORAGE_KEY);
+                } else {
+                    this.addMessage(id, els.messages, 'ai', `⚠️ API error ${res.status}: ${err?.error?.message || 'Unknown'}`);
+                }
+                return;
+            }
+            const data = await res.json();
+            const reply = data.content?.[0]?.text || '…';
+            this.conversations[id].push({ role: 'assistant', content: reply });
+            this.addMessage(id, els.messages, 'ai', reply);
+        } catch (err) {
+            typingEl.remove();
+            this.addMessage(id, els.messages, 'ai',
+                `⚠️ Connection error. Serve this site from a local server (not file://).\nError: ${err.message}`
+            );
+        } finally {
+            this.isTyping[id] = false;
+            if (els.input) { els.input.disabled = false; els.input.focus(); }
+            if (els.send) els.send.disabled = false;
+        }
+    }
+
+    addMessage(id, container, role, text) {
+        if (!container) return null;
+        const wrap = document.createElement('div');
+        wrap.className = `chat-msg ${role}`;
+        const av = document.createElement('div');
+        av.className = 'msg-avatar';
+        av.textContent = role === 'ai' ? 'B' : '✦';
+        const bubble = document.createElement('div');
+        bubble.className = 'msg-bubble';
+        bubble.innerHTML = text
+            .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+            .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+            .replace(/`([^`]+)`/g,'<code style="font-family:var(--font-mono);font-size:0.82em;background:rgba(255,255,255,0.08);padding:2px 5px;border-radius:3px;">$1</code>')
+            .replace(/\n/g,'<br>');
+        wrap.appendChild(av);
+        wrap.appendChild(bubble);
+        container.appendChild(wrap);
+        container.scrollTop = container.scrollHeight;
+        return wrap;
+    }
+
+    addTypingIndicator(container) {
+        if (!container) return document.createElement('div');
+        const wrap = document.createElement('div');
+        wrap.className = 'chat-msg ai';
+        const av = document.createElement('div');
+        av.className = 'msg-avatar';
+        av.textContent = 'B';
+        const typing = document.createElement('div');
+        typing.className = 'msg-typing';
+        for (let i = 0; i < 3; i++) {
+            const d = document.createElement('div');
+            d.className = 'typing-dot';
+            typing.appendChild(d);
+        }
+        wrap.appendChild(av);
+        wrap.appendChild(typing);
+        container.appendChild(wrap);
+        container.scrollTop = container.scrollHeight;
+        return wrap;
     }
 }
 

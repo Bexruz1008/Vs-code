@@ -1,42 +1,47 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="BDex Group is a full stack studio building premium web experiences, product systems, and scalable digital platforms.">
-    <meta name="theme-color" content="#f6f2ea">
-    <meta property="og:title" content="BDex Group - Portfolio">
-    <meta property="og:description" content="Full stack studio crafting bold, high performance digital experiences.">
+    <meta name="description" content="BDex Group — full stack studio building premium web experiences, product systems, and scalable digital platforms.">
+    <meta name="theme-color" content="#040406">
+    <meta property="og:title" content="BDex Group — Portfolio">
+    <meta property="og:description" content="Full stack studio crafting bold, high‑performance digital experiences.">
     <meta name="robots" content="index, follow">
-    <title>BDex Group - Portfolio</title>
+    <title>BDex Group — Portfolio</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style-premium.css">
     <link rel="icon" type="image/svg+xml" href="./logo.svg">
 </head>
 <body class="no-js">
+
+    <!-- Loading Screen -->
     <div id="loadingScreen" class="loading-screen" aria-hidden="true">
         <div class="loader-mark">
-            <img src="./logo.svg" alt="BDex Group" width="120" height="40">
-            <span class="loader-text">BDex Group</span>
+            <img src="./logo.svg" alt="BDex Group" width="100" height="32">
+            <span>BDex Group</span>
         </div>
-        <div class="loader-track" aria-hidden="true">
-            <div class="loader-fill"></div>
-        </div>
+        <div class="loader-track"><div class="loader-fill"></div></div>
     </div>
 
+    <!-- Cursor -->
     <div class="cursor-ring" aria-hidden="true"></div>
     <div class="cursor-dot" aria-hidden="true"></div>
 
+    <!-- Particles -->
     <canvas id="particleCanvas" aria-hidden="true"></canvas>
 
+    <!-- Floating AI Button -->
+    <button class="ai-float-btn" id="aiFloatBtn" aria-label="Open AI assistant" title="Ask AI anything">🤖</button>
+
+    <!-- Header -->
     <header id="header" class="site-header">
         <div class="container header-inner">
             <a class="logo" href="#home" aria-label="BDex Group home">
-                <img src="./logo.svg" alt="BDex Group logo" class="logo-svg" width="34" height="34">
+                <img src="./logo.svg" alt="BDex Group logo" class="logo-svg" width="28" height="28">
                 <span class="logo-text">BDex Group</span>
             </a>
             <div class="links" id="navLinks">
@@ -45,6 +50,7 @@
                     <a href="#about" class="list">About</a>
                     <a href="#skills" class="list">Skills</a>
                     <a href="#projects" class="list">Projects</a>
+                    <a href="#ai-section" class="list">AI</a>
                     <a href="#contact" class="list">Contact</a>
                 </nav>
                 <div class="nav-cta">
@@ -53,15 +59,15 @@
                     <a href="admin.html" class="admin-link" aria-label="Admin panel">Admin</a>
                 </div>
             </div>
-            <button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
+            <button class="mobile-menu-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span><span></span><span></span>
             </button>
         </div>
     </header>
 
     <main>
+
+        <!-- ── Hero ──────────────────────────── -->
         <section id="home" class="hero">
             <div class="hero-bg" aria-hidden="true">
                 <div class="orb orb-1"></div>
@@ -69,97 +75,116 @@
                 <div class="orb orb-3"></div>
                 <div class="grid-sheen"></div>
             </div>
-            <div class="container hero-grid">
-                <div class="hero-copy">
-                    <p class="eyebrow-label">Full Stack Studio</p>
-                    <h1 class="hero-title">
-                        <span class="greeting">We are</span>
-                        <span class="name gradient-text" id="heroNameDisplay">Bexruz</span>
-                        <span class="brand-name">BDex Group</span>
-                    </h1>
-                    <p class="hero-motto" id="heroMottoDisplay">Build. Develop. Explore.</p>
-                    <div class="hero-role">
-                        <span class="typing-text">Full Stack Developer</span><span class="cursor" aria-hidden="true">|</span>
-                    </div>
-                    <p class="hero-description" id="heroDescDisplay">
-                        Crafting high performance digital products with rigorous engineering, human centered design,
-                        and a taste for bold ideas. We build web platforms that scale and feel effortless.
-                    </p>
-                    <div class="hero-actions">
-                        <a href="#projects" class="btn btn-primary magnetic">View Work</a>
-                        <a href="#contact" class="btn btn-secondary magnetic">Start a Project</a>
-                    </div>
-                    <div class="hero-social">
-                        <a href="#" class="chip" data-social="github">GitHub</a>
-                        <a href="#" class="chip" data-social="linkedin">LinkedIn</a>
-                        <a href="#" class="chip" data-social="twitter">Twitter</a>
-                        <a href="#" class="chip" data-social="dribbble">Dribbble</a>
-                    </div>
+
+            <div class="hero-inner">
+                <div class="eyebrow-row">
+                    <span class="eyebrow-label">Full Stack Studio · Tashkent, Uzbekistan</span>
+                    <div class="eyebrow-line"></div>
                 </div>
-                <div class="hero-visual" aria-hidden="true">
-                    <div class="hero-panel" data-tilt>
-                        <div class="panel-header">
-                            <span class="panel-dot"></span>
-                            <span class="panel-dot"></span>
-                            <span class="panel-dot"></span>
-                            <span class="panel-title">bdex.stack</span>
+
+                <div class="hero-title-block">
+                    <span class="mega-line mega-line-1" id="heroNameDisplay">BEXRUZ</span>
+                    <span class="mega-line mega-line-2">
+                        <span class="word-group">BDEX</span>
+                    </span>
+                    <span class="mega-line mega-line-3">GROUP</span>
+                </div>
+
+                <div class="hero-sub-row">
+                    <div class="hero-left">
+                        <div class="hero-role">
+                            <span class="typing-text">Full Stack Developer</span>
+                            <span class="cursor" aria-hidden="true"></span>
                         </div>
-                        <pre class="panel-code"><code>const studio = {
-  strategy: "Product thinking",
-  design: "Systems and motion",
-  build: "JS + API + Cloud",
-  focus: "Speed and craft"
-};</code></pre>
-                        <div class="panel-metrics">
-                            <div>
-                                <span class="metric-label">Delivery</span>
-                                <span class="metric-value">2-6 weeks</span>
-                            </div>
-                            <div>
-                                <span class="metric-label">Teams</span>
-                                <span class="metric-value">Lean and senior</span>
-                            </div>
+                        <p class="hero-description" id="heroDescDisplay">
+                            Crafting high‑performance digital products with rigorous engineering,
+                            human‑centered design, and a taste for bold ideas.
+                        </p>
+                        <p class="hero-motto" id="heroMottoDisplay" style="font-family:var(--font-mono);font-size:0.78rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);margin-bottom:28px;">Build. Develop. Explore.</p>
+                        <div class="hero-actions">
+                            <a href="#projects" class="btn btn-primary magnetic">View Work</a>
+                            <a href="#contact" class="btn btn-secondary magnetic">Start a Project</a>
+                        </div>
+                        <div class="hero-social">
+                            <a href="#" class="chip" data-social="github">GitHub</a>
+                            <a href="#" class="chip" data-social="linkedin">LinkedIn</a>
+                            <a href="#" class="chip" data-social="twitter">Twitter</a>
+                            <a href="#" class="chip" data-social="dribbble">Dribbble</a>
                         </div>
                     </div>
-                    <div class="floating-badge badge-1">Design Systems</div>
-                    <div class="floating-badge badge-2">Full Stack Builds</div>
-                    <div class="floating-badge badge-3">Product Strategy</div>
+                    <div class="hero-visual" aria-hidden="true">
+                        <div class="hero-panel" data-tilt>
+                            <div class="panel-header">
+                                <span class="panel-dot"></span>
+                                <span class="panel-dot"></span>
+                                <span class="panel-dot"></span>
+                                <span class="panel-title">bdex.stack</span>
+                            </div>
+                            <pre class="panel-code"><code><span class="kw">const</span> <span class="key">studio</span> = {
+  <span class="key">strategy</span>: <span class="str">"Product thinking"</span>,
+  <span class="key">design</span>:   <span class="str">"Systems + motion"</span>,
+  <span class="key">build</span>:    <span class="str">"JS · API · Cloud"</span>,
+  <span class="key">ai</span>:      <span class="str">"Claude‑powered"</span>,
+  <span class="key">focus</span>:   <span class="str">"Speed and craft"</span>
+};</code></pre>
+                            <div class="panel-metrics">
+                                <div>
+                                    <span class="metric-label">Delivery</span>
+                                    <span class="metric-value">2–6 WEEKS</span>
+                                </div>
+                                <div>
+                                    <span class="metric-label">Stack</span>
+                                    <span class="metric-value">FULL</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero-badges">
+                            <div class="hero-badge"><span></span>Design Systems</div>
+                            <div class="hero-badge"><span></span>Full Stack Builds</div>
+                            <div class="hero-badge"><span></span>Product Strategy</div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <div class="scroll-indicator" aria-hidden="true">
                 <div class="mouse"><div class="mouse-wheel"></div></div>
                 <span class="scroll-text">scroll</span>
             </div>
         </section>
 
+        <!-- ── About ─────────────────────────── -->
         <section id="about" class="about">
             <div class="container">
                 <div class="section-header">
                     <span class="section-number" aria-hidden="true">01</span>
-                    <h2 class="section-title">About</h2>
+                    <h2 class="section-title">ABOUT</h2>
                     <div class="section-line" aria-hidden="true"></div>
                 </div>
                 <div class="about-grid">
                     <div class="about-text">
+                        <div class="about-eyebrow">Who we are</div>
                         <p class="about-intro" id="aboutIntroDisplay">
-                            We are a senior focused studio turning ambitious ideas into reliable digital products.
+                            Senior focused studio turning ambitious ideas into reliable digital products.
                         </p>
-                        <p id="aboutBodyDisplay">
-                            Our work blends strategy, design, and engineering to ship experiences that look sharp and
-                            perform even sharper. We love complex problems, fast iterations, and clean systems.
-                        </p>
-                        <p id="aboutExtraDisplay">
-                            When we are not shipping, we are exploring new stacks, open sourcing tools, and mentoring
-                            the next generation of builders.
-                        </p>
+                        <div class="about-body-text">
+                            <p id="aboutBodyDisplay">
+                                Our work blends strategy, design, and engineering to ship experiences that look sharp
+                                and perform even sharper. We love complex problems, fast iterations, and clean systems.
+                            </p>
+                            <p id="aboutExtraDisplay">
+                                When we are not shipping, we are exploring new stacks, open‑sourcing tools, and
+                                mentoring the next generation of builders.
+                            </p>
+                        </div>
                         <div class="about-stats">
                             <div class="stat-item">
                                 <div class="stat-number" data-target="50" id="statProjects">0</div>
-                                <div class="stat-label">Projects Completed</div>
+                                <div class="stat-label">Projects Done</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-number" data-target="5" id="statYears">0</div>
-                                <div class="stat-label">Years Experience</div>
+                                <div class="stat-label">Years Active</div>
                             </div>
                             <div class="stat-item">
                                 <div class="stat-number" data-target="30" id="statClients">0</div>
@@ -168,29 +193,24 @@
                         </div>
                     </div>
                     <div class="about-card" aria-hidden="true">
-                        <h3>Our Playbook</h3>
-                        <p>Discovery to launch, we run a fast and transparent process.</p>
+                        <h3>OUR PLAYBOOK</h3>
+                        <p>Discovery to launch — a fast, transparent process.</p>
                         <div class="about-steps">
                             <div class="step">
                                 <span>01</span>
-                                <div>
-                                    <strong>Clarity</strong>
-                                    <p>Define outcomes, users, and technical constraints.</p>
-                                </div>
+                                <div><strong>Clarity</strong><p>Define outcomes, users, and constraints.</p></div>
                             </div>
                             <div class="step">
                                 <span>02</span>
-                                <div>
-                                    <strong>Design</strong>
-                                    <p>Prototype flows, systems, and the product narrative.</p>
-                                </div>
+                                <div><strong>Design</strong><p>Prototype flows, systems, and narratives.</p></div>
                             </div>
                             <div class="step">
                                 <span>03</span>
-                                <div>
-                                    <strong>Build</strong>
-                                    <p>Ship clean code, measurable performance, and QA.</p>
-                                </div>
+                                <div><strong>Build</strong><p>Ship clean code with measurable performance.</p></div>
+                            </div>
+                            <div class="step">
+                                <span>04</span>
+                                <div><strong>Launch</strong><p>Deploy, monitor, and iterate rapidly.</p></div>
                             </div>
                         </div>
                         <div class="about-callout">Trusted by teams that move fast.</div>
@@ -199,29 +219,31 @@
             </div>
         </section>
 
+        <!-- ── Skills ────────────────────────── -->
         <section id="skills" class="skills">
             <div class="container">
                 <div class="section-header">
                     <span class="section-number" aria-hidden="true">02</span>
-                    <h2 class="section-title">Skills</h2>
+                    <h2 class="section-title">SKILLS</h2>
                     <div class="section-line" aria-hidden="true"></div>
                 </div>
                 <div class="skills-lead">
-                    <p>We build across the stack with a focus on fast delivery, scalable architecture, and a sharp visual edge.</p>
+                    <p>We build across the full stack — fast delivery, scalable architecture, and a sharp visual edge.</p>
                 </div>
                 <div id="skillsGrid" class="skills-grid" aria-live="polite"></div>
             </div>
         </section>
 
+        <!-- ── Projects ──────────────────────── -->
         <section id="projects" class="projects">
             <div class="container">
                 <div class="section-header">
                     <span class="section-number" aria-hidden="true">03</span>
-                    <h2 class="section-title">Projects</h2>
+                    <h2 class="section-title">WORK</h2>
                     <div class="section-line" aria-hidden="true"></div>
                 </div>
                 <div class="projects-lead">
-                    <p>Selected work spanning product strategy, web platforms, and high performance front ends.</p>
+                    <p>Selected work spanning product strategy, web platforms, and high‑performance front ends.</p>
                 </div>
                 <div id="projectsGrid" class="projects-grid" aria-live="polite"></div>
                 <div class="projects-footer">
@@ -230,41 +252,134 @@
             </div>
         </section>
 
-        <section class="cta-band">
-            <div class="container cta-inner">
-                <div>
-                    <h2>Let's craft a category defining product.</h2>
-                    <p>We take on a small number of partners each quarter for maximum focus.</p>
-                </div>
-                <a href="#contact" class="btn btn-primary magnetic">Book a Call</a>
-            </div>
-        </section>
-
-        <section id="contact" class="contact">
+        <!-- ── AI Section ─────────────────────── -->
+        <section id="ai-section" class="ai-section">
             <div class="container">
                 <div class="section-header">
                     <span class="section-number" aria-hidden="true">04</span>
-                    <h2 class="section-title">Contact</h2>
+                    <h2 class="section-title">AI ASSISTANT</h2>
+                    <div class="section-line" aria-hidden="true"></div>
+                </div>
+                <div class="ai-grid">
+                    <div class="ai-copy">
+                        <div class="ai-eyebrow">Powered by Claude</div>
+                        <h2 class="ai-title">
+                            Ask anything<br>
+                            <em>about BDex.</em>
+                        </h2>
+                        <p class="ai-description">
+                            Our AI assistant knows everything about BDex Group — our services, tech stack, process,
+                            pricing, and availability. Get instant answers, no waiting.
+                        </p>
+                        <div class="ai-features">
+                            <div class="ai-feature">
+                                <div class="ai-feature-icon">⚡</div>
+                                <div class="ai-feature-text">
+                                    <strong>Instant Answers</strong>
+                                    <p>Ask about services, pricing, timeline, tech stack — get detailed answers immediately.</p>
+                                </div>
+                            </div>
+                            <div class="ai-feature">
+                                <div class="ai-feature-icon">🎯</div>
+                                <div class="ai-feature-text">
+                                    <strong>Project Scoping</strong>
+                                    <p>Describe your idea and get a preliminary assessment from the AI.</p>
+                                </div>
+                            </div>
+                            <div class="ai-feature">
+                                <div class="ai-feature-icon">💡</div>
+                                <div class="ai-feature-text">
+                                    <strong>Tech Advice</strong>
+                                    <p>Ask technical questions and get recommendations tailored to your needs.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Embedded AI Chat Panel -->
+                    <div class="ai-chat-panel" id="mainChatPanel">
+                        <div class="chat-header">
+                            <div class="chat-avatar">B</div>
+                            <div class="chat-info">
+                                <div class="chat-name">BDex AI Assistant</div>
+                                <div class="chat-status">Online · Powered by Claude</div>
+                            </div>
+                            <button class="chat-key-btn" id="mainKeyBtn" title="Set API Key">⚙ API Key</button>
+                        </div>
+
+                        <!-- API Key Modal (shown if no key) -->
+                        <div class="chat-key-modal hidden" id="mainKeyModal">
+                            <div class="key-modal-inner">
+                                <h3>SET API KEY</h3>
+                                <p>Enter your Anthropic API key to enable the AI assistant. Your key is stored locally and never sent to any server other than Anthropic's API.</p>
+                                <input type="password" id="mainApiKeyInput" placeholder="sk-ant-...">
+                                <div class="key-modal-btns">
+                                    <button class="btn btn-primary btn-sm" id="mainSaveKey">Save Key</button>
+                                    <button class="btn btn-secondary btn-sm" id="mainSkipKey">Cancel</button>
+                                </div>
+                                <p class="key-note">Get your key at <strong>console.anthropic.com</strong> — never shared, stored only in your browser.</p>
+                            </div>
+                        </div>
+
+                        <div class="chat-messages" id="mainChatMessages">
+                            <!-- Welcome message added by JS -->
+                        </div>
+                        <div class="chat-input-area">
+                            <input class="chat-input" id="mainChatInput" type="text"
+                                placeholder="Ask about services, pricing, tech stack…"
+                                autocomplete="off">
+                            <button class="chat-send-btn" id="mainChatSend" title="Send">➤</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── CTA ───────────────────────────── -->
+        <section class="cta-band">
+            <div class="cta-inner">
+                <div class="cta-text">
+                    <h2>LET'S CRAFT A<br>CATEGORY‑DEFINING<br>PRODUCT.</h2>
+                    <p>We take on a small number of partners each quarter for maximum focus.</p>
+                </div>
+                <a href="#contact" class="btn btn-primary magnetic" style="font-size:1rem;padding:18px 40px;">Book a Call</a>
+            </div>
+        </section>
+
+        <!-- ── Contact ───────────────────────── -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-number" aria-hidden="true">05</span>
+                    <h2 class="section-title">CONTACT</h2>
                     <div class="section-line" aria-hidden="true"></div>
                 </div>
                 <div class="contact-grid">
                     <div class="contact-info">
-                        <h3>Let's build the next release.</h3>
+                        <div class="contact-tag">Get in touch</div>
+                        <h3 class="contact-headline">LET'S<br>BUILD<br>TOGETHER.</h3>
                         <p class="contact-description" id="contactDescDisplay">
-                            We are ready to talk through your next project, audit an existing product, or co build a new idea.
+                            We are ready to talk through your next project, audit an existing product,
+                            or co‑build a new idea from scratch.
                         </p>
                         <div class="contact-details">
                             <div class="contact-item">
-                                <span>Email</span>
-                                <a href="mailto:hello@bdexgroup.com" id="contactEmailDisplay">hello@bdexgroup.com</a>
+                                <span class="contact-item-label">Email</span>
+                                <div class="contact-item-value">
+                                    <a href="mailto:hello@bdexgroup.com" id="contactEmailDisplay">hello@bdexgroup.com</a>
+                                </div>
                             </div>
                             <div class="contact-item">
-                                <span>Phone</span>
-                                <a href="tel:+998901234567" id="contactPhoneDisplay">+998 90 123 45 67</a>
+                                <span class="contact-item-label">Phone</span>
+                                <div class="contact-item-value">
+                                    <a href="tel:+998901234567" id="contactPhoneDisplay">+998 90 123 45 67</a>
+                                </div>
                             </div>
                             <div class="contact-item">
-                                <span>Location</span>
-                                <span id="contactLocationDisplay">Tashkent, Uzbekistan</span>
+                                <span class="contact-item-label">Location</span>
+                                <div class="contact-item-value">
+                                    <span id="contactLocationDisplay">Tashkent, Uzbekistan</span>
+                                </div>
                             </div>
                         </div>
                         <div class="contact-social">
@@ -288,7 +403,7 @@
                         </div>
                         <div class="form-group">
                             <label for="subject">Subject</label>
-                            <input type="text" id="subject" name="subject" placeholder="Product strategy, redesign, or build">
+                            <input type="text" id="subject" name="subject" placeholder="Product strategy, redesign, new build…">
                         </div>
                         <div class="form-group">
                             <label for="message">Message</label>
@@ -303,22 +418,24 @@
         </section>
     </main>
 
+    <!-- Footer -->
     <footer class="footer">
         <div class="container footer-content">
             <div class="footer-brand">
-                <img src="./logo.svg" alt="BDex Group" width="120" height="36">
-                <p>BDex Group - Full stack studio for bold digital products.</p>
+                <img src="./logo.svg" alt="BDex Group" width="100" height="30">
+                <p>BDex Group — Full stack studio for bold digital products.</p>
             </div>
             <div class="footer-links">
                 <a href="#home">Home</a>
                 <a href="#about">About</a>
                 <a href="#skills">Skills</a>
-                <a href="#projects">Projects</a>
+                <a href="#projects">Work</a>
+                <a href="#ai-section">AI</a>
                 <a href="#contact">Contact</a>
             </div>
             <div class="footer-meta">
-                <span>Built with care and modern web craft.</span>
-                <span>Copyright 2026 BDex Group</span>
+                <span>Built with care + Claude AI.</span>
+                <span>© 2026 BDex Group</span>
             </div>
         </div>
     </footer>
