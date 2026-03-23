@@ -6,31 +6,329 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Pacifico&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
     <header>
-        <a href="#" class="logo"><img src="./images/SOB READY.png" alt=""></a>
-        <nav class="nav">
-            <a href="" class="nav__link nav__link--active">Home <span>+</span></a>
-            <a href="" class="nav__link">Category</a>
-            <a href="" class="nav__link">Shop</a>
-            <a href="" class="nav__link">Blog</a>
-            <a href="" class="nav__link">Page</a>
-        </nav>
-        <div class="header__btns">
+        <div class="container header__inner">
+            <a href="#" class="logo"><img src="./images/SOB READY.png" alt=""></a>
+            <nav class="nav">
+                <a href="" class="nav__link nav__link--active">Home <span>+</span></a>
+                <a href="" class="nav__link">Category</a>
+                <a href="" class="nav__link">Shop</a>
+                <a href="" class="nav__link">Blog</a>
+                <a href="" class="nav__link">Page</a>
+            </nav>
+            <div class="header__btns">
 
-            <div class="input">
-                <input type="text" name="" id="search" placeholder="Search...">
-                <button class="search--btn"><img src="./images/icon (3).png" alt=""></button>
-            </div>
-            <div class="vectors">
-                <button class="vector"><img src="./images/Vector cart.png" alt=""></button>
-                <button class="vector"><img src="./images/Vector profile.png" alt=""></button>
+                <div class="input">
+                    <input type="text" name="" id="search" placeholder="Search...">
+                    <button class="search--btn"><img src="./images/icon (3).png" alt=""></button>
+                </div>
+                <div class="vectors">
+                    <button class="vector"><img src="./images/Vector cart.png" alt=""></button>
+                    <button class="vector"><img src="./images/Vector profile.png" alt=""></button>
+                </div>
             </div>
         </div>
     </header>
 
+    <main>
+        <section class="section1">
+            <div class="container hero">
+                <div class="hero__left">
+                    <div class="hero__controls">
+                        <button class="btn-circle">&#10094;</button>
+                    </div>
+                    <img class="hero__decor" src="./images/Elements.png" alt="">
+                    <p class="hero__tag">All You Need For</p>
+                    <h1 class="hero__title">Perfect <span>Breakfast</span></h1>
+                    <p class="hero__text">
+                        Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                        Ipsum has been the industry's standard dummy text ever since the 1500
+                    </p>
+                    <div class="hero__actions">
+                        <a href="#" class="btn btn--primary">Buy Now</a>
+                        <a href="#" class="btn btn--outline">See More</a>
+                    </div>
+                </div>
+                <div class="hero__right">
+                    <img class="hero__image" src="./images/image (2).png" alt="Sushi">
+                    <button class="btn-circle btn-circle--fill hero__next">&#10095;</button>
+                </div>
+            </div>
+            <div class="container categories">
+                <div class="category-card">
+                    <img src="./images/Fruits.png" alt="Fruits">
+                    <span>Fruits</span>
+                </div>
+                <div class="category-card">
+                    <img src="./images/Vegetables.png" alt="Vegetables">
+                    <span>Vegetables</span>
+                </div>
+                <div class="category-card">
+                    <img src="./images/Semi-finished.png" alt="Semi-finished">
+                    <span>Semi-finished</span>
+                </div>
+                <div class="category-card">
+                    <img src="./images/Bakery.png" alt="Bakery">
+                    <span>Bakery</span>
+                </div>
+                <div class="category-card">
+                    <img src="./images/Meat.png" alt="Meat">
+                    <span>Meat</span>
+                </div>
+                <div class="category-card">
+                    <img src="./images/Pasta.png" alt="Pasta">
+                    <span>Pasta</span>
+                </div>
+                <div class="category-card">
+                    <img src="./images/Sweets.png" alt="Sweets">
+                    <span>Sweets</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="section2">
+            <div class="container section-head section-head--nav">
+                <h2 class="section-title"><span>New Products</span></h2>
+                <div class="section-nav">
+                    <button class="nav-btn">&#10094;</button>
+                    <button class="nav-btn nav-btn--active">&#10095;</button>
+                </div>
+            </div>
+            <div class="container new-products">
+                <div class="feature-card">
+                    <span class="feature-card__vertical">Vegetable</span>
+                    <span class="feature-card__script">Organic</span>
+                    <div class="feature-card__image">
+                        <img src="./images/Image (3).png" alt="Fresh Vegetable">
+                    </div>
+                    <h3>Fresh Vegetable</h3>
+                    <a href="#" class="btn btn--primary btn--small">Order Now</a>
+                </div>
+                <div class="product-grid">
+                    <div class="product-card product-card--image">
+                        <div class="product-card__image">
+                            <img src="./images/Product 1.png" alt="Bakery bread">
+                            <img class="product-card__hover" src="./images/Hover.png" alt="">
+                        </div>
+                        <p class="product-title">bakery bread viennoiserie...</p>
+                        <p class="product-price"><span class="old">$40.00</span> $30.00 (1kg)</p>
+                    </div>
+                    <div class="product-card product-card--image">
+                        <div class="product-card__image">
+                            <img src="./images/Product 2.png" alt="Ice cream">
+                        </div>
+                        <p class="product-title">ICE cream cones sundae...</p>
+                        <p class="product-price"><span class="old">$20.00</span> $15.00 (450ml)</p>
+                    </div>
+                    <div class="product-card product-card--image">
+                        <div class="product-card__image">
+                            <img src="./images/Product 3.png" alt="Papaya">
+                        </div>
+                        <p class="product-title">Papaya seed auglis fruit...</p>
+                        <p class="product-price"><span class="old">$45.00</span> $35.00 (1.5kg)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="section4">
+            <div class="container section-head section-head--center">
+                <h2 class="section-title"><span>Best Selling</span></h2>
+                <div class="tabs">
+                    <button class="tab tab--active">Fruits</button>
+                    <button class="tab">Vegetable</button>
+                    <button class="tab">Meal</button>
+                    <button class="tab">Milk</button>
+                    <button class="tab">Cakes</button>
+                    <button class="tab">Drinks</button>
+                </div>
+            </div>
+            <div class="container best-selling">
+                <div class="best-card">
+                    <img src="./images/image (8).png" alt="Fresh Black Coffee">
+                    <div class="best-timer">
+                        <div class="best-time"><span>3</span><small>Day</small></div>
+                        <div class="best-time"><span>16</span><small>Hour</small></div>
+                        <div class="best-time"><span>25</span><small>Min</small></div>
+                        <div class="best-time"><span>10</span><small>Sec</small></div>
+                    </div>
+                    <h3>Fresh Black Coffee</h3>
+                    <p class="best-text">There are many variations of passages of Lorem Ipsum</p>
+                    <p class="product-price"><span class="old">$25.00</span> $20.00</p>
+                    <div class="best-actions">
+                        <button class="btn btn--primary btn--small">Add to Bag</button>
+                        <button class="best-plus">+</button>
+                    </div>
+                </div>
+                <div class="best-grid">
+                    <div class="best-item">
+                        <img src="./images/image (9).png" alt="Low Fat Peanut Oil">
+                        <div>
+                            <p class="best-item__title">Low Fat Peanut Oil</p>
+                            <p class="best-item__price"><span class="old">$6.00</span> $2.00</p>
+                            <button class="btn btn--outline btn--tiny">Buy Now</button>
+                            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        </div>
+                    </div>
+                    <div class="best-item">
+                        <img src="./images/image (222).png" alt="Prime Beef">
+                        <div>
+                            <p class="best-item__title">Prime Beef</p>
+                            <p class="best-item__price"><span class="old">$36.00</span> $20.00</p>
+                            <button class="btn btn--outline btn--tiny">Buy Now</button>
+                            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        </div>
+                    </div>
+                    <div class="best-item">
+                        <img src="./images/image (5).png" alt="Mulberry">
+                        <div>
+                            <p class="best-item__title">Mulberry</p>
+                            <p class="best-item__price"><span class="old">$16.00</span> $2.00</p>
+                            <button class="btn btn--outline btn--tiny">Buy Now</button>
+                            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        </div>
+                    </div>
+                    <div class="best-item">
+                        <img src="./images/image (6).png" alt="Coconut Milk">
+                        <div>
+                            <p class="best-item__title">Coconut Milk</p>
+                            <p class="best-item__price"><span class="old">$6.00</span> $5.00</p>
+                            <button class="btn btn--outline btn--tiny">Buy Now</button>
+                            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        </div>
+                    </div>
+                    <div class="best-item">
+                        <img src="./images/image (7).png" alt="Cream Cake">
+                        <div>
+                            <p class="best-item__title">Cream Cake</p>
+                            <p class="best-item__price"><span class="old">$17.00</span> $12.00</p>
+                            <button class="btn btn--outline btn--tiny">Buy Now</button>
+                            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        </div>
+                    </div>
+                    <div class="best-item">
+                        <img src="./images/Product 3.png" alt="Crown Daisy">
+                        <div>
+                            <p class="best-item__title">Crown Daisy</p>
+                            <p class="best-item__price"><span class="old">$12.00</span> $8.00</p>
+                            <button class="btn btn--outline btn--tiny">Buy Now</button>
+                            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        </div>
+                    </div>
+                    <div class="best-item">
+                        <img src="./images/Product 2.png" alt="Fresh Fish">
+                        <div>
+                            <p class="best-item__title">Fresh Fish</p>
+                            <p class="best-item__price"><span class="old">$18.00</span> $12.00</p>
+                            <button class="btn btn--outline btn--tiny">Buy Now</button>
+                            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        </div>
+                    </div>
+                    <div class="best-item">
+                        <img src="./images/Product 1.png" alt="Mix Ready Juc">
+                        <div>
+                            <p class="best-item__title">Mix Ready Juc</p>
+                            <p class="best-item__price"><span class="old">$12.00</span> $8.00</p>
+                            <button class="btn btn--outline btn--tiny">Buy Now</button>
+                            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        </div>
+                    </div>
+                    <div class="best-item">
+                        <img src="./images/image (111).png" alt="Kiwifruit Food">
+                        <div>
+                            <p class="best-item__title">Kiwifruit Food</p>
+                            <p class="best-item__price"><span class="old">$8.00</span> $5.00</p>
+                            <button class="btn btn--outline btn--tiny">Buy Now</button>
+                            <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section5">
+            <div class="container delivery">
+                <div class="delivery__image">
+                    <img src="./images/stake .png" alt="Delivery food">
+                </div>
+                <div class="delivery__content">
+                    <img class="delivery__decor" src="./images/Elements.png" alt="">
+                    <h2>Fresh Product Directly To Your Door With Free <span>Delivery</span></h2>
+                    <p>
+                        There are many variations of passage Lorem Ipsum available, but the majority
+                        hav suffered alteration in some form, by injected humour
+                    </p>
+                    <div class="delivery__list">
+                        <span class="delivery__item">Free Delivery For All Order</span>
+                        <span class="delivery__item">Only Fresh Food</span>
+                    </div>
+                    <a href="#" class="btn btn--outline">Find Now</a>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="section6">
+            <div class="container app">
+                <div class="app__content">
+                    <h2>Make your online shop sob ready with our mobile all</h2>
+                    <p>
+                        There are many variations of passages of Lorem Ipsum available, but the majority
+                        have suffered alteration in some form, by injected humour
+                    </p>
+                    <div class="app__buttons">
+                        <img src="./images/google Play.png" alt="Google Play">
+                        <img src="./images/appStore.png" alt="App Store">
+                    </div>
+                </div>
+                <div class="app__image">
+                    <img src="./images/app scrren.png" alt="App screen">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer__grid">
+            <div class="footer__brand">
+                <img src="./images/SOB READY.png" alt="SOB READY">
+                <p>Sophisticated simplicity for the independent mind</p>
+            </div>
+            <div class="footer__col">
+                <h4>Help & Information</h4>
+                <a href="#">Pagination</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Contact</a>
+                <a href="#">Home page</a>
+                <a href="#">Term of use</a>
+            </div>
+            <div class="footer__col">
+                <h4>About Us</h4>
+                <a href="#">Help Center</a>
+                <a href="#">Address Store</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Receivers & Amplifiers</a>
+                <a href="#">Clothings</a>
+            </div>
+            <div class="footer__col">
+                <h4>Categories</h4>
+                <a href="#">DelDelivery</a>
+                <a href="#">Legal Notice</a>
+                <a href="#">Documentation</a>
+                <a href="#">Secure payment</a>
+                <a href="#">Stores</a>
+            </div>
+        </div>
+    </footer>
 
 </body>
 
