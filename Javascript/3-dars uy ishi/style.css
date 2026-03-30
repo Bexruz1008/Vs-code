@@ -1,0 +1,462 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: #222;
+  background: #f7f7f7;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+a:hover {
+  text-decoration: underline 2px;
+}
+
+.container {
+  width: min(1140px, 92%);
+  margin: 0 auto;
+}
+
+.header {
+  background: #fff;
+}
+
+.nav {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.nav-left {
+  display: flex;
+  list-style: none;
+  gap: 24px;
+  font-size: 14px;
+}
+
+.logo {
+  width: 44px;
+  height: 44px;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-btn {
+  border: 0;
+  background: transparent;
+  font-size: 18px;
+}
+
+.btn-primary {
+  border: 0;
+  background: #11ad68;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: 600;
+}
+
+main section {
+  padding: 72px 0;
+}
+
+.section-tint {
+  background: #e9f4ef;
+}
+
+h1 {
+  text-align: center;
+  margin-left: 200px;
+  padding: 20px 0;
+}
+
+h1,
+h2 {
+  color: #222;
+  line-height: 1.15;
+}
+
+h1 {
+  font-size: clamp(36px, 5vw, 56px);
+  max-width: 100%;
+  text-wrap: nowrap;
+}
+
+h2 {
+  font-size: clamp(32px, 4.3vw, 52px);
+  max-width: 580px;
+}
+
+.lead {
+  margin-top: 18px;
+  color: #5a5a5a;
+  line-height: 1.8;
+  max-width: 560px;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 40px;
+  align-items: center;
+}
+
+.hero-copy {
+  position: relative;
+}
+
+.hero-copy p {
+  margin-top: 18px;
+  max-width: 760px;
+  text-align: center;
+  color: #5a5a5a;
+  margin-left: 25%;
+  position: relative;
+  z-index: 10;
+}
+
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 26px;
+  font-weight: 500;
+  margin-left: 50%;
+  position: relative;
+  z-index: 100;
+  align-self: center;
+}
+
+.link-arrow-text {
+  font-weight: 600;
+}
+
+.arrow-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #11ad68;
+  flex-shrink: 0;
+}
+
+.arrow-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.hero-stats {
+  display: grid;
+  gap: 14px;
+  align-self: center;
+}
+
+.hero-stats article {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-stats strong {
+  display: block;
+  font-size: 32px;
+  line-height: 1;
+}
+
+.hero-stats small {
+  color: #5a5a5a;
+}
+
+.stat-icon {
+  width: 30px;
+  height: auto;
+}
+
+.stars-icon {
+  width: 86px;
+  height: auto;
+  margin-bottom: -6px;
+}
+
+.hero-image {
+  margin-top: 28px;
+  min-height: 260px;
+  position: relative;
+  overflow: visible;
+  max-width: 800px;
+}
+.hero-image img {
+  width: 100%;
+  mix-blend-mode: darken;
+}
+
+.hero-leaves {
+  position: absolute;
+  top: -280px;
+  left: -220px;
+  width: 660px;
+  height: auto;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.hero-basket {
+  position: relative;
+  width: 560px;
+  max-width: 100%;
+  height: auto;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.features {
+  margin-top: 28px;
+  display: grid;
+  gap: 12px;
+}
+
+.feature-card {
+  padding: 20px;
+  border-radius: 12px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.feature-card:hover {
+  background: #edf7f2;
+  transform: scale(1.05);
+}
+
+.feature-card h3 {
+  font-size: 20px;
+}
+
+.feature-card p {
+  margin-top: 8px;
+  color: #666;
+  font-size: 14px;
+}
+
+.feature-icon {
+  width: 42px;
+  height: auto;
+}
+
+.delivery-art,
+.special-image,
+.customer-art {
+  min-height: 460px;
+  border-radius: 20px;
+}
+
+.delivery-art {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.delivery-art::before {
+  content: none;
+}
+
+.delivery-circle {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  opacity: 0.95;
+}
+
+.delivery-man {
+  position: relative;
+  z-index: 1;
+  width: 360px;
+  max-width: 90%;
+  height: auto;
+}
+
+.special-image {
+  background: #dff3ea;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  border-radius: 18px;
+}
+
+.special-items-img {
+  width: 420px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 18px;
+}
+
+.special {
+  position: relative;
+}
+
+.special-leaves {
+  position: absolute;
+  right: -60px;
+  top: 45%;
+  width: 260px;
+  height: auto;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.customer-art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.customer-art::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  background: rgba(229, 231, 230, 0.147);
+  opacity: 0.9;
+}
+
+.mini {
+  display: flex;
+}
+
+.customer-img {
+  width: 340px;
+  height: auto;
+  max-width: 100%;
+  position: relative;
+  z-index: 1;
+  mix-blend-mode: darken;
+}
+
+.stars-img {
+  width: 120px;
+  height: auto;
+  margin-top: 10px;
+}
+
+.special h2,
+.customers h2 {
+  max-width: 450px;
+}
+
+.name {
+  margin-top: 20px;
+  font-size: 30px;
+}
+
+.app-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.phone-mockup {
+  height: 100%;
+  width: 170px;
+  border-radius: 30px;
+  background: transparent;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.phone-mockup-img {
+  width: 190px;
+  max-width: 100%;
+  height: auto;
+}
+
+.tag {
+  display: inline-block;
+  background: #e8efea;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  color: #4c4c4c;
+}
+
+.stores {
+  margin-top: 24px;
+  display: flex;
+  gap: 10px;
+}
+
+.stores-img {
+  width: 260px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.footer {
+  background: #fff;
+  padding: 56px 0;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.2fr;
+  gap: 34px;
+}
+
+.footer-grid h4 {
+  margin-bottom: 12px;
+}
+
+.footer-grid p,
+.footer-grid a {
+  color: #666;
+  display: block;
+  margin-bottom: 9px;
+  font-size: 14px;
+}
+
+.socials {
+  display: flex;
+  gap: 10px;
+}
+
+.socials span {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid #c8c8c8;
+  display: grid;
+  place-items: center;
+}
+
+/*# sourceMappingURL=style.css.map */

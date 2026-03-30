@@ -1,0 +1,80 @@
+*, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  height: 100dvh;
+  background-color: rgba(65, 105, 225, 0.46);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+.login {
+  width: 60%;
+  height: 80%;
+  border-radius: 10px;
+  background-image: linear-gradient(rgba(22, 22, 236, 0.67)), url(https://burst.shopifycdn.com/photos/chicago-city-lights-at-night.jpg?width=1000&format=pjpg&exif=0&iptc=0);
+  display: grid;
+  place-items: center;
+  padding: 50px;
+  gap: 0;
+}
+.login h1 {
+  color: white;
+}
+.login img {
+  width: 130px;
+  border-radius: 50%;
+}
+.login .inputs {
+  display: grid;
+  gap: 10px;
+  align-items: center;
+}
+.login .inputs svg {
+  font-size: 20px;
+  margin-top: 10px;
+  padding: 2px;
+}
+.login .inputs .input {
+  display: flex;
+  background-color: white;
+  padding: 5px;
+  width: 300px;
+  height: 50px;
+  border-radius: 50px;
+}
+.login .inputs .input:hover {
+  transform: scale(1.05);
+}
+.login .inputs .input input {
+  width: 90%;
+  border: none;
+  padding-left: 10px;
+}
+.login .btn {
+  width: 300px;
+  height: 50px;
+  border: none;
+  border-radius: 50px;
+  background-color: rgb(104, 64, 40);
+  font-size: 16px;
+  color: white;
+}
+.login .btn:hover {
+  background-color: rgb(95, 71, 57);
+  transform: scale(1.05);
+}
+.login a {
+  font-size: 16px;
+  color: rgb(171, 170, 170);
+  text-decoration: none;
+}
+.login a:hover {
+  text-decoration: underline;
+}
+
+/*# sourceMappingURL=style.css.map */

@@ -4,298 +4,363 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Boxy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Barlow+Condensed:wght@700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 
-<!-- ─── NAVBAR ─── -->
-<nav class="navbar">
-    <div class="navbar__logo">
-        <img src="./images/logo (2).png" alt="Boxy">
+
+    <nav class="nav">
+    <div class="nav-logo">
+        <img src="./images/logo (2).png">
     </div>
-    <ul class="navbar__links">
+    <ul class="nav-links">
         <li><a href="#">Home</a></li>
         <li><a href="#">Choose Your Fighter</a></li>
         <li><a href="#" class="active">Bookings</a></li>
+        
     </ul>
-    <div class="navbar__right">
-        <div class="navbar__icon">
-            <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z" stroke-linecap="round" stroke-linejoin="round"/><polyline points="22,6 12,13 2,6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="nav-right">
+        <a class="nav-login" href="#auth">Login</a>
+        <div class="nav-icon">
+            <img src="./images/mail.png">
         </div>
-        <div class="navbar__icon">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-linecap="round"/></svg>
+        <div class="nav-icon">
+            <img src="./images/Account circle.png">
         </div>
-        <button class="btn-contact">CONTACT US</button>
+        <button class="btn-border">CONTACT US</button>
     </div>
 </nav>
 
-<!-- ─── HERO ─── -->
-<section class="hero">
-    <div class="hero__content">
-        <h1 class="hero__title">
-            Empower Fighters and Elevate You:
-            <span>Boxy's</span> Seamless Booking for a Cause
-        </h1>
-        <p class="hero__desc">
-            Welcome to Boxy, your premier portal for booking private lessons, and seminars with
-            top-notch local fighters. Make an impact while refining your skills, knowing that
-            every booking not only propels fighters towards their dreams but also sustains your
-            favorite gyms.
-        </p>
-        <div class="hero__btns">
-            <button class="btn-primary">Book a Fighter</button>
-            <button class="btn-primary" style="background:transparent;border:1.5px solid rgba(255,255,255,0.3);">Book a Gym Trainer</button>
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                Empower Fighters and Elevate You:
+                <span>Boxy's</span> Seamless Booking for a Cause
+            </h1>
+            <p class="hero-desc">
+                Welcome to Boxy, your premier portal for booking private lessons, and seminars with
+                top-notch local fighters. Make an impact while refining your skills, knowing that
+                every booking not only propels fighters towards their dreams but also sustains your
+                favorite gyms.
+            </p>
+            <div class="hero-btns">
+                <button class="btn-main">Book a Fighter</button>
+                <button class="btn-ghost">Book a Gym Trainer</button>
+            </div>
         </div>
-    </div>
-    <div class="hero__image">
-        <img src="./images/coverFilm.png" alt="Boxing">
+        <div class="hero-img">
+            <img src="./images/coverFilm.png">
+        </div>
+    </section>
+
+<section class="auth" id="auth">
+    <div class="auth-wrap">
+        <div class="auth-card">
+            <h3>Welcome to BOXY, where fighters find opportunities!</h3>
+            <form class="auth-form">
+                <div class="auth-field">
+                    <label class="auth-label" for="reg-name">Name</label>
+                    <input class="auth-input" id="reg-name" type="text" placeholder="Name">
+                </div>
+                <div class="auth-field">
+                    <label class="auth-label" for="reg-username">Username</label>
+                    <input class="auth-input" id="reg-username" type="text" placeholder="Username">
+                </div>
+                <div class="auth-field">
+                    <label class="auth-label" for="reg-role">Select Role</label>
+                    <input class="auth-input" id="reg-username" type="text" placeholder="Username">
+                    
+                </div>
+                <div class="auth-field">
+                    <label class="auth-label" for="reg-phone">Phonenumber</label>
+                    <input class="auth-input" id="reg-phone" type="tel" placeholder="Phonenumber">
+                </div>
+                <div class="auth-field">
+                    <label class="auth-label">Add Image</label>
+                    <label class="auth-upload">
+                        <input class="auth-file" type="file" accept="image/*">
+                        <span>Add Image Here</span>
+                    </label>
+                </div>
+                <div class="auth-field">
+                    <label class="auth-label" for="reg-email">Email</label>
+                    <input class="auth-input" id="reg-email" type="email" placeholder="Email">
+                </div>
+                <div class="auth-field">
+                    <label class="auth-label" for="reg-pass">Password</label>
+                    <input class="auth-input" id="reg-pass" type="password" placeholder="Password">
+                </div>
+            </form>
+            <button class="auth-btn" type="button">REGISTER</button>
+            <p class="auth-link">Already have an account? <a href="#">Login here.</a></p>
+        </div>
+
+        <div class="auth-card auth-login">
+            <h3>Welcome to BOXY, where fighters find opportunities!</h3>
+            <form class="auth-form">
+                <div class="auth-field">
+                    <label class="auth-label" for="log-email">Email</label>
+                    <input class="auth-input" id="log-email" type="email" placeholder="Email">
+                </div>
+                <div class="auth-field">
+                    <label class="auth-label" for="log-pass">Password</label>
+                    <input class="auth-input" id="log-pass" type="password" placeholder="Password">
+                </div>
+            </form>
+            <button class="auth-btn" type="button">LOGIN</button>
+            <p class="auth-link">Don't have an account? <a href="#">Sign Up here.</a></p>
+            <p class="auth-link auth-muted">Forgot password?</p>
+        </div>
     </div>
 </section>
 
-<!-- ─── WHY BOXY ─── -->
-<section class="why">
-    <div class="section-header">
-        <h2>Why Boxy</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    </div>
-    <div class="why__grid">
-        <div class="why__card">
-            <div class="why__icon">
-                <img src="./images/boxing.png" alt="Fighters">
+    <section class="why">
+        <div class="section-head">
+            <h2>Why Boxy</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
+                dolore magna aliqua.</p>
+        </div>
+        <div class="why-grid">
+            <div class="why-card">
+                <div class="why-icon">
+                    <img src="./images/boxing.png">
+                </div>
+                <div class="why-text">
+                    <h3>Fighters With Heart</h3>
+                    <p>Discover passionate local fighters with a range of expertise, enthusiastic about mentoring you.
+                        Every booking directly benefits their journey, helping them chase their aspirations.</p>
+                </div>
             </div>
-            <div class="why__text">
-                <h3>Fighters With Heart</h3>
-                <p>Discover passionate local fighters with a range of expertise, enthusiastic about mentoring you. Every booking directly benefits their journey, helping them chase their aspirations.</p>
+            <div class="why-card">
+                <div class="why-icon">
+                    <img src="./images/boxing-gloves (1).png">
+                </div>
+                <div class="why-text">
+                    <h3>Empower Dreams</h3>
+                    <p>Each session booked secures a consistent income for fighters and contributes to gym stability,
+                        ensuring both can concentrate on delivering the best training experiences for you.</p>
+                </div>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">
+                    <img src="./images/calendar (1).png">
+                </div>
+                <div class="why-text">
+                    <h3>Seamless Scheduling</h3>
+                    <p>Secure your slot with ease, whether it's one-on-one coaching, energizing group sessions, or
+                        exclusive seminars. Boxy's system simplifies your booking experience.</p>
+                </div>
+            </div>
+            <div class="why-card">
+                <div class="why-icon">
+                    <img src="./images/growth.png">
+                </div>
+                <div class="why-text">
+                    <h3>Witness Growth</h3>
+                    <p>See tangible improvements in your skills. Track achievements, rejoice in milestones, and set
+                        fresh objectives with Boxy's insights, all while backing local talent and gyms.</p>
+                </div>
+            </div>
+            <div class="why-card full">
+                <div class="why-icon">
+                    <img src="./images/teamwork.png">
+                </div>
+                <div class="why-text">
+                    <h3>Community Connection</h3>
+                    <p>Immerse yourself in a community united by passion. Engage with fighters, gym owners, and fellow
+                        enthusiasts, creating a network anchored by a shared love for combat sports.</p>
+                </div>
             </div>
         </div>
-        <div class="why__card">
-            <div class="why__icon">
-                <img src="./images/boxing-gloves (1).png" alt="Dreams">
-            </div>
-            <div class="why__text">
-                <h3>Empower Dreams</h3>
-                <p>Each session booked secures a consistent income for fighters and contributes to gym stability, ensuring both can concentrate on delivering the best training experiences for you.</p>
-            </div>
-        </div>
-        <div class="why__card">
-            <div class="why__icon">
-                <img src="./images/calendar (1).png" alt="Scheduling">
-            </div>
-            <div class="why__text">
-                <h3>Seamless Scheduling</h3>
-                <p>Secure your slot with ease, whether it's one-on-one coaching, energizing group sessions, or exclusive seminars. Boxy's system simplifies your booking experience.</p>
-            </div>
-        </div>
-        <div class="why__card">
-            <div class="why__icon">
-                <img src="./images/growth.png" alt="Growth">
-            </div>
-            <div class="why__text">
-                <h3>Witness Growth</h3>
-                <p>See tangible improvements in your skills. Track achievements, rejoice in milestones, and set fresh objectives with Boxy's insights, all while backing local talent and gyms.</p>
-            </div>
-        </div>
-        <div class="why__card full">
-            <div class="why__icon">
-                <img src="./images/teamwork.png" alt="Community">
-            </div>
-            <div class="why__text">
-                <h3>Community Connection</h3>
-                <p>Immerse yourself in a community united by passion. Engage with fighters, gym owners, and fellow enthusiasts, creating a network anchored by a shared love for combat sports.</p>
-            </div>
-        </div>
-    </div>
-</section>
+    </section>
 
-<!-- ─── CHOOSE YOUR FIGHTER ─── -->
-<section class="fighters">
-    <div class="section-header">
+
+    <section class="fighters fighters-featured">
+    <div class="section-head">
         <h2>Choose Your Fighter</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore</p>
     </div>
-    <div class="fighters__grid">
-        <!-- Fighter 1 -->
-        <div class="fighter__card">
-            <img src="./images/coverFilm (1).png" alt="Jayden" class="fighter__img">
-            <div class="fighter__info">
-                <p class="fighter__name" style="padding:0;width:auto;">Jayden - Liquid Steel</p>
-                <p class="fighter__nickname" style="padding:0;width:auto;color:#3847c9;">Nickname</p>
-                <div class="fighter__tags">
-                    <span class="fighter__tag">⭐ 4.9</span>
-                    <span class="fighter__tag">Boxing</span>
-                    <span class="fighter__tag">MMA</span>
-                </div>
-                <div class="fighter__btns">
-                    <button class="btn-outline">View Profile</button>
-                    <button class="btn-book">Book Now</button>
-                </div>
+    <div class="fighters-grid">
+        <div class="fighter-card fighter-featured">
+            <div class="fighter-media">
+                <img src="./images/coverFilm (1).png" class="fighter-img">
             </div>
+            <div class="fighter-body">
+                <p class="fighter-name">Jayden - Liquid Steel</p>
+                <p class="fighter-loc">Vancouver</p>
+            </div>
+            <div class="fighter-footer"><div class="fighter-banner">FORMER BFL WELTERWEIGHT CHAMP</div>
+            <div class="fighter-pills">
+                <span class="fighter-pill">$50/h</span>
+                <span class="fighter-pill">First booking free</span>
+            </div></div>
         </div>
-        <!-- Fighter 2 -->
-        <div class="fighter__card">
-            <img src="./images/coverFilm (2).png" alt="Josh" class="fighter__img">
-            <div class="fighter__info">
-                <p class="fighter__name" style="padding:0;width:auto;">JOSH "THE SPARTAN"</p>
-                <p class="fighter__nickname" style="padding:0;width:auto;color:#3847c9;">Passionate about Kickboxing & MMA</p>
-                <div class="fighter__tags">
-                    <span class="fighter__tag">⭐ 4.8</span>
-                    <span class="fighter__tag">Kickbox</span>
-                    <span class="fighter__tag">MMA</span>
-                </div>
-                <div class="fighter__btns">
-                    <button class="btn-outline">View Profile</button>
-                    <button class="btn-book">Book Now</button>
-                </div>
+        <div class="fighter-card fighter-featured">
+            <div class="fighter-media">
+                <img src="./images/coverFilm (2).png" class="fighter-img">
             </div>
+            <div class="fighter-body">
+                <p class="fighter-name">JOSH - &quot;THE SPARTAN&quot;</p>
+                <p class="fighter-loc">Vancouver</p>
+            </div>
+            <div class="fighter-footer"><div class="fighter-banner">FOUNDER OF DRIVE MARKETING GROUP</div>
+            <div class="fighter-pills">
+                <span class="fighter-pill">$50/h</span>
+                <span class="fighter-pill">First booking free</span>
+            </div></div>
         </div>
-        <!-- Fighter 3 -->
-        <div class="fighter__card">
-            <img src="./images/coverFilm (3).png" alt="Gabi" class="fighter__img">
-            <div class="fighter__info">
-                <p class="fighter__name" style="padding:0;width:auto;">GABI - "BIG FOOT"</p>
-                <p class="fighter__nickname" style="padding:0;width:auto;color:#3847c9;">MMA • Wrestling</p>
-                <div class="fighter__tags">
-                    <span class="fighter__tag">⭐ 5.0</span>
-                    <span class="fighter__tag">Wrestling</span>
-                    <span class="fighter__tag">Sambo</span>
-                </div>
-                <div class="fighter__btns">
-                    <button class="btn-outline">View Profile</button>
-                    <button class="btn-book">Book Now</button>
-                </div>
+        <div class="fighter-card fighter-featured">
+            <div class="fighter-media">
+                <img src="./images/coverFilm (3).png" class="fighter-img">
             </div>
+            <div class="fighter-body">
+                <p class="fighter-name">CAIO - &quot;BIG FOOT&quot;</p>
+                <p class="fighter-loc">Vancouver</p>
+            </div>
+            <div class="fighter-footer"><div class="fighter-banner">5X BFL HEAVY WEIGHT CHAMPION</div>
+            <div class="fighter-pills">
+                <span class="fighter-pill">$50/h</span>
+                <span class="fighter-pill">First booking free</span>
+            </div></div>
         </div>
     </div>
-    <div class="explore-btn-wrap">
-        <button class="btn-explore">Explore More Fighters</button>
+    <div class="explore-wrap">
+        <button class="btn-cta">Explore More Fighters</button>
     </div>
 </section>
 
-<!-- ─── NEWSLETTER ─── -->
-<section class="newsletter">
-    <div class="newsletter__text">
-        <h2>Subscribe our newsletter for newest updates</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
-    </div>
-    <div class="newsletter__form">
-        <input type="email" class="newsletter__input" placeholder="Enter your email">
-        <button class="newsletter__btn">Subscribe Now</button>
-    </div>
-</section>
+    <section class="news">
+        <div class="news-text">
+            <h2>Subscribe our newsletter for newest updates</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+        </div>
+        <div class="news-form">
+            <input type="email" class="news-input" placeholder="Enter your email">
+            <button class="news-btn">Subscribe Now</button>
+        </div>
+    </section>
 
-<!-- ─── CHOOSE YOUR GYM ─── -->
-<section class="gym fighters">
-    <div class="section-header">
+    <section class="gym fighters fighters-featured">
+    <div class="section-head">
         <h2>Choose Your Gym</h2>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore</p>
     </div>
-    <div class="fighters__grid">
-        <div class="fighter__card">
-            <img src="./images/coverFilm (1).png" alt="Gym 1" class="fighter__img">
-            <div class="fighter__info">
-                <p class="fighter__name" style="padding:0;width:auto;">Jayden - Liquid Steel</p>
-                <p class="fighter__nickname" style="padding:0;width:auto;color:#3847c9;">Head Trainer</p>
-                <div class="fighter__tags">
-                    <span class="fighter__tag">⭐ 4.9</span>
-                    <span class="fighter__tag">Boxing</span>
-                </div>
-                <div class="fighter__btns">
-                    <button class="btn-outline">View Profile</button>
-                    <button class="btn-book">Book Now</button>
-                </div>
+    <div class="fighters-grid">
+        <div class="fighter-card fighter-featured">
+            <div class="fighter-media">
+                <img src="./images/coverFilm (1).png" class="fighter-img">
             </div>
+            <div class="fighter-body">
+                <p class="fighter-name">Jayden - Liquid Steel</p>
+                <p class="fighter-loc">Vancouver</p>
+            </div>
+            <div class="fighter-footer"><div class="fighter-banner">HEAD TRAINER</div>
+            <div class="fighter-pills">
+                <span class="fighter-pill">$50/h</span>
+                <span class="fighter-pill">First booking free</span>
+            </div></div>
         </div>
-        <div class="fighter__card">
-            <img src="./images/coverFilm (2).png" alt="Gym 2" class="fighter__img">
-            <div class="fighter__info">
-                <p class="fighter__name" style="padding:0;width:auto;">JOSH "THE SPARTAN"</p>
-                <p class="fighter__nickname" style="padding:0;width:auto;color:#3847c9;">Gym Trainer</p>
-                <div class="fighter__tags">
-                    <span class="fighter__tag">⭐ 4.8</span>
-                    <span class="fighter__tag">Kickbox</span>
-                </div>
-                <div class="fighter__btns">
-                    <button class="btn-outline">View Profile</button>
-                    <button class="btn-book">Book Now</button>
-                </div>
+        <div class="fighter-card fighter-featured">
+            <div class="fighter-media">
+                <img src="./images/coverFilm (2).png" class="fighter-img">
             </div>
+            <div class="fighter-body">
+                <p class="fighter-name">JOSH - &quot;THE SPARTAN&quot;</p>
+                <p class="fighter-loc">Vancouver</p>
+            </div>
+            <div class="fighter-footer"><div class="fighter-banner">GYM TRAINER</div>
+            <div class="fighter-pills">
+                <span class="fighter-pill">$50/h</span>
+                <span class="fighter-pill">First booking free</span>
+            </div></div>
         </div>
-        <div class="fighter__card">
-            <img src="./images/coverFilm (3).png" alt="Gym 3" class="fighter__img">
-            <div class="fighter__info">
-                <p class="fighter__name" style="padding:0;width:auto;">GABI - "BIG FOOT"</p>
-                <p class="fighter__nickname" style="padding:0;width:auto;color:#3847c9;">Head Coach</p>
-                <div class="fighter__tags">
-                    <span class="fighter__tag">⭐ 5.0</span>
-                    <span class="fighter__tag">MMA</span>
-                </div>
-                <div class="fighter__btns">
-                    <button class="btn-outline">View Profile</button>
-                    <button class="btn-book">Book Now</button>
-                </div>
+        <div class="fighter-card fighter-featured">
+            <div class="fighter-media">
+                <img src="./images/coverFilm (3).png" class="fighter-img">
             </div>
+            <div class="fighter-body">
+                <p class="fighter-name">CAIO - &quot;BIG FOOT&quot;</p>
+                <p class="fighter-loc">Vancouver</p>
+            </div>
+            <div class="fighter-footer"><div class="fighter-banner">HEAD COACH</div>
+            <div class="fighter-pills">
+                <span class="fighter-pill">$50/h</span>
+                <span class="fighter-pill">First booking free</span>
+            </div></div>
         </div>
     </div>
-    <div class="explore-btn-wrap">
-        <button class="btn-explore">Explore More Gym Trainer</button>
+    <div class="explore-wrap">
+        <button class="btn-cta">Explore More Gym Trainer</button>
     </div>
 </section>
 
-<!-- ─── FOOTER ─── -->
-<footer class="footer">
-    <div class="footer__left">
-        <img src="./images/logo (2).png" alt="Boxy logo">
-        <p>Boxy lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-            et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
-        <h5>Follow Us</h5>
+    <footer class="footer">
+        <div class="foot-left">
+            <img src="./images/logo (2).png">
+            <p>Boxy lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+            <h5>Follow Us</h5>
 
-        <div class="socials">
-            <div class="vector"><img src="./images/Vector.png" alt="" class="vector__img"></div>
-            <div class="vector youtube"><img src="./images/Vector (1).png" alt="" class="vector__img"></div>
-            <div class="vector"><img src="./images/Vector (2).png" alt="" class="vector__img"></div>
-            <div class="vector"><img src="./images/Vector (3).png" alt="" class="vector__img"></div>
-            <div class="vector"><img src="./images/Vector (4).png" alt="" class="vector__img"></div>
+            <div class="socials">
+                <div class="social"><img src="./images/Vector.png" class="social-img"></div>
+                <div class="social"><img src="./images/Vector (1).png" class="social-img"></div>
+                <div class="social"><img src="./images/Vector (2).png" class="social-img"></div>
+                <div class="social"><img src="./images/Vector (3).png" class="social-img"></div>
+                <div class="social"><img src="./images/Vector (4).png" class="social-img"></div>
+            </div>
         </div>
-    </div>
-    <div class="list">
-        <p class="list__hero">Quick Links</p>
-        <a href="" class="footer__link">Home</a>
-        <a href="" class="footer__link">Contact Us</a>
-        <a href="" class="footer__link">Choose your fighter</a>
-        <a href="" class="footer__link">Book Now</a>
-    </div>
-    <div class="list--second">
-        <p class="list__hero">Categories +</p>
-        <div class="lists">
-            <a href="" class="footer__link">Boxing</a>
-            <a href="" class="footer__link">Kickbox</a>
-            <a href="" class="footer__link">Sambo</a>
-            <a href="" class="footer__link">Amature boxing</a>
-            <a href="" class="footer__link">Sanshou</a>
-            <a href="" class="footer__link">Ji Jitsu</a>
-            <a href="" class="footer__link">Judo</a>
-            <a href="" class="footer__link">Knuckle Boxing</a>
-            <a href="" class="footer__link">Catch Wrestling</a>
-            <a href="" class="footer__link">Wrestling</a>
+        <div class="foot-list">
+            <p class="foot-title">Quick Links</p>
+            <a href="" class="foot-link">Home</a>
+            <a href="" class="foot-link">Contact Us</a>
+            <a href="" class="foot-link">Choose your fighter</a>
+            <a href="" class="foot-link">Book Now</a>
         </div>
-    </div>
-    <div class="footer__card">
-        <p class="card--heading">Get updates of Boxy Everywhere & Anytime Now</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
-        <button type="submit" class="footer__card-btn">Subscribe Now</button>
-    </div>
-</footer>
+        <div class="foot-list foot-list2">
+            <p class="foot-title">Categories +</p>
+            <div class="foot-links">
+                <a href="" class="foot-link">Boxing</a>
+                <a href="" class="foot-link">Kickbox</a>
+                <a href="" class="foot-link">Sambo</a>
+                <a href="" class="foot-link">Amature boxing</a>
+                <a href="" class="foot-link">Sanshou</a>
+                <a href="" class="foot-link">Ji Jitsu</a>
+                <a href="" class="foot-link">Judo</a>
+                <a href="" class="foot-link">Knuckle Boxing</a>
+                <a href="" class="foot-link">Catch Wrestling</a>
+                <a href="" class="foot-link">Wrestling</a>
+            </div>
+        </div>
+        <div class="foot-card">
+            <p class="foot-card-title">Get updates of Boxy Everywhere &amp; Anytime Now</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor</p>
+            <button type="submit" class="foot-card-btn">Subscribe Now</button>
+        </div>
+    </footer>
 
 
-<div class="bottom">
-    <p class="bottom--text">© 2023 All Rights Reserved</p>
-    <p class="bottom--text">Made with ♥️</p>
-</div>
+    <div class="bottom">
+        <p class="bottom-text">&copy; 2023 All Rights Reserved</p>
+        <p class="bottom-text">Made with &hearts;</p>
+    </div>
 
 
 </body>
 
 </html>
+
+
+
+
+
+
+
+
