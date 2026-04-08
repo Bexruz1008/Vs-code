@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visit Europe - Discover Europe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="top-stripe">
+    <span class="stripe orange"></span>
+    <span class="stripe yellow"></span>
+    <span class="stripe green"></span>
+    <span class="stripe teal"></span>
+    <span class="stripe pink"></span>
+  </div>
+
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="logo">
+        <img class="logo-img" src="https://visiteurope.com/themes/custom/europe/logo.svg" alt="">
+      </a>
+      <div class="nav-links">
+        <a href="#">Destinations <span class="caret"></span></a>
+        <a href="#">Experiences</a>
+        <a href="#">Events</a>
+        <a href="#">Travel tips</a>
+        <a href="#">Inspiration <span class="caret"></span></a>
+      </div>
+      <div class="nav-right">
+        <button class="search-pill" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="11" cy="11" r="7" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <span>Search</span>
+        </button>
+        <a class="lang" href="#">En <span class="caret"></span></a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-box">
+        <video autoplay muted loop>
+          <source
+            src="https://visiteurope.com/sites/default/files/videos/2026-02/LD%20Hero%20for%20website%201872x1057.mp4"
+            type="video/mp4">
+        </video>
+        <div class="hero-tag">
+          <span>THE OFFICIAL TRAVEL PORTAL OF EUROPE</span>
+          <span class="eu-stars">
+            ⭐
+          </span>
+        </div>
+        <div class="hero-text">
+          <h1>Unlock an Unexpected Upgrade</h1>
+          <p>Whether you explore off-season, go offbeat, travel green or love local, responsible travel can upscale your
+            stay in ways you'd never imagine.</p>
+          <button class="btn-primary" type="button">Unlock it now</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-heading center">
+        <h2>European experiences by interest</h2>
+        <div class="underline two-tone">
+          <span class="u-yellow"></span>
+          <span class="u-green"></span>
+        </div>
+      </div>
+      <div class="interest-grid">
+        <article class="interest-card card-orange">
+          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600&q=80" alt="">
+          <div class="interest-overlay"></div>
+          <h3>Arts and culture</h3>
+        </article>
+        <article class="interest-card card-amber">
+          <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" alt="">
+          <div class="interest-overlay"></div>
+          <h3>Food and drinks</h3>
+        </article>
+        <article class="interest-card card-green">
+          <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&q=80" alt="">
+          <div class="interest-overlay"></div>
+          <h3>History and heritage</h3>
+        </article>
+        <article class="interest-card card-teal">
+          <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=600&q=80" alt="">
+          <div class="interest-overlay"></div>
+          <h3>Nature and outdoors</h3>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section explore">
+    <div class="container">
+      <div class="section-heading center">
+        <h2>Explore Europe</h2>
+        <div class="underline two-tone">
+          <span class="u-green"></span>
+          <span class="u-pink"></span>
+        </div>
+        <p class="section-subtitle">USE THE INTERACTIVE MAP TO PLAN YOUR TRIP AND DISCOVER WHAT TO DO</p>
+      </div>
+      <div class="tabs">
+        <button class="tab-btn active">Destinations</button>
+        <button class="tab-btn">Experiences</button>
+        <button class="tab-btn">Events</button>
+      </div>
+      <div class="map-wrap">
+        <img class="map-image"
+          src="https://img.freepik.com/premium-vector/colored-political-world-map-vector-editable-high-resolution-global-country-map-illustration_150558-1283.jpg?semt=ais_hybrid&w=740&q=80"
+          alt="">
+      </div>
+    </div>
+  </section>
+
+  <section class="section destinations">
+    <div class="container">
+      <div class="filter-tabs">
+        <button class="filter-btn active" type="button">Countries</button>
+        <button class="filter-btn" type="button">Regions</button>
+      </div>
+      <div class="dest-carousel-wrap">
+        <button class="carousel-btn prev"> ⇐</button>
+        <div class="dest-carousel" id="dest">
+          <div class="dest-card"><img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSt7sURVWRl0P6phqOAH1J978eOEuDIoyu2Iw&s" alt="">
+            <div class="dest-card-overlay"></div>
+            <div class="dest-card-name">Austria</div>
+          </div>
+          <div class="dest-card"><img src="https://images.unsplash.com/photo-1491557345352-5929e343eb89?w=400&q=80"
+              alt="">
+            <div class="dest-card-overlay"></div>
+            <div class="dest-card-name">Belgium</div>
+          </div>
+          <div class="dest-card"><img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQawCqG1gQM3kAF02oJgbKZCTfIYhEHwl9aDA&s" alt="">
+            <div class="dest-card-overlay"></div>
+            <div class="dest-card-name">Bulgaria</div>
+          </div>
+          <div class="dest-card"><img src="https://images.unsplash.com/photo-1555990793-da11153b2473?w=400&q=80" alt="">
+            <div class="dest-card-overlay"></div>
+            <div class="dest-card-name">Croatia</div>
+          </div>
+          <div class="dest-card"><img src="https://images.unsplash.com/photo-1543158266-0066955047b1?w=400&q=80" alt="">
+            <div class="dest-card-overlay"></div>
+            <div class="dest-card-name">Cyprus</div>
+          </div>
+          <div class="dest-card"><img src="https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=400&q=80"
+              alt="">
+            <div class="dest-card-overlay"></div>
+            <div class="dest-card-name">Czechia</div>
+          </div>
+          <div class="dest-card"><img src="https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?w=400&q=80"
+              alt="">
+            <div class="dest-card-overlay"></div>
+            <div class="dest-card-name">Denmark</div>
+          </div>
+        </div>
+        <button class="carousel-btn next">⇒
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section events">
+    <div class="container">
+      <div class="section-heading center">
+        <h2>Experience Europe's iconic events</h2>
+        <div class="underline two-tone">
+          <span class="u-green"></span>
+          <span class="u-pink"></span>
+        </div>
+      </div>
+      <div class="event-feature">
+        <div class="event-image">
+          <img
+            src="https://visiteurope.com/sites/default/files/styles/card_huge/public/images/2024-07/Belgrade-Sava-river-Ada-Ciganlija-by-Andrej-Nihil-scaled.jpeg.webp?h=6fa72889&itok=hVFy3iFb"
+            alt="">
+        </div>
+        <div class="event-card">
+          <div class="event-date">13 MAR - 18 APR 2026</div>
+          <div class="event-location">BELGRADE / SERBIA</div>
+          <h3>Belgrade Dance Festival</h3>
+          <p>A mesmerizing showcase of international dance, artistry, and cultural exchange in Serbia's vibrant capital.
+          </p>
+          <a class="event-arrow" href="#">→</a>
+        </div>
+      </div>
+      <div class="event-grid">
+        <article class="event-tile">
+          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600&q=80" alt="">
+          <div class="tile-date">23 MAR - 13 SEP 2026</div>
+          <div class="tile-body">
+            <div class="tile-location">LUCERNE / SWITZERLAND</div>
+            <h4>Lucerne Festival</h4>
+          </div>
+          <a class="tile-arrow" href="#">→</a>
+        </article>
+        <article class="event-tile">
+          <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=600&q=80" alt="">
+          <div class="tile-date">25 APR - 28 MAY 2026</div>
+          <div class="tile-body">
+            <div class="tile-location">TALLINN / ESTONIA</div>
+            <h4>Jazzkaar</h4>
+          </div>
+          <a class="tile-arrow" href="#">→</a>
+        </article>
+        <article class="event-tile">
+          <img src="https://images.unsplash.com/photo-1521337581100-8ca9a73a5f79?w=600&q=80" alt="">
+          <div class="tile-date">29-30 MAY 2026</div>
+          <div class="tile-body">
+            <div class="tile-location">COPENHAGEN / DENMARK</div>
+            <h4>Copenhagen Beer Festival</h4>
+          </div>
+          <a class="tile-arrow" href="#">→</a>
+        </article>
+        <article class="event-tile">
+          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600&q=80" alt="">
+          <div class="tile-date">27 JUN - 26 JUL 2026</div>
+          <div class="tile-body">
+            <div class="tile-location">LJUBLJANA / SLOVENIA</div>
+            <h4>The Ljubljana Festival</h4>
+          </div>
+          <a class="tile-arrow" href="#">→</a>
+        </article>
+      </div>
+      <div class="center-action">
+        <button class="btn-outline" type="button">Show all Events</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="section plan">
+    <div class="container">
+      <div class="plan-grid">
+        <div class="plan-intro">
+          <h2>Plan your trip to Europe</h2>
+          <div class="underline two-tone">
+            <span class="u-pink"></span>
+            <span class="u-teal"></span>
+          </div>
+        </div>
+        <article class="plan-card">
+          <img
+            src="https://visiteurope.com/sites/default/files/styles/card_huge/public/images/2018-05/4012393060319088873.jpg.webp?h=a0ed079c&itok=i-Hv5ouu"
+            alt="">
+          <div class="plan-card-body">
+            <h3>Your guide to plan your daily life in Europe</h3>
+          </div>
+          <a class="tile-arrow" href="#">→</a>
+        </article>
+        <article class="plan-card">
+          <img
+            src="https://visiteurope.com/sites/default/files/styles/card_huge/public/images/2022-10/shutterstock_423529120-min-scaled-e1665652775457.jpg.webp?h=ab8dd873&itok=FmMpZWac"
+            alt="">
+          <div class="plan-card-body">
+            <h3>What you need to enter Europe</h3>
+          </div>
+          <a class="tile-arrow" href="#">→</a>
+        </article>
+      </div>
+      <div class="plan-grid three">
+        <article class="plan-card">
+          <img
+            src="https://visiteurope.com/sites/default/files/styles/card_huge/public/images/2018-05/4012393060319088873.jpg.webp?h=a0ed079c&itok=i-Hv5ouu"
+            alt="">
+          <div class="plan-card-body">
+            <h3>How to stay safe while traveling in Europe</h3>
+          </div>
+          <a class="tile-arrow" href="#">→</a>
+        </article>
+        <article class="plan-card">
+          <img
+            src="https://visiteurope.com/sites/default/files/styles/card_huge/public/images/2022-10/shutterstock_227787976-min-scaled-e1665650866117.jpg.webp?h=6c00dbdb&itok=68XGs1hn"
+            alt="">
+          <div class="plan-card-body">
+            <h3>The ultimate guide to European currencies</h3>
+          </div>
+          <a class="tile-arrow" href="#">→</a>
+        </article>
+        <article class="plan-card">
+          <img
+            src="https://visiteurope.com/sites/default/files/styles/card_huge/public/images/2017-09/accomodtaion_header.jpg.webp?h=1bc2e847&itok=LtKIJddI"
+            alt="">
+          <div class="plan-card-body">
+            <h3>How to choose your accommodation in Europe</h3>
+          </div>
+          <a class="tile-arrow" href="#">→</a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img class="footer-logo-img" src="https://visiteurope.com/themes/custom/europe/logo.svg" alt="">
+        <div class="footer-logo-sub">visiteurope.com</div>
+      </div>
+      <div class="footer-col">
+        <h4>Destinations</h4>
+        <ul>
+          <li><a href="#">Countries</a></li>
+          <li><a href="#">Regions</a></li>
+          <li><a href="#">Experiences</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Events</h4>
+        <ul>
+          <li><a href="#">Travel tips</a></li>
+          <li><a href="#" class="muted">Inspiration</a></li>
+          <li><a href="#">Travel guides</a></li>
+          <li><a href="#">Trips</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>About us</h4>
+        <ul>
+          <li><a href="#">Privacy policy</a></li>
+          <li><a href="#">Terms of service</a></li>
+        </ul>
+      </div>
+      <div class="footer-right">
+        <button class="btn-outline light" type="button">Collaborate with us</button>
+        <div class="social-icons">
+          <a href="#" class="social-icon"><img src="https://cdn.simpleicons.org/facebook/ffffff" alt=""></a>
+          <a href="#" class="social-icon"><img src="https://cdn.simpleicons.org/instagram/ffffff" alt=""></a>
+          <a href="#" class="social-icon"><img src="https://cdn.simpleicons.org/x/ffffff" alt=""></a>
+          <a href="#" class="social-icon"><img src="https://cdn.simpleicons.org/youtube/ffffff" alt=""></a>
+          <a href="#" class="social-icon"><img src="https://cdn.simpleicons.org/pinterest/ffffff" alt=""></a>
+          <a href="#" class="social-icon"><img src="https://cdn.simpleicons.org/tiktok/ffffff" alt=""></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="eu-badge">
+        <img class="eu-flag-img" src="https://visiteurope.com/themes/custom/europe/images/eu-fund.png" alt="">
+
+      </div>
+      <p>2026 © European Travel Commission. All Rights Reserved</p>
+    </div>
+  </footer>
+  <div class="bottom-stripe">
+    <span class="stripe orange"></span>
+    <span class="stripe yellow"></span>
+    <span class="stripe green"></span>
+    <span class="stripe teal"></span>
+    <span class="stripe pink"></span>
+  </div>
+
+  <a class="access-btn" href="#">
+    <img src="https://www.skynettechnologies.com/sites/default/files/aioa-icon-type-1.svg" alt="">
+  </a>
+
+</body>
+
+</html>

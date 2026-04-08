@@ -102,7 +102,7 @@ input {
     border-color: var(--border);
 }
 
-.form {
+.page {
     max-width: 1120px;
     margin: 24px auto 48px;
     padding: 0 28px;
@@ -190,10 +190,7 @@ section h2 {
     gap: 8px;
     cursor: pointer;
 }
-.add-btn:active{
-    filter: brightness(.5);
-    scale: 1.05;
-}
+
 .add-btn .star {
     filter: brightness(0) ;
 }
@@ -201,7 +198,7 @@ section h2 {
 .list-card {
     display: grid;
     gap: 16px;
-    max-height: 70dvh;
+    max-height: 70vh;
     overflow-y: scroll;
 }
 .list-card::-webkit-scrollbar {
@@ -334,7 +331,7 @@ section h2 {
     }
     
 
-    .form {
+    .page {
         grid-template-columns: 1fr;
     }
 }

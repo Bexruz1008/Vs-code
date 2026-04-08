@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yaqinlarim.uz</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body data-theme="light">
     <header class="navbar">
         <div class="brand">
@@ -18,7 +20,7 @@
             <span id="themeLabel">Tun rejimi</span>
         </button>
     </header>
-    
+
     <form class="form" id="form">
         <section class="create">
             <h2>Kontakt yaratish</h2>
@@ -37,11 +39,11 @@
                     </label>
                     <label class="field">
                         <img src="rasmlar/phone 1.png" alt="" class="icon">
-                        <input type="text" placeholder="Telefon raqam" id="phone">
+                        <input type="number" placeholder="Telefon raqam" id="phone">
                     </label>
                     <label class="field">
                         <img src="rasmlar/email 3.png" alt="" class="icon">
-                        <input type="text" placeholder="Elektron pochta" id="email">
+                        <input type="email" placeholder="Elektron pochta" id="email">
                     </label>
                     <label class="field">
                         <img src="rasmlar/Frame 6.png" alt="" class="icon">
@@ -54,8 +56,8 @@
                 </div>
             </div>
         </section>
-        
-        <section class="list" >
+
+        <section class="list">
             <h2>Kontaktlar</h2>
             <div class="card list-card">
                 <div class="list-top">
@@ -69,12 +71,8 @@
                         <button type="button">Barchasi</button>
                     </div>
                 </div>
-                
+
                 <div class="contacts" id="contactList">
-                   
-
-            
-
 
                 </div>
             </div>
@@ -82,4 +80,5 @@
     </form>
     <script src="app.js"></script>
 </body>
+
 </html>

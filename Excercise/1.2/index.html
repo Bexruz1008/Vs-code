@@ -1,35 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        #sar {
-            background: linear-gradient(to left, blue, violet, gold);
-            background-size: 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            width: fit-content;
-            overflow: hidden;
-            animation: slide 8s linear infinite;
-        }
-
-        @keyframes slide {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            100% {
-                background-position: 100% 50%;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visit Europe – Discover Europe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="style.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
-
 <body>
-    <h1 id="sar">Birbaloo</h1>
-</body>
 
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="#" class="logo">
+    EUR<span>O</span>PE
+    <span class="logo-sub">visiteurope.com</span>
+  </a>
+  <div class="nav-links">
+    <a href="#">Destinations</a>
+    <a href="#">Experiences</a>
+    <a href="#">Events</a>
+    <a href="#">Travel Tips</a>
+    <a href="#">Inspiration</a>
+  </div>
+  <div class="nav-right">
+    <button class="icon-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <a href="#">EN</a>
+    <button class="btn-login">Log in</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-media">
+    <img src="https://images.unsplash.com/photo-1555992336-03a23c7b20ee?w=1200&q=80">
+  </div>
+  <div class="hero-promo">
+    <h2>Upgrade your travel experience</h2>
+    <p>Whether you explore off-season, go offbeat, travel green or love local, responsible travel can upscale your stay in ways you'd never imagine.</p>
+    <button class="btn-unlock">Unlock it now</button>
+  </div>
+  <div class="hero-overlap"></div>
+</section>
+
+<!-- EXPERIENCES BY INTEREST -->
+<section style="background:#fff; padding-top:48px;">
+  <div class="section-heading">
+    <h2>European experiences by interest</h2>
+    <div style="display:flex;justify-content:center;margin-bottom:48px;">
+      <div style="display:flex;height:4px;border-radius:2px;overflow:hidden;width:120px;">
+        <span style="background:#F5A623;flex:1"></span>
+        <span style="background:#F8E04A;flex:1"></span>
+        <span style="background:#4AB570;flex:1"></span>
+        <span style="background:#3CC0CC;flex:1"></span>
+      </div>
+    </div>
+  </div>
+  <div class="interest-grid">
+    <div class="interest-card card-orange">
+      <img src="https://images.unsplash.com/photo-1551038247-3d9af20df552?w=600&q=80">
+      <div class="interest-card-overlay"></div>
+      <div class="interest-card-title">Arts and culture</div>
+    </div>
+    <div class="interest-card card-olive">
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80">
+      <div class="interest-card-overlay"></div>
+      <div class="interest-card-title">Food and drinks</div>
+    </div>
+    <div class="interest-card card-green">
+      <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&q=80">
+      <div class="interest-card-overlay"></div>
+      <div class="interest-card-title">History and heritage</div>
+    </div>
+    <div class="interest-card card-teal">
+      <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80">
+      <div class="interest-card-overlay"></div>
+      <div class="interest-card-title">Nature and outdoors</div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPLORE EUROPE MAP -->
+<section class="explore-section">
+  <div class="section-heading">
+    <h2>Explore Europe</h2>
+    <div style="display:flex;justify-content:center;margin-bottom:20px;">
+      <div style="display:flex;height:4px;border-radius:2px;overflow:hidden;width:100px;">
+        <span style="background:#4AB570;flex:1.2"></span>
+        <span style="background:#F06292;flex:1"></span>
+      </div>
+    </div>
+    <p>USE THE INTERACTIVE MAP TO PLAN YOUR TRIP AND DISCOVER WHAT TO DO</p>
+  </div>
+  <div class="explore-tabs">
+    <button class="tab-btn active" onclick="setTab(this)">Destinations</button>
+    <button class="tab-btn" onclick="setTab(this)">Experiences</button>
+    <button class="tab-btn" onclick="setTab(this)">Events</button>
+  </div>
+  <div id="map"></div>
+</section>
+
+<!-- DESTINATIONS CAROUSEL -->
+<section class="destinations-section">
+  <div class="section-heading">
+    <h2>Discover European destinations</h2>
+  </div>
+  <div class="dest-carousel-wrap">
+    <button class="carousel-btn prev" onclick="scrollCarousel('dest', -1)">&#8249;</button>
+    <div class="dest-carousel" id="dest">
+      <div class="dest-card"><img src="https://images.unsplash.com/photo-1516550893882-d3a17fdbb2d3?w=400&q=80"><div class="dest-card-overlay"></div><div class="dest-card-name">Austria</div></div>
+      <div class="dest-card"><img src="https://images.unsplash.com/photo-1491557345352-5929e343eb89?w=400&q=80"><div class="dest-card-overlay"></div><div class="dest-card-name">Belgium</div></div>
+      <div class="dest-card"><img src="https://images.unsplash.com/photo-1576502200916-3808e07386a5?w=400&q=80"><div class="dest-card-overlay"></div><div class="dest-card-name">Bulgaria</div></div>
+      <div class="dest-card"><img src="https://images.unsplash.com/photo-1555990793-da11153b2473?w=400&q=80"><div class="dest-card-overlay"></div><div class="dest-card-name">Croatia</div></div>
+      <div class="dest-card"><img src="https://images.unsplash.com/photo-1543158266-0066955047b1?w=400&q=80"><div class="dest-card-overlay"></div><div class="dest-card-name">Cyprus</div></div>
+      <div class="dest-card"><img src="https://images.unsplash.com/photo-1519677100203-a0e668c92439?w=400&q=80"><div class="dest-card-overlay"></div><div class="dest-card-name">Czechia</div></div>
+      <div class="dest-card"><img src="https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?w=400&q=80"><div class="dest-card-overlay"></div><div class="dest-card-name">Denmark</div></div>
+      <div class="dest-card"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"><div class="dest-card-overlay"></div><div class="dest-card-name">France</div></div>
+      <div class="dest-card"><img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=400&q=80"><div class="dest-card-overlay"></div><div class="dest-card-name">Germany</div></div>
+      <div class="dest-card"><img src="https://images.unsplash.com/photo-1503152394-c571994fd383?w=400&q=80"><div class="dest-card-overlay"></div><div class="dest-card-name">Greece</div></div>
+      <div class="dest-card"><img src="https://images.unsplash.com/photo-1541370976299-4d24be63a18f?w=400&q=80"><div class="dest-card-overlay"></div><div class="dest-card-name">Italy</div></div>
+      <div class="dest-card"><img src="https://images.unsplash.com/photo-1558618047-3e5b14a8b9fb?w=400&q=80"><div class="dest-card-overlay"></div><div class="dest-card-name">Spain</div></div>
+    </div>
+    <button class="carousel-btn next" onclick="scrollCarousel('dest', 1)">&#8250;</button>
+  </div>
+</section>
+
+<!-- EVENTS -->
+<section class="events-section">
+  <div class="section-heading" style="text-align:left; padding:0 0 0;">
+    <h2>Experience Europe's iconic events</h2>
+    <div style="display:flex;height:4px;border-radius:2px;overflow:hidden;width:100px;margin-bottom:32px;">
+      <span style="background:#4AB570;flex:1.2"></span>
+      <span style="background:#F06292;flex:1"></span>
+    </div>
+  </div>
+  <div class="event-feature">
+    <div class="event-img">
+      <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=900&q=80">
+    </div>
+    <div class="event-info">
+      <span class="event-date">13 MAR – 18 APR 2026</span>
+      <p class="event-location">Belgrade / Serbia</p>
+      <h3 class="event-title">Belgrade Dance Festival</h3>
+      <p class="event-desc">A mesmerizing showcase of international dance artistry and cultural exchange in Serbia's vibrant capital city.</p>
+      <button class="btn-event">Discover the event →</button>
+    </div>
+  </div>
+</section>
+
+<!-- TRAVEL GUIDES -->
+<section style="padding: 0 24px 0; margin-bottom:64px;">
+  <div class="guides-section">
+    <div class="section-heading">
+      <h2>Travel tips &amp; guides</h2>
+      <div style="display:flex;height:4px;border-radius:2px;overflow:hidden;width:100px;margin-bottom:32px;">
+        <span style="background:#F5A623;flex:1"></span>
+        <span style="background:#4AB570;flex:1"></span>
+      </div>
+    </div>
+    <div class="guides-grid">
+      <div class="guide-card">
+        <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=600&q=80">
+        <div class="guide-card-body"><h3>How to stay safe while traveling in Europe</h3></div>
+        <div class="guide-card-footer"><button class="btn-arrow">→</button></div>
+      </div>
+      <div class="guide-card">
+        <img src="https://images.unsplash.com/photo-1580048915913-4f8f5cb481c4?w=600&q=80">
+        <div class="guide-card-body"><h3>The ultimate guide to European currencies</h3></div>
+        <div class="guide-card-footer"><button class="btn-arrow">→</button></div>
+      </div>
+      <div class="guide-card">
+        <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&q=80">
+        <div class="guide-card-body"><h3>How to choose your accommodation in Europe</h3></div>
+        <div class="guide-card-footer"><button class="btn-arrow">→</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL SECTION -->
+<section class="social-section" style="padding-bottom:64px;">
+  <div class="section-heading" style="padding: 0 48px 0; text-align:left;">
+    <h2>Follow us on Instagram</h2>
+    <p style="font-size:13px; color:var(--text-light); margin-bottom:16px;">@visiteurope_com</p>
+  </div>
+  <div class="social-strip">
+    <div class="social-tile">
+      <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=400&q=80">
+      <div class="social-tag">📎 Your #UnexpectedUpgrade</div>
+    </div>
+    <div class="social-tile">
+      <img src="https://images.unsplash.com/photo-1528702748617-c64d49f918af?w=400&q=80">
+      <div class="social-tag">📎 Go #offbeat</div>
+    </div>
+    <div class="social-tile">
+      <img src="https://images.unsplash.com/photo-1433086966358-54859d0ed716?w=400&q=80">
+      <div class="social-tag">📎 Travel #offseason</div>
+    </div>
+    <div class="social-tile">
+      <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&q=80">
+      <div class="social-tag">📎 #TravelGreen</div>
+    </div>
+    <div class="social-tile">
+      <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80">
+      <div class="social-tag">📎 #LoveLocal</div>
+    </div>
+    <div class="social-tile">
+      <img src="https://images.unsplash.com/photo-1503220317375-aaad61436b1b?w=400&q=80">
+      <div class="social-tag">📎 Follow us on Instagram</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">EUR<span>O</span>PE</div>
+      <div class="footer-logo-sub">visiteurope.com</div>
+    </div>
+    <div class="footer-col">
+      <h4>Destinations</h4>
+      <ul>
+        <li class="has-border"><a href="#">Countries</a></li>
+        <li class="has-border"><a href="#">Regions</a></li>
+        <li><a href="#">Experiences</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Events</h4>
+      <ul>
+        <li><a href="#">Travel tips</a></li>
+        <li><a href="#" style="opacity:.5">Inspiration</a></li>
+        <li class="has-border"><a href="#">Travel guides</a></li>
+        <li class="has-border"><a href="#">Trips</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>&nbsp;</h4>
+      <ul>
+        <li><a href="#">About us</a></li>
+        <li><a href="#">Privacy policy</a></li>
+        <li><a href="#">Terms of service</a></li>
+      </ul>
+    </div>
+    <div></div>
+    <div class="footer-right">
+      <button class="btn-collaborate">Collaborate with us</button>
+      <div class="social-icons">
+        <a href="#" class="social-icon">f</a>
+        <a href="#" class="social-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="#" class="social-icon">𝕏</a>
+        <a href="#" class="social-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+        </a>
+        <a href="#" class="social-icon">P</a>
+        <a href="#" class="social-icon">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.166 0h-.317C5.31 0 0 5.353 0 11.961c0 4.68 2.698 8.719 6.627 10.728-.031-.896-.006-1.973.223-2.949l1.631-6.908s-.416-.834-.416-2.067c0-1.935 1.123-3.381 2.518-3.381 1.188 0 1.764.891 1.764 1.96 0 1.194-.762 2.981-1.154 4.635-.328 1.385.694 2.512 2.056 2.512 2.469 0 4.128-3.176 4.128-6.937 0-2.858-1.923-4.997-5.398-4.997-3.929 0-6.378 2.938-6.378 6.213 0 1.127.33 1.923.848 2.534.238.282.271.395.185.72-.062.237-.202.808-.261 1.033-.085.328-.344.444-.631.324-1.762-.72-2.583-2.648-2.583-4.815 0-3.574 3.015-7.898 9.009-7.898 4.826 0 7.995 3.504 7.995 7.27 0 4.982-2.769 8.685-6.876 8.685-1.381 0-2.681-.748-3.126-1.59l-.896 3.441c-.278 1.012-.827 2.026-1.331 2.812.599.178 1.228.274 1.879.274 6.539 0 11.84-5.353 11.84-11.961C24.006 5.353 18.705 0 12.166 0z"/></svg>
+        </a>
+        <a href="#" class="social-icon" style="font-weight:900; font-size:14px;">♪</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="eu-badge">
+      <div class="eu-flag">🇪🇺</div>
+      <p>Co-funded by<br>the European Union</p>
+    </div>
+    <p>2026 © European Travel Commission. All Rights Reserved</p>
+  </div>
+</footer>
+<div class="rainbow-bottom"></div>
+
+<script>
+  function setTab(el) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function scrollCarousel(id, dir) {
+    document.getElementById(id).scrollBy({ left: dir * 440, behavior: 'smooth' });
+  }
+
+  const map = L.map('map', { zoomControl: true, scrollWheelZoom: false }).setView([50.0, 10.0], 4);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(map);
+
+  [
+    { name: 'Paris',      lat: 48.86, lng:  2.35 },
+    { name: 'Rome',       lat: 41.90, lng: 12.50 },
+    { name: 'Barcelona',  lat: 41.39, lng:  2.15 },
+    { name: 'Vienna',     lat: 48.21, lng: 16.37 },
+    { name: 'Amsterdam',  lat: 52.37, lng:  4.90 },
+    { name: 'Prague',     lat: 50.08, lng: 14.44 },
+    { name: 'Athens',     lat: 37.98, lng: 23.73 },
+    { name: 'Dubrovnik',  lat: 42.65, lng: 18.09 },
+    { name: 'Lisbon',     lat: 38.72, lng: -9.14 },
+    { name: 'Copenhagen', lat: 55.68, lng: 12.57 },
+  ].forEach(c => {
+    L.circleMarker([c.lat, c.lng], {
+      radius: 8, fillColor: '#2B3070', color: '#fff', weight: 2, fillOpacity: 0.85
+    }).addTo(map).bindPopup(`<strong>${c.name}</strong>`);
+  });
+</script>
+</body>
 </html>
