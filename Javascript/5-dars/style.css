@@ -1,0 +1,337 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+    --bg: #f3f6fb;
+    --header-bg: #f7f9fc;
+    --card: #f8f9fd;
+    --panel: #ffffff;
+    --panel-strong: #3a4867;
+    --border: #c6cfde;
+    --field-bg: #ffffff;
+    --field-border: #c6cfde;
+    --row: #f0f3f7;
+    --row-alt: rgba(57, 72, 103, 0.05);
+    --text: #1f263b;
+    --muted: #7b879c;
+    --primary: #3a4867;
+    --btn-bg: #3a4867;
+    --btn-text: #ffffff;
+    --shadow: 0 14px 30px rgba(18, 28, 45, 0.08);
+}
+
+body[data-theme='dark'] {
+    --bg: #1e273b;
+    --header-bg: #212c43;
+    --card: #252f47;
+    --panel: #2b3752;
+    --panel-strong: #2a3550;
+    --border: #3a4660;
+    --field-bg: #2b3752;
+    --field-border: #415071;
+    --row: #2a3651;
+    --row-alt: #303d5b;
+    --text: #f4f7ff;
+    --muted: #a7b3c8;
+    --primary: #f4f7ff;
+    --btn-bg: #f1f4ff;
+    --btn-text: #2b3752;;
+    --shadow: 0 16px 32px rgba(4, 8, 16, 0.4);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+img {
+    display: block;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+.navbar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 28px;
+    background: var(--header-bg);
+    width: 100dvw;
+    border-bottom: 1px solid var(--border);
+}
+
+.navbar h1 {
+    font-size: 22px;
+    font-weight: 700;
+    justify-self: center;
+}
+
+.brand,
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--panel);
+    color: var(--text);
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: var(--shadow);
+}
+
+.brand {
+    justify-self: start;
+}
+
+.theme-toggle {
+    justify-self: end;
+    cursor: pointer;
+    border-color: var(--border);
+}
+
+.form {
+    max-width: 1120px;
+    margin: 24px auto 48px;
+    padding: 0 28px;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+}
+
+section h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+}
+
+.create-card {
+    display: grid;
+    gap: 16px;
+}
+
+.avatar-panel {
+    background: var(--panel-strong);
+    border-radius: 18px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 170px;
+}
+
+.avatar-big {
+    width: 130px;
+    height: auto;
+}
+
+.contact-form {
+    display: grid;
+    gap: 10px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 12px;
+}
+
+.field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--field-bg);
+    border: 1px solid var(--field-border);
+    border-radius: 10px;
+    padding: 8px 10px;
+}
+
+.field input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+    width: 100%;
+    font-size: 14px;
+}
+
+.field input::placeholder {
+    color: var(--muted);
+}
+
+.add-btn {
+    border: none;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.add-btn .star {
+    filter: brightness(0) ;
+}
+
+.list-card {
+    display: grid;
+    gap: 16px;
+    max-height: 70vh;
+    overflow-y: scroll;
+}
+.list-card::-webkit-scrollbar {
+    display: none;
+}
+
+.list-top {
+    display: grid;
+    gap: 12px;
+}
+
+.user-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--field-bg);
+    border: 1px solid var(--field-border);
+    border-radius: 12px;
+    padding: 8px 10px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+    flex: 1;
+    font-size: 14px;
+}
+
+.search-bar input::placeholder {
+    color: var(--muted);
+}
+
+.search-bar button {
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font-weight: 600;
+    padding-left: 12px;
+    border-left: 1px solid var(--field-border);
+    cursor: pointer;
+}
+
+.contacts {
+    display: grid;
+    gap: 10px;
+}
+
+.contact-item {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: transparent;
+    border-radius: 12px;
+}
+
+.contact-item:nth-child(odd) {
+    background: var(--row-alt);
+}
+
+.info {
+    min-width: 0;
+}
+
+.info .name {
+    font-weight: 600;
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.info .phone {
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.avatar-mini {
+    width: 36px;
+    height: 36px;
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+    filter: var(--icon-filter);
+}
+
+.dots {
+    width: 18px;
+    height: 18px;
+}
+
+.star,
+.star-outline {
+    width: 18px;
+    height: 18px;
+}
+
+
+@media (max-width: 900px) {
+    .navbar {
+        grid-template-columns: 1fr 1fr 1fr ;
+        justify-items: center;
+        text-align: center;
+        
+    }
+
+    .brand,
+    .theme-toggle {
+        justify-self: center;
+        width: auto;
+    }
+    
+
+    .form {
+        grid-template-columns: 1fr;
+    }
+}
