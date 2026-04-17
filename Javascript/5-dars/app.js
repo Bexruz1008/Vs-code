@@ -62,6 +62,9 @@ form.addEventListener('submit',  (e) => {
         alert("Raqamni to'liq kiriting")
         return
     }
+    if (window.width < 768) {
+        themeLabel.textContent = '';
+    }
 
     const newContact = {
         id: email,
