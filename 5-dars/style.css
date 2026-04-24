@@ -256,6 +256,23 @@ section h2 {
     gap: 10px;
 }
 
+.empty-state {
+    padding: 36px 20px;
+    text-align: center;
+    background: var(--row-alt);
+    border-radius: 16px;
+}
+
+.empty-state h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
 .contact-item {
     display: grid;
     grid-template-columns: auto 1fr auto;
