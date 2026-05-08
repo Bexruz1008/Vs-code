@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frame Capture</title>
+    <style>
+        html, body {
+            margin: 0;
+            height: 100%;
+            background: #000;
+            overflow: hidden;
+        }
+
+        body {
+            display: grid;
+            place-items: center;
+        }
+
+        video {
+            width: 100vw;
+            height: 100vh;
+            object-fit: contain;
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+    <video id="video" muted playsinline></video>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const time = Number(params.get("time") || 0);
+        const source = params.get("src");
+        const video = document.getElementById("video");
+
+        if (!source) {
+            document.body.textContent = "Missing src parameter";
+            throw new Error("Missing src parameter");
+        }
+
+        video.src = source;
+
+        video.addEventListener("loadedmetadata", () => {
+            const targetTime = Math.min(Math.max(time, 0), Math.max(video.duration - 0.1, 0));
+            video.currentTime = targetTime;
+        });
+
+        video.addEventListener("seeked", () => {
+            document.body.setAttribute("data-ready", "true");
+        });
+    </script>
+</body>
+</html>

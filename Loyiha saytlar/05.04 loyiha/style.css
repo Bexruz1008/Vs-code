@@ -1,0 +1,71 @@
+    *,html{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: sans-serif;
+    }
+    body{
+        background-color: whitesmoke;
+        display: grid;
+        place-items: center;
+        grid-template-columns: 1fr 1fr;
+        height: 100dvh;
+    }
+    .card{
+        width: 350px;
+        height: 500px;
+        background-color: white;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 20px 20px 20px 20px;
+        border-radius: 20px;
+        box-shadow: 0 0 20px 0px;
+    }
+    strong{
+        font-size: 45px 
+    }
+    .btn{
+        padding: 10px 50px;
+        border-radius: 999px;
+        background-color: transparent;
+        display: flex;
+        text-align: center;
+        align-items: center;
+    }
+    .overlay{
+        width: 350px;
+        height: 600px;
+        background-color: rgba(236, 35, 236, 0.312);
+        position: absolute;
+        z-index: 1;
+        display: none;
+    }
+    .btn span{
+        overflow: hidden;
+        display: none;
+    }
+    .btn:hover >  span {
+        display: inline;
+        transition: transform 1s ease;
+        position: absolute;
+    }
+    .btn1:hover{
+        display: inline;
+        transition: all 0.5s ease;
+        background-color: rgb(12, 12, 174);
+        transition: background 0.5s ease;
+        color: white;
+    }
+    .text p{
+        margin: 0;
+    }
+    @media (max-width:900px) {
+        body{
+            grid-template-columns: 1fr;
+            gap: 20px;
+            padding: 20px ;
+        }   
+    }
+

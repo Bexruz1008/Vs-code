@@ -1,0 +1,306 @@
+:root {
+    --page-start: #5e63d6;
+    --page-end: #5643b3;
+    --card-bg: #f8f8fb;
+    --text-main: #171717;
+    --text-soft: #787878;
+    --blue: #1492f2;
+    --blue-dark: #0a73d2;
+    --followed-bg: #eceae5;
+    --liked: #ff4d73;
+    --shadow: 0 32px 70px rgba(27, 18, 98, 0.28);
+    --page-padding: clamp(12px, 2vh, 24px);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    padding: var(--page-padding);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background:
+        radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 25%),
+        linear-gradient(180deg, var(--page-start), var(--page-end));
+}
+
+.page {
+    position: relative;
+    width: min(100%, 660px);
+    min-height: calc(100svh - (var(--page-padding) * 2));
+    display: grid;
+    place-items: center;
+}
+
+.post-card {
+    width: min(100%, 560px);
+    height: min(calc(100svh - (var(--page-padding) * 2)), 920px);
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 40px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    padding: clamp(18px, 2.8vh, 28px) clamp(18px, 2.4vw, 30px) clamp(16px, 2.4vh, 24px);
+    background: var(--card-bg);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: clamp(12px, 1.8vh, 18px);
+    min-width: 0;
+}
+
+.avatar {
+    flex-shrink: 0;
+    width: clamp(52px, 7vh, 74px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff6ebf, #fb3d65);
+}
+
+.profile-text h1,
+.profile-text p {
+    margin: 0;
+}
+
+.profile-text h1 {
+    color: var(--text-main);
+    font-size: clamp(1.7rem, 1.35vw + 1rem, 2.3rem);
+    line-height: 1.05;
+    font-weight: 700;
+}
+
+.profile-text p {
+    margin-top: 6px;
+    color: var(--text-soft);
+    font-size: clamp(1.2rem, 1vw + 0.7rem, 1.85rem);
+    line-height: 1.2;
+}
+
+.follow-btn {
+    border: 0;
+    min-width: clamp(110px, 14vh, 148px);
+    padding: clamp(12px, 1.8vh, 17px) clamp(18px, 2.2vw, 28px);
+    border-radius: 999px;
+    background: var(--blue);
+    color: #ffffff;
+    font-size: clamp(1.2rem, 0.9vw + 0.85rem, 1.85rem);
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.follow-btn:hover {
+    transform: translateY(-1px);
+    background: var(--blue-dark);
+}
+
+.follow-btn.is-following {
+    background: var(--followed-bg);
+    color: #1d1d1d;
+}
+
+.follow-btn.is-following:hover {
+    background: #e3e0da;
+}
+
+.art {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+    background: linear-gradient(135deg, #4143cb 0%, #8600dd 55%, #390bb7 100%);
+}
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+}
+
+.shape-glow {
+    top: 52px;
+    left: -96px;
+    width: 470px;
+    height: 470px;
+    background: radial-gradient(circle, rgba(255, 247, 231, 1) 0%, rgba(255, 218, 197, 0.98) 28%, rgba(255, 144, 75, 0.55) 52%, rgba(255, 144, 75, 0) 78%);
+}
+
+.shape-light {
+    top: -74px;
+    right: 60px;
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle at center, rgba(247, 214, 255, 0.95), rgba(239, 210, 255, 0.5) 40%, rgba(239, 210, 255, 0) 75%);
+}
+
+.shape-pink {
+    top: 246px;
+    left: -42px;
+    width: 660px;
+    height: 255px;
+    border-radius: 55% 45% 38% 62% / 70% 55% 45% 30%;
+    background: linear-gradient(90deg, rgba(245, 126, 179, 0.78), rgba(204, 98, 233, 0.7), rgba(164, 91, 241, 0.62));
+    transform: rotate(10deg);
+}
+
+.shape-violet {
+    right: -68px;
+    bottom: 115px;
+    width: 460px;
+    height: 215px;
+    border-radius: 60% 40% 55% 45% / 45% 35% 65% 55%;
+    background: linear-gradient(90deg, rgba(216, 105, 227, 0.3), rgba(180, 65, 238, 0.96));
+    transform: rotate(-12deg);
+}
+
+.shape-blue {
+    left: -28px;
+    bottom: -58px;
+    width: 560px;
+    height: 300px;
+    border-radius: 58% 42% 0 0 / 72% 52% 0 0;
+    background: linear-gradient(140deg, #16a7e4 0%, #25c3ec 56%, rgba(38, 180, 228, 0.65) 100%);
+}
+
+.shape-deep {
+    right: -76px;
+    bottom: -118px;
+    width: 360px;
+    height: 240px;
+    border-radius: 60% 40% 0 0 / 80% 55% 0 0;
+    background: radial-gradient(circle at top left, rgba(0, 188, 255, 0.2), rgba(4, 35, 184, 0.96) 56%, #3302a7 100%);
+    filter: blur(2px);
+}
+
+.post-body {
+    padding: clamp(18px, 2.6vh, 28px) clamp(18px, 2.4vw, 30px) clamp(22px, 3vh, 34px);
+    background: var(--card-bg);
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: clamp(12px, 1.8vh, 18px);
+}
+
+.icon-btn {
+    border: 0;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: #0d0d0d;
+    cursor: pointer;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.icon-btn:hover {
+    transform: translateY(-2px);
+}
+
+.icon-btn svg {
+    width: clamp(30px, 4vh, 40px);
+    height: clamp(30px, 4vh, 40px);
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.like-btn.is-liked {
+    color: var(--liked);
+}
+
+.like-btn.is-liked svg {
+    fill: currentColor;
+}
+
+.likes-count {
+    min-width: 80px;
+    color: var(--text-main);
+    font-size: clamp(1.25rem, 0.8vw + 1rem, 1.95rem);
+    font-weight: 700;
+    line-height: 1;
+}
+
+.caption {
+    margin: 0;
+    color: #252525;
+    font-size: clamp(1.2rem, 0.85vw + 0.85rem, 1.95rem);
+    line-height: 1.28;
+    font-weight: 500;
+}
+
+.caption strong {
+    color: #1a1a1a;
+    font-weight: 700;
+}
+
+@media (max-width: 720px) {
+    .post-card {
+        border-radius: 30px;
+    }
+
+    .post-header,
+    .post-body {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .post-header {
+        gap: 12px;
+    }
+
+    .profile {
+        gap: 14px;
+    }
+
+    .avatar {
+        width: 58px;
+    }
+
+    .follow-btn {
+        min-width: 116px;
+        padding: 12px 20px;
+    }
+
+    .actions {
+        gap: 12px;
+    }
+
+    .icon-btn svg {
+        width: 34px;
+        height: 34px;
+    }
+
+    .likes-count {
+        min-width: 66px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}

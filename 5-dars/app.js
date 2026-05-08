@@ -44,15 +44,6 @@ const body = document.body;
 function showContacts(arr) {
     contactsBox.innerHTML = "";
 
-    if (arr.length === 0) {
-        contactsBox.innerHTML = `
-            <div class="empty-state">
-                <h3>Kontakt topilmadi</h3>
-                <p>Boshqa so'z yozib ko'ring.</p>
-            </div>
-        `;
-        return;
-    }
 
     arr.forEach((contact) => {
         contactsBox.innerHTML += `
@@ -83,9 +74,6 @@ addBtn.onclick = function () {
         return;
     }
 
-    let bor = contacts.find((item) => item.email === emailValue);
-
-
 
     let newContact = {
         id: emailValue,
@@ -112,8 +100,8 @@ searchInput.oninput = function () {
 
     let filteredContacts = contacts.filter((contact) => {
         return (
-            contact.fName.toLowerCase().includes(searchValue) ||
-            contact.lName.toLowerCase().includes(searchValue) ||
+            contact.fName.toLowerCase().includes(searchValue),
+            contact.lName.toLowerCase().includes(searchValue) ,
             contact.email.toLowerCase().includes(searchValue)
         );
     });

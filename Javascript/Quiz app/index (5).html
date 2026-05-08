@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz app</title>
+    <link rel="stylesheet" href="style (2).css" />
+  </head>
+  <body>
+    <div class="screen" id="startScreen">
+      <div class="card">
+        <div class="logo">🧩</div>
+        <h1>Quiz app</h1>
+        <p>Bilimingizni sinab ko'ring!<br />10 ta savol, har biri 10 ball.</p>
+        <div class="meta">
+          <span>10 savol</span>
+          <span>Har savolga 15 soniya</span>
+          <span>Jami 100 ball</span>
+        </div>
+        <button class="btn btn-primary" id="startBtn">Boshlash</button>
+      </div>
+    </div>
+
+    <div class="screen hidden" id="quizScreen">
+      <div class="quiz-header">
+        <div class="progress-wrap">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="quiz-meta">
+          <span id="questionCounter">Savol 1 / 10</span>
+          <span class="timer-badge" id="timerBadge">15s</span>
+          <span id="scoreDisplay">Ball: 0</span>
+        </div>
+      </div>
+
+      <div class="card quiz-card">
+        <p class="question-number" id="questionNumber">01</p>
+        <h2 class="question-text" id="questionText">Savol yuklanmoqda...</h2>
+        <div class="options" id="optionsContainer"></div>
+      </div>
+    </div>
+
+    <div class="screen hidden" id="resultScreen">
+      <div class="card result-card">
+        <div class="result-emoji" id="resultEmoji">Natija</div>
+        <h2 id="resultTitle">Natija</h2>
+        <p id="resultMessage">Xabar</p>
+
+        <div class="score-circle">
+          <span id="finalScore">0</span>
+          <small>/ 100</small>
+        </div>
+
+        <div class="result-stats">
+          <div class="result-stat">
+            <span class="stat-num" id="correctCount">0</span>
+            <span class="stat-label">To'g'ri</span>
+          </div>
+          <div class="result-stat">
+            <span class="stat-num" id="wrongCount">0</span>
+            <span class="stat-label">Noto'g'ri</span>
+          </div>
+        </div>
+
+        <div class="review-section">
+          <h3>Javoblar sharhi</h3>
+          <ul class="review-list" id="reviewList"></ul>
+        </div>
+
+        <button class="btn btn-primary" id="retryBtn">Qayta urinish</button>
+      </div>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
