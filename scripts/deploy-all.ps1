@@ -95,6 +95,129 @@ function Convert-ToGitPath {
     return $RelativePath.Replace('\', '/')
 }
 
+function Get-WorkflowUrl {
+    param(
+        [string]$RemoteUrl
+    )
+
+    if ([string]::IsNullOrWhiteSpace($RemoteUrl)) {
+        return $null
+    }
+
+    $repoMatch = [regex]::Match($RemoteUrl, "github\.com[/:](?<owner>[^/]+)/(?<repo>[^/.]+)(\.git)?$")
+    if (-not $repoMatch.Success) {
+        return $null
+    }
+
+    $owner = $repoMatch.Groups["owner"].Value
+    $repo = $repoMatch.Groups["repo"].Value
+    return "https://github.com/$owner/$repo/actions/workflows/deploy-pages.yml"
+}
+
+function Get-DeployProjectDirs {
+    param(
+        [string[]]$ChangedPaths = @()
+    )
+
+    $projectDirs = @{}
+    foreach ($path in $ChangedPaths) {
+        $dir = Split-Path -Path $path -Parent
+        if ([string]::IsNullOrWhiteSpace($dir)) {
+            if (Test-ProjectDirectory -DirPath ".") {
+                $projectDirs["."] = $true
+            }
+            continue
+        }
+
+        while ($true) {
+            if ([string]::IsNullOrWhiteSpace($dir)) {
+                break
+            }
+
+            if (Test-ProjectDirectory -DirPath $dir) {
+                $projectDirs[$dir] = $true
+                break
+            }
+
+            $parent = Split-Path -Path $dir -Parent
+            if ($parent -eq $dir) {
+                break
+            }
+            $dir = $parent
+        }
+    }
+
+    $projectLinks = @($projectDirs.Keys | Sort-Object)
+    if ($projectLinks.Count -gt 0) {
+        return $projectLinks
+    }
+
+    $fallbackDir = $null
+
+    $latestIndex = Get-ChildItem -Path "." -Recurse -File -ErrorAction SilentlyContinue |
+        Where-Object {
+            $_.Name -ieq "index.html" -and
+            $_.FullName -notmatch '[\\/]\.git[\\/]' -and
+            $_.FullName -notmatch '[\\/]\.github[\\/]' -and
+            $_.FullName -notmatch '[\\/]\.vscode[\\/]' -and
+            $_.FullName -notmatch '[\\/]node_modules[\\/]'
+        } |
+        Sort-Object -Property LastWriteTime -Descending |
+        Select-Object -First 1
+
+    if ($latestIndex) {
+        $latestDir = Split-Path -Path $latestIndex.FullName -Parent
+        $fallbackDir = Convert-ToRelativePath -AbsolutePath $latestDir
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($fallbackDir)) {
+        return @($fallbackDir)
+    }
+
+    return @()
+}
+
+function Get-DeployTargets {
+    param(
+        [string]$RemoteUrl,
+        [string[]]$ChangedPaths = @()
+    )
+
+    if ([string]::IsNullOrWhiteSpace($RemoteUrl)) {
+        return @()
+    }
+
+    $baseUrl = Get-PagesBaseUrl -RemoteUrl $RemoteUrl
+    if ([string]::IsNullOrWhiteSpace($baseUrl)) {
+        return @()
+    }
+
+    $targets = New-Object System.Collections.Generic.List[object]
+    $targets.Add([PSCustomObject]@{
+            Label        = "Root"
+            ProjectDir   = "."
+            Url          = $baseUrl
+            WaitForReady = $false
+        })
+
+    foreach ($projectDir in (Get-DeployProjectDirs -ChangedPaths $ChangedPaths)) {
+        $url = $baseUrl
+        if ($projectDir -ne ".") {
+            $urlPath = Convert-ToUrlPath -RelativePath $projectDir
+            $url = "$baseUrl$urlPath"
+        }
+
+        $targets.Add([PSCustomObject]@{
+                Label        = $projectDir
+                ProjectDir   = $projectDir
+                Url          = $url
+                WaitForReady = $true
+            })
+    }
+
+    return $targets.ToArray()
+}
+
 function Resolve-DeployProjectDir {
     param(
         [string]$InputPath
@@ -270,6 +393,111 @@ function Get-BranchSyncState {
     }
 }
 
+function Test-DeployUrlReady {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Url
+    )
+
+    try {
+        $response = Invoke-WebRequest -Uri $Url `
+            -Headers @{
+                "Cache-Control" = "no-cache"
+                "Pragma"        = "no-cache"
+            } `
+            -MaximumRedirection 5 `
+            -TimeoutSec 15 `
+            -ErrorAction Stop
+
+        if ($null -eq $response) {
+            return $false
+        }
+
+        $statusCode = [int]$response.StatusCode
+        if ($statusCode -lt 200 -or $statusCode -ge 400) {
+            return $false
+        }
+
+        $content = ""
+        if ($null -ne $response.Content) {
+            $content = [string]$response.Content
+        }
+
+        if ($content -match '(?i)<title>\s*404\s*</title>' -or
+            $content -match '(?i)file not found' -or
+            $content -match '(?i)there isn''t a github pages site here') {
+            return $false
+        }
+
+        return $true
+    }
+    catch {
+        return $false
+    }
+}
+
+function Wait-ForDeployTargets {
+    param(
+        [object[]]$Targets = @(),
+        [string]$RemoteUrl = "",
+        [int]$TimeoutSeconds = 180,
+        [int]$PollIntervalSeconds = 5
+    )
+
+    $readyTargets = @($Targets | Where-Object { $_.WaitForReady })
+    if ($readyTargets.Count -eq 0) {
+        return $true
+    }
+
+    $pending = @{}
+    foreach ($target in $readyTargets) {
+        if (-not $pending.ContainsKey($target.Url)) {
+            $pending[$target.Url] = $target
+        }
+    }
+
+    if ($pending.Count -eq 0) {
+        return $true
+    }
+
+    Write-Host "Waiting for GitHub Pages to serve the updated site..."
+    $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
+
+    while ((Get-Date) -lt $deadline) {
+        $readyUrls = @()
+        foreach ($url in @($pending.Keys)) {
+            $target = $pending[$url]
+            if (Test-DeployUrlReady -Url $url) {
+                Write-Host "  Ready: $($target.Url)"
+                $readyUrls += $url
+            }
+        }
+
+        foreach ($url in $readyUrls) {
+            $pending.Remove($url)
+        }
+
+        if ($pending.Count -eq 0) {
+            Write-Host "GitHub Pages site is live."
+            return $true
+        }
+
+        Start-Sleep -Seconds $PollIntervalSeconds
+    }
+
+    Write-Warning "Push finished, but GitHub Pages is still not serving these URL(s):"
+    foreach ($target in $pending.Values) {
+        Write-Warning "  $($target.Url)"
+    }
+
+    $workflowUrl = Get-WorkflowUrl -RemoteUrl $RemoteUrl
+    if (-not [string]::IsNullOrWhiteSpace($workflowUrl)) {
+        Write-Warning "Check workflow status: $workflowUrl"
+    }
+
+    return $false
+}
+
 function Try-PushPendingCommits {
     param(
         [string]$RemoteUrl,
@@ -299,7 +527,7 @@ function Try-PushPendingCommits {
     Write-Host "No new file changes detected, but local branch is ahead by $($syncState.Ahead) commit(s)."
     Write-Host "Pushing pending commits..."
     Invoke-CommandChecked -Executable "git" -Arguments @("push")
-    Write-Host "Deploy pipeline triggered successfully."
+    Write-Host "Push completed."
 
     $changedPaths = @(& git diff --name-only "$($syncState.Upstream)..HEAD")
     $changedPaths = $changedPaths | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
@@ -307,7 +535,8 @@ function Try-PushPendingCommits {
         $changedPaths = $FallbackChangedPaths
     }
 
-    Show-DeployLinks -RemoteUrl $RemoteUrl -ChangedPaths $changedPaths
+    $deployTargets = Show-DeployLinks -RemoteUrl $RemoteUrl -ChangedPaths $changedPaths
+    Wait-ForDeployTargets -Targets $deployTargets -RemoteUrl $RemoteUrl | Out-Null
     $result.Pushed = $true
     return $result
 }
@@ -326,86 +555,37 @@ function Show-DeployLinks {
 
     if ($baseUrl) {
         try {
-            $projectDirs = @{}
-            foreach ($path in $ChangedPaths) {
-                $dir = Split-Path -Path $path -Parent
-                if ([string]::IsNullOrWhiteSpace($dir)) {
-                    if (Test-ProjectDirectory -DirPath ".") {
-                        $projectDirs["."] = $true
-                    }
-                    continue
-                }
-
-                while ($true) {
-                    if ([string]::IsNullOrWhiteSpace($dir)) {
-                        break
-                    }
-
-                    if (Test-ProjectDirectory -DirPath $dir) {
-                        $projectDirs[$dir] = $true
-                        break
-                    }
-
-                    $parent = Split-Path -Path $dir -Parent
-                    if ($parent -eq $dir) {
-                        break
-                    }
-                    $dir = $parent
-                }
-            }
+            $deployTargets = @(Get-DeployTargets -RemoteUrl $RemoteUrl -ChangedPaths $ChangedPaths)
 
             Write-Host ""
             Write-Host "Site links:"
             Write-Host "  Root: $baseUrl"
 
-            $projectLinks = @($projectDirs.Keys | Sort-Object)
-            if ($projectLinks.Count -eq 0) {
-                $fallbackDir = $null
-
-                $latestIndex = Get-ChildItem -Path "." -Recurse -File -ErrorAction SilentlyContinue |
-                    Where-Object {
-                        $_.Name -ieq "index.html" -and
-                        $_.FullName -notmatch '[\\/]\.git[\\/]' -and
-                        $_.FullName -notmatch '[\\/]\.github[\\/]' -and
-                        $_.FullName -notmatch '[\\/]\.vscode[\\/]' -and
-                        $_.FullName -notmatch '[\\/]node_modules[\\/]'
-                    } |
-                    Sort-Object -Property LastWriteTime -Descending |
-                    Select-Object -First 1
-
-                if ($latestIndex) {
-                    $latestDir = Split-Path -Path $latestIndex.FullName -Parent
-                    $fallbackDir = Convert-ToRelativePath -AbsolutePath $latestDir
-                }
-
-                if (-not [string]::IsNullOrWhiteSpace($fallbackDir)) {
-                    $projectLinks = @($fallbackDir)
-                }
+            foreach ($target in $deployTargets | Where-Object { $_.Label -ne "Root" }) {
+                Write-Host "  $($target.Label) => $($target.Url)"
+            }
+            $workflowUrl = Get-WorkflowUrl -RemoteUrl $RemoteUrl
+            if (-not [string]::IsNullOrWhiteSpace($workflowUrl)) {
+                Write-Host ""
+                Write-Host "Workflow links:"
+                Write-Host "  Pages: $workflowUrl"
             }
 
-            foreach ($projectDir in $projectLinks) {
-                if ($projectDir -eq ".") {
-                    Write-Host "  . => $baseUrl"
-                    continue
-                }
-
-                $urlPath = Convert-ToUrlPath -RelativePath $projectDir
-                Write-Host "  $projectDir => $baseUrl$urlPath"
-            }
+            return $deployTargets
         }
         catch {
             Write-Warning "Site links could not be generated: $($_.Exception.Message)"
         }
     }
 
-    $repoMatch = [regex]::Match($RemoteUrl, "github\.com[/:](?<owner>[^/]+)/(?<repo>[^/.]+)(\.git)?$")
-    if ($repoMatch.Success) {
-        $owner = $repoMatch.Groups["owner"].Value
-        $repo = $repoMatch.Groups["repo"].Value
+    $workflowUrl = Get-WorkflowUrl -RemoteUrl $RemoteUrl
+    if (-not [string]::IsNullOrWhiteSpace($workflowUrl)) {
         Write-Host ""
         Write-Host "Workflow links:"
-        Write-Host "  Pages: https://github.com/$owner/$repo/actions/workflows/deploy-pages.yml"
+        Write-Host "  Pages: $workflowUrl"
     }
+
+    return @()
 }
 
 function Show-NoChangesDiagnostics {
@@ -549,5 +729,6 @@ $changedPaths = $changedPaths | Where-Object { -not [string]::IsNullOrWhiteSpace
 Write-Host "Pushing to remote..."
 Invoke-CommandChecked -Executable "git" -Arguments @("push")
 
-Write-Host "Deploy pipeline triggered successfully."
-Show-DeployLinks -RemoteUrl $remoteUrl -ChangedPaths $changedPaths
+Write-Host "Push completed."
+$deployTargets = Show-DeployLinks -RemoteUrl $remoteUrl -ChangedPaths $changedPaths
+Wait-ForDeployTargets -Targets $deployTargets -RemoteUrl $remoteUrl | Out-Null
