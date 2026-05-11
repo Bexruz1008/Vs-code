@@ -114,6 +114,20 @@ function Get-WorkflowUrl {
     return "https://github.com/$owner/$repo/actions/workflows/deploy-pages.yml"
 }
 
+function Get-RedeployCommitMessage {
+    param(
+        [string]$ProjectDir = ""
+    )
+
+    $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm"
+    if ([string]::IsNullOrWhiteSpace($ProjectDir) -or $ProjectDir -eq ".") {
+        return "deploy: retry pages $timestamp"
+    }
+
+    $normalizedDir = $ProjectDir.Replace('\', '/')
+    return "deploy: retry $normalizedDir $timestamp"
+}
+
 function Get-DeployProjectDirs {
     param(
         [string[]]$ChangedPaths = @()
@@ -393,11 +407,19 @@ function Get-BranchSyncState {
     }
 }
 
-function Test-DeployUrlReady {
+function Get-DeployUrlStatus {
     param(
         [Parameter(Mandatory = $true)]
         [string]$Url
     )
+
+    $result = [PSCustomObject]@{
+        Url          = $Url
+        Reachable    = $false
+        Ready        = $false
+        StatusCode   = $null
+        ErrorMessage = ""
+    }
 
     try {
         $response = Invoke-WebRequest -Uri $Url `
@@ -410,12 +432,14 @@ function Test-DeployUrlReady {
             -ErrorAction Stop
 
         if ($null -eq $response) {
-            return $false
+            return $result
         }
 
+        $result.Reachable = $true
         $statusCode = [int]$response.StatusCode
+        $result.StatusCode = $statusCode
         if ($statusCode -lt 200 -or $statusCode -ge 400) {
-            return $false
+            return $result
         }
 
         $content = ""
@@ -426,14 +450,95 @@ function Test-DeployUrlReady {
         if ($content -match '(?i)<title>\s*404\s*</title>' -or
             $content -match '(?i)file not found' -or
             $content -match '(?i)there isn''t a github pages site here') {
-            return $false
+            return $result
         }
 
-        return $true
+        $result.Ready = $true
+        return $result
     }
     catch {
+        $result.ErrorMessage = $_.Exception.Message
+
+        $response = $null
+        if ($_.Exception.PSObject.Properties.Name -contains "Response") {
+            $response = $_.Exception.Response
+        }
+
+        if ($null -ne $response) {
+            $result.Reachable = $true
+            try {
+                $result.StatusCode = [int]$response.StatusCode
+            }
+            catch {
+            }
+        }
+
+        return $result
+    }
+}
+
+function Test-DeployUrlReady {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Url
+    )
+
+    return (Get-DeployUrlStatus -Url $Url).Ready
+}
+
+function Get-UnreadyDeployTargets {
+    param(
+        [object[]]$Targets = @()
+    )
+
+    $statuses = New-Object System.Collections.Generic.List[object]
+    foreach ($target in ($Targets | Where-Object { $_.WaitForReady })) {
+        $urlStatus = Get-DeployUrlStatus -Url $target.Url
+        if (-not $urlStatus.Ready) {
+            $statuses.Add([PSCustomObject]@{
+                    Target       = $target
+                    Reachable    = $urlStatus.Reachable
+                    StatusCode   = $urlStatus.StatusCode
+                    ErrorMessage = $urlStatus.ErrorMessage
+                })
+        }
+    }
+
+    return $statuses.ToArray()
+}
+
+function Try-RedeployUnavailableSite {
+    param(
+        [object[]]$Targets = @(),
+        [string]$RemoteUrl = "",
+        [string]$ProjectDir = ""
+    )
+
+    $unreadyStatuses = @(Get-UnreadyDeployTargets -Targets $Targets)
+    if ($unreadyStatuses.Count -eq 0) {
         return $false
     }
+
+    $reachableFailures = @($unreadyStatuses | Where-Object { $_.Reachable })
+    if ($reachableFailures.Count -eq 0) {
+        Write-Warning "Could not verify GitHub Pages reachability from this machine, so no empty redeploy commit was created."
+        return $false
+    }
+
+    Write-Warning "No project file changes were detected, but the published URL is still unavailable."
+    foreach ($failure in $reachableFailures) {
+        $details = if ($null -ne $failure.StatusCode) { "HTTP $($failure.StatusCode)" } else { "not ready" }
+        Write-Warning "  $($failure.Target.Url) ($details)"
+    }
+
+    $retryMessage = Get-RedeployCommitMessage -ProjectDir $ProjectDir
+    Write-Host "Creating empty redeploy commit..."
+    Invoke-CommandChecked -Executable "git" -Arguments @("commit", "--allow-empty", "-m", $retryMessage)
+    Write-Host "Pushing redeploy commit..."
+    Invoke-CommandChecked -Executable "git" -Arguments @("push")
+    Write-Host "Push completed."
+    Wait-ForDeployTargets -Targets $Targets -RemoteUrl $RemoteUrl | Out-Null
+    return $true
 }
 
 function Wait-ForDeployTargets {
@@ -591,7 +696,8 @@ function Show-DeployLinks {
 function Show-NoChangesDiagnostics {
     param(
         [Parameter(Mandatory = $true)]
-        [string]$TargetProjectDir
+        [string]$TargetProjectDir,
+        [switch]$DeployDirExplicit
     )
 
     $allChanges = @(& git status --porcelain)
@@ -608,7 +714,12 @@ function Show-NoChangesDiagnostics {
             Write-Host "  ... and $($allChanges.Count - $preview.Count) more"
         }
 
-        Write-Host "Tip: open a file inside '$TargetProjectDir' and rerun this task, or run deploy without -DeployDir."
+        if ($DeployDirExplicit) {
+            Write-Host "Tip: this task only deploys changes inside '$TargetProjectDir'. Save changes there, then rerun this deploy task."
+        }
+        else {
+            Write-Host "Tip: open a file inside '$TargetProjectDir' and rerun this task, or run deploy without -DeployDir."
+        }
         return
     }
 
@@ -632,7 +743,12 @@ function Show-NoChangesDiagnostics {
     }
 
     Write-Host "Git sees no saved file changes."
-    Write-Host "Tip: save edited files and verify they are inside '$TargetProjectDir'."
+    if ($DeployDirExplicit) {
+        Write-Host "Tip: save edited files inside '$TargetProjectDir' before rerunning this deploy task."
+    }
+    else {
+        Write-Host "Tip: save edited files and verify they are inside '$TargetProjectDir'."
+    }
 }
 
 try {
@@ -693,9 +809,13 @@ if (-not [string]::IsNullOrWhiteSpace($targetProjectDir)) {
             exit 0
         }
 
+        $deployTargets = Show-DeployLinks -RemoteUrl $remoteUrl -ChangedPaths @($linkHint)
+        if (Try-RedeployUnavailableSite -Targets $deployTargets -RemoteUrl $remoteUrl -ProjectDir $targetProjectDir) {
+            exit 0
+        }
+
         Write-Host "No changes found in selected folder. Nothing to deploy."
-        Show-NoChangesDiagnostics -TargetProjectDir $targetProjectDir
-        Show-DeployLinks -RemoteUrl $remoteUrl -ChangedPaths @($linkHint)
+        Show-NoChangesDiagnostics -TargetProjectDir $targetProjectDir -DeployDirExplicit:(-not [string]::IsNullOrWhiteSpace($DeployDir))
         exit 0
     }
 }
@@ -710,8 +830,12 @@ else {
             exit 0
         }
 
+        $deployTargets = Show-DeployLinks -RemoteUrl $remoteUrl
+        if (Try-RedeployUnavailableSite -Targets $deployTargets -RemoteUrl $remoteUrl) {
+            exit 0
+        }
+
         Write-Host "No changes found. Nothing to deploy."
-        Show-DeployLinks -RemoteUrl $remoteUrl
         exit 0
     }
 
