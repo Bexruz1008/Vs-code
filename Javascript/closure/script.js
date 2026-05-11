@@ -97,5 +97,3 @@ function createUser(name) {
 let showUser = createUser()
 showUser()
 showUser()
-
-// 7
