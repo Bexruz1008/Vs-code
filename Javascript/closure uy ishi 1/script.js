@@ -17,7 +17,7 @@ function passwordChecker() {
             return;
         }
 
-        if (password.includes("1234")) {
+        if (password.includes("123")) {
             passResult.textContent = "Parol xavfsiz emas, 123 raqamlarini o'z ichiga olmasligi kerak";
             passResult.style.color = "red";
             return;
@@ -34,7 +34,7 @@ function passwordChecker() {
 function ageCalculator() {
 
     return () => {
-        const birthYear = Number(userYear.value);
+        const birthYear = +userYear.value.trim();
         let name = userName.value.trim();
         let formattedName = name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script defer src="./form.js"></script>
+    <script defer src="./script.js"></script>
+  </head>
+  <body class="form-body">
+    <nav>
+      <a>Xodimlar.uz</a>
+      <div class="nav-flex">
+        <a href="./index.html">Bosh sahifa</a>
+        <a href="./add_student.html">Xodimlar qo'shish</a>
+      </div>
+    </nav>
+    <h1 class="add-studentH1">Yangi xodimlar qo'shish</h1>
+    <main class="add-student-main">
+      <form id="add-student-form">
+        <label for="name"
+          >To'liq ism
+          <input type="text" id="name" placeholder="Ism Familya" required />
+        </label>
+
+        <label for="pochta"
+          >Elektron pochta
+          <input
+            type="email"
+            id="email"
+            placeholder="email@misol.com"
+            required
+          />
+        </label>
+
+        <label for="phone"
+          >Telefon
+          <input type="text" id="phone" placeholder="+998 00 000 00 00" />
+        </label>
+
+        <label for="website"
+          >Veb-sayt
+          <input type="url" id="website" placeholder="www.misol.com" />
+        </label>
+
+        <label for="company">
+          Kompaniya
+          <input type="text" id="company" placeholder="Kompaniya nomi" />
+        </label>
+
+        <label for="city">
+          Shahar
+          <input type="text" id="city" placeholder="Shahar nomi" />
+        </label>
+        <div class="btns-flex">
+          <button id="submit-btn" type="submit">Qo'shish</button>
+          <button id="reset-btn" type="reset">Bekor qilish</button>
+        </div>
+      </form>
+    </main>
+  </body>
+</html>

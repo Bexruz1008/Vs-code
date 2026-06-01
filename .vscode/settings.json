@@ -7,5 +7,12 @@
     "editor.insertSpaces": true
   },
   "liveServer.settings.port": 5588,
-  "task.saveBeforeRun": "always"
+  "task.saveBeforeRun": "always",
+  "editor.wordWrap": "bounded",
+  "chat.editor.wordWrap": "on",
+  "editor.quickSuggestionsDelay": 0,
+  "editor.suggest.showWords": true,
+  "editor.suggest.localityBonus": true,
+  "editor.codeActionsOnSave": {},
+  "java.configuration.updateBuildConfiguration": "interactive"
 }

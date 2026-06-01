@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amaliyot — Massiv, Ob'ekt, DOM</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- <script defer src="app.js"></script> -->
+    <script defer src="answers.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>JavaScript amaliyoti</h1>
+        <p>Bir vaqtda bitta <code>section</code> ustida ishlang. Qolgan bo‘limlarni CSS da <code>display: none</code>
+            qilish mumkin (ixtiyoriy).</p>
+    </header>
+
+    <main>
+
+        <!-- TOPSHIRIQ 1 — Kutubxona navbatlari (asosan console.log; DOM shart emas) -->
+        <section id="topshiriq-1" class="topshiriq" aria-labelledby="t1-title">
+            <h2 id="t1-title">Topshiriq 1 — Kutubxona navbatlari</h2>
+            <p>Natijani brauzer konsolida ko‘ring (F12 → Console).</p>
+            <!-- Talaba: input/tugmalar ixtiyoriy qo‘shishi mumkin -->
+        </section>
+
+
+        <!-- TOPSHIRIQ 2 — Talabalar (asosan console.log) -->
+        <section id="topshiriq-2" class="topshiriq" aria-labelledby="t2-title">
+            <h2 id="t2-title">Topshiriq 2 — Talabalar ro‘yxati</h2>
+            <p>Natijani konsolda chiqaring. DOM ixtiyoriy: <code>#talabalar-chiqish</code></p>
+            <pre id="talabalar-chiqish" aria-live="polite"></pre>
+        </section>
+
+
+        <!-- TOPSHIRIQ 3 — forEach, mevalar ro‘yxati -->
+        <section id="topshiriq-3" class="topshiriq" aria-labelledby="t3-title">
+            <h2 id="t3-title">Topshiriq 3 — Mevlar ro‘yxati</h2>
+            <ul id="meva-ro'yxati"></ul>
+        </section>
+
+
+        <!-- TOPSHIRIQ 4 — Do‘kon katalogi -->
+        <section id="topshiriq-4" class="topshiriq" aria-labelledby="t4-title">
+            <h2 id="t4-title">Topshiriq 4 — Onlayn do‘kon katalogi</h2>
+            <label for="kategoriya">Kategoriya:</label>
+            <select id="kategoriya" name="kategoriya">
+                <option value="barcha">Barchasi</option>
+                <option value="elektronika">Elektronika</option>
+                <option value="kiyim">Kiyim</option>
+                <option value="oziq-ovqat">Oziq-ovqat</option>
+            </select>
+            <section id="katalog" class="katalog-grid" aria-label="Mahsulotlar katalogi"></section>
+        </section>
+
+
+        <!-- TOPSHIRIQ 5 — Savat -->
+        <section id="topshiriq-5" class="topshiriq" aria-labelledby="t5-title">
+            <h2 id="t5-title">Topshiriq 5 — Savat</h2>
+
+            <div class="savat-layout">
+                <div aria-label="Mahsulotlar">
+                    <h3>Mahsulotlar</h3>
+                    <!-- Talaba: data-id yoki data-nom bilan tugmalar qo‘shadi; mahsulotlar app.js da -->
+                    <ul id="mahsulotlar-ro'yxati" class="mahsulotlar-tugmalar"></ul>
+                </div>
+
+                <div aria-label="Savat">
+                    <h3>Savat</h3>
+                    <ul id="savat"></ul>
+                    <p id="jami">Jami: —</p>
+                    <button type="button" id="savatdan-olib-tashlash">Oxirgisini olib tashlash</button>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- TOPSHIRIQ 6 — Vazifalar paneli -->
+        <section id="topshiriq-6" class="topshiriq" aria-labelledby="t6-title">
+            <h2 id="t6-title">Topshiriq 6 — Vazifalar paneli</h2>
+            <form id="vazifa-form" action="#" method="get">
+                <label for="vazifa-matn">Yangi vazifa:</label>
+                <input type="text" id="vazifa-matn" name="vazifa-matn" placeholder="Masalan: Darslik o'qish"
+                    autocomplete="off">
+                <button type="button" id="qoshish">Qo‘shish</button>
+            </form>
+            <button type="button" id="faqat-faol">Faqat faol vazifalar</button>
+            <button type="button" id="barcha-vazifalar">Barcha vazifalar</button>
+            <ul id="vazifalar"></ul>
+        </section>
+
+
+        <!-- TOPSHIRIQ 7 — Reyting jadvali -->
+        <section id="topshiriq-7" class="topshiriq" aria-labelledby="t7-title">
+            <h2 id="t7-title">Topshiriq 7 — O‘yin reytingi</h2>
+            <table id="reyting-jadval">
+                <thead>
+                    <tr>
+                        <th scope="col">O‘rin</th>
+                        <th scope="col">Ism</th>
+                        <th scope="col">Ball</th>
+                        <th scope="col">Daraja</th>
+                    </tr>
+                </thead>
+                <tbody id="reyting-tana"></tbody>
+            </table>
+        </section>
+
+
+        <!-- CHALLENGE 8 — Kutubxona qidiruvi -->
+        <section id="topshiriq-8" class="topshiriq challenge" aria-labelledby="t8-title">
+            <h2 id="t8-title">Challenge 8 — Kutubxona qidiruvi</h2>
+            <label for="qidiruv">Qidiruv (nom yoki muallif):</label>
+            <input type="search" id="qidiruv" name="qidiruv" placeholder="Kitob nomi..." autocomplete="off">
+
+            <label for="janr">Janr:</label>
+            <select id="janr" name="janr">
+                <option value="barcha">Barcha janrlar</option>
+                <option value="dasturlash">Dasturlash</option>
+                <option value="badiiy">Badiiy</option>
+                <option value="ilmiy">Ilmiy</option>
+                <option value="bolalar">Bolalar</option>
+            </select>
+
+            <div id="natijalar" class="kartochkalar-grid" aria-live="polite" aria-label="Qidiruv natijalari"></div>
+        </section>
+
+
+        <!-- CHALLENGE 9 — Xarajatlar hisoboti -->
+        <section id="topshiriq-9" class="topshiriq challenge" aria-labelledby="t9-title">
+            <h2 id="t9-title">Challenge 9 — Oylik xarajatlar</h2>
+            <article id="hisobot" aria-label="Xarajatlar hisoboti">
+                <p id="hisobot-umumiy">Umumiy: —</p>
+                <ul id="hisobot-kategoriyalar"></ul>
+            </article>
+        </section>
+
+
+        <!-- CHALLENGE 10 — Navbat simulyatori -->
+        <section id="topshiriq-10" class="topshiriq challenge" aria-labelledby="t10-title">
+            <h2 id="t10-title">Challenge 10 — Navbat simulyatori</h2>
+
+            <div class="navbat-boshqaruv" aria-label="Navbat boshqaruvi">
+                <button type="button" id="navbatga-qoshish">Navbatga qo‘shish</button>
+                <button type="button" id="xizmat-korsatish">Xizmat ko‘rsatish</button>
+                <button type="button" id="oxirgi-bekor">Oxirgi bekor qilish</button>
+            </div>
+
+            <p id="keyingi">Keyingi: —</p>
+            <p id="navbat-statistika">Statistika: —</p>
+
+            <h3>Navbatda</h3>
+            <ol id="navbat"></ol>
+        </section>
+
+
+        <!-- CHALLENGE 11 — Mini CRM -->
+        <section id="topshiriq-11" class="topshiriq challenge" aria-labelledby="t11-title">
+            <h2 id="t11-title">Challenge 11 — Mini CRM</h2>
+
+            <div class="crm-filtr" aria-label="Filtr">
+                <button type="button" id="faqat-faollar">Faqat faollar</button>
+                <button type="button" id="hammasi">Hammasi</button>
+            </div>
+
+            <table id="mijozlar-jadval">
+                <thead>
+                    <tr>
+                        <th scope="col">Kompaniya</th>
+                        <th scope="col">Buyurtmalar</th>
+                        <th scope="col">O‘rtacha</th>
+                        <th scope="col">Jami summa</th>
+                        <th scope="col">Faol</th>
+                    </tr>
+                </thead>
+                <tbody id="mijozlar"></tbody>
+            </table>
+
+            <aside id="crm-statistika" aria-label="CRM statistikasi">
+                <p id="crm-jami-aylanma">Faol mijozlar aylanmasi: —</p>
+                <p id="crm-eng-yirik">Eng yirik kompaniya: —</p>
+            </aside>
+        </section>
+
+
+        <!-- CHALLENGE 12 — O‘quv markazi paneli -->
+        <section id="topshiriq-12" class="topshiriq challenge" aria-labelledby="t12-title">
+            <h2 id="t12-title">Challenge 12 — O‘quv markazi paneli</h2>
+
+            <div class="markaz-panel" aria-label="Guruh boshqaruvi">
+                <label for="guruh-tanlash">Guruh:</label>
+                <select id="guruh-tanlash" name="guruh">
+                    <!-- Talaba: option larni app.js dan yoki qo‘lda to‘ldiradi -->
+                </select>
+
+                <form id="talaba-qoshish-form" action="#" method="get">
+                    <h3>Yangi talaba</h3>
+                    <label for="talaba-ism">Ism:</label>
+                    <input type="text" id="talaba-ism" name="ism" autocomplete="name">
+
+                    <label for="talaba-ball">Ball:</label>
+                    <input type="number" id="talaba-ball" name="ball" min="0" max="100" step="1">
+
+                    <button type="button" id="talaba-qoshish">Talaba qo‘shish</button>
+                    <button type="button" id="talaba-chiqarish">Guruhdan chiqarish (oxirgi)</button>
+                </form>
+            </div>
+
+            <div aria-label="Tanlangan guruh">
+                <h3 id="guruh-sarlavha">Guruh: —</h3>
+                <p id="guruh-ortacha">O‘rtacha ball: —</p>
+                <ul id="talabalar-ro'yxati"></ul>
+            </div>
+
+            <div aria-label="A'lo o'quvchilar">
+                <h3>A'lo o'quvchilar (ball ≥ 80)</h3>
+                <ul id="alo-oquvchilar"></ul>
+            </div>
+
+            <div id="markaz-statistika" aria-label="Umumiy statistika">
+                <p id="jami-talabalar">Jami talabalar: —</p>
+                <p id="jami-guruhlar">Jami guruhlar: —</p>
+            </div>
+        </section>
+
+
+        <!-- MINI-TOPSHIRIQLAR -->
+        <section id="mini-topshiriqlar" class="topshiriq mini" aria-labelledby="mini-title">
+            <h2 id="mini-title">Mini-topshiriqlar</h2>
+
+            <article id="mini-a" aria-labelledby="mini-a-title">
+                <h3 id="mini-a-title">Mini A — map (kvadratlar)</h3>
+                <ul id="sonlar"></ul>
+            </article>
+
+            <article id="mini-b" aria-labelledby="mini-b-title">
+                <h3 id="mini-b-title">Mini B — filter (juft sonlar)</h3>
+                <p id="juft"></p>
+            </article>
+
+            <article id="mini-c" aria-labelledby="mini-c-title">
+                <h3 id="mini-c-title">Mini C — reduce (konsol)</h3>
+                <p>Natija konsolda.</p>
+            </article>
+
+            <article id="mini-d" aria-labelledby="mini-d-title">
+                <h3 id="mini-d-title">Mini D — Oxirgi harakatlar</h3>
+                <button type="button" id="harakat-qoshish">Harakat qo‘shish</button>
+                <ol id="oxirgi-harakatlar"></ol>
+            </article>
+
+            <article id="mini-e" aria-labelledby="mini-e-title">
+                <h3 id="mini-e-title">Mini E — Foydalanuvchi validatsiyasi</h3>
+                <form id="royxat-form" action="#" method="get">
+                    <label for="login">Login:</label>
+                    <input type="text" id="login" name="login" autocomplete="username">
+
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" autocomplete="email">
+
+                    <label for="yosh">Yosh:</label>
+                    <input type="number" id="yosh" name="yosh" min="1" max="120">
+
+                    <button type="submit" id="royxat-yuborish">Ro‘yxatdan o‘tish</button>
+                </form>
+                <p id="validatsiya-xabar" role="status" aria-live="polite"></p>
+            </article>
+        </section>
+
+    </main>
+
+
+</body>
+
+</html>

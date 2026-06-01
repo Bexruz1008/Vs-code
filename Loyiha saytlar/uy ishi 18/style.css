@@ -1,0 +1,438 @@
+/* ==========================================================================
+   Asosiy stillar — JavaScript amaliyoti
+   Bir topshiriq ustida ishlash: keraksiz section larni yashiring, masalan:
+   .topshiriq { display: none; }
+   #topshiriq-3 { display: block; }
+   ========================================================================== */
+
+:root {
+  --bg: #f4f6f9;
+  --surface: #ffffff;
+  --text: #1a1d26;
+  --muted: #5c6478;
+  --border: #dde2ec;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --accent: #7c3aed;
+  --success: #059669;
+  --danger: #dc2626;
+  --radius: 10px;
+  --shadow: 0 2px 8px rgba(26, 29, 38, 0.06);
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+  --max-width: 900px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* ----- Header / Footer ----- */
+
+header,
+footer {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1.25rem 1.5rem;
+}
+
+header {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+header h1 {
+  margin: 0 0 0.35rem;
+  font-size: 1.5rem;
+}
+
+header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+footer p {
+  margin: 0;
+}
+
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* ----- Topshiriq bo‘limlari ----- */
+
+.topshiriq {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.topshiriq h2 {
+  margin: 0 0 1rem;
+  font-size: 1.2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--primary);
+}
+
+.topshiriq h3 {
+  margin: 1rem 0 0.5rem;
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.topshiriq.challenge h2 {
+  border-bottom-color: var(--accent);
+}
+
+.topshiriq.mini h2 {
+  border-bottom-color: var(--success);
+}
+
+.topshiriq.mini article {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--bg);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.topshiriq > p {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+}
+
+code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--bg);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+}
+
+/* ----- Formlar, inputlar ----- */
+
+label {
+  display: inline-block;
+  margin: 0.5rem 0.75rem 0.5rem 0;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="number"],
+select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font: inherit;
+  background: var(--surface);
+  min-width: 160px;
+}
+
+input:focus,
+select:focus,
+button:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+form {
+  margin: 0.75rem 0;
+}
+
+/* ----- Tugmalar ----- */
+
+button {
+  font: inherit;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  margin: 0.25rem 0.5rem 0.25rem 0;
+  border: none;
+  border-radius: 6px;
+  background: var(--primary);
+  color: #fff;
+  transition: background 0.15s ease;
+}
+
+button:hover {
+  background: var(--primary-hover);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+#savatdan-olib-tashlash,
+#oxirgi-bekor {
+  background: var(--danger);
+}
+
+#savatdan-olib-tashlash:hover,
+#oxirgi-bekor:hover {
+  background: #b91c1c;
+}
+
+.navbat-boshqaruv,
+.crm-filtr {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* ----- Ro‘yxatlar ----- */
+
+ul,
+ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+ul:empty::before,
+ol:empty::before {
+  content: "(bo‘sh — JavaScript bilan to‘ldiring)";
+  color: var(--muted);
+  font-style: italic;
+  list-style: none;
+  margin-left: -1.5rem;
+}
+
+#meva-royxati li,
+#vazifalar li,
+#savat li,
+#talabalar-royxati li,
+#alo-oquvchilar li {
+  padding: 0.35rem 0;
+}
+
+#vazifalar li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  list-style: none;
+  margin-left: -1.5rem;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+/* ----- Jadval ----- */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.95rem;
+}
+
+th,
+td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  border: 1px solid var(--border);
+}
+
+thead th {
+  background: var(--bg);
+  font-weight: 600;
+}
+
+tbody tr:nth-child(even) {
+  background: #fafbfc;
+}
+
+/* ----- Katalog va kartochkalar (talaba .card qo‘shadi) ----- */
+
+.katalog-grid,
+.kartochkalar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.card,
+.kitob-kartochka {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+.card h4,
+.kitob-kartochka h4 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+}
+
+.card .narx,
+.kitob-kartochka .yil {
+  color: var(--primary);
+  font-weight: 600;
+  margin: 0;
+}
+
+.mahsulotlar-tugmalar {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mahsulotlar-tugmalar li {
+  margin-bottom: 0.5rem;
+}
+
+.mahsulotlar-tugmalar:empty::before {
+  margin-left: 0;
+}
+
+/* ----- Savat layout ----- */
+
+.savat-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 600px) {
+  .savat-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+#jami,
+#hisobot-umumiy,
+#crm-jami-aylanma {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin: 0.75rem 0;
+}
+
+/* ----- Hisobot, CRM, markaz ----- */
+
+#hisobot,
+#crm-statistika,
+#markaz-statistika {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--bg);
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+#hisobot-kategoriyalar {
+  list-style: none;
+  padding: 0;
+}
+
+#hisobot-kategoriyalar li {
+  padding: 0.35rem 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+#keyingi {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+#talabalar-chiqish {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 1rem;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  min-height: 4rem;
+  overflow-x: auto;
+}
+
+#talabalar-chiqish:empty::before {
+  content: "Natija shu yerda chiqadi...";
+  color: #94a3b8;
+}
+
+/* ----- Validatsiya xabari (JS da class qo‘shish mumkin) ----- */
+
+#validatsiya-xabar {
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  min-height: 1.5rem;
+}
+
+#validatsiya-xabar.muvaffaq {
+  background: #d1fae5;
+  color: var(--success);
+}
+
+#validatsiya-xabar.xato {
+  background: #fee2e2;
+  color: var(--danger);
+}
+
+/* ----- Daraja ranglari (reyting uchun, ixtiyoriy) ----- */
+
+.daraja-oltin {
+  color: #b45309;
+  font-weight: 600;
+}
+
+.daraja-kumush {
+  color: #64748b;
+  font-weight: 600;
+}
+
+.daraja-bronza {
+  color: #92400e;
+  font-weight: 600;
+}
+
+/* ----- Mini: sonlar ro‘yxati ----- */
+
+#sonlar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+#sonlar li {
+  background: var(--primary);
+  color: #fff;
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+#sonlar:empty::before {
+  content: none;
+}
