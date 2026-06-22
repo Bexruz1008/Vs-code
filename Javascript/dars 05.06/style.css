@@ -1,0 +1,85 @@
+*,
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  transition: all 0.5s ease;
+}
+body {
+  background-color: #857259;
+  padding: 30px;
+  display: grid;
+  place-items: center;
+  scroll-behavior: smooth;
+}
+body::-webkit-scrollbar {
+  background-color: #857259;
+  position: relative;
+}
+body::-webkit-scrollbar-thumb {
+  background-color: #135029;
+  border-radius: 10px;
+}
+#list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    padding-top: 20px;
+}
+.progress {
+  width: 90%;
+  height: 10px;
+  background-color: #135029;
+  border-radius: 10px;
+  overflow: hidden;
+  animation: progress 1s linear forwards;
+}
+@keyframes progress {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 90%;
+  }
+}
+.card {
+  display: grid;
+  place-items: center;
+  width: 300px;
+  background-color: #135029;
+  gap: 10px;
+  padding: 20px;
+  margin: 10px 10px;
+  text-align: center;
+  border-radius: 20px;
+  box-shadow: 0 20px 20px #00000080;
+}
+h1 {
+  padding: 20px 10px;
+  color: #f0f8ff;
+  font-size: 40px;
+  text-shadow: 2px 2px 5px #000;
+}
+p {
+  color: #f0f8ff;
+}
+h3 {
+  color: #dad587;
+  border-bottom: 3px solid #96711a;
+  padding: 10px 5px;
+}
+h2 {
+  color: #dad587;
+  padding: 10px;
+  background-color: #96711a;
+  border-radius: 10px;
+}
+h2:hover {
+  color: #96711a;
+  background-color: #dad587;
+  transition: all 0.5s ease;
+}
+h4 {
+  color: #e0bfb8;
+}
