@@ -154,15 +154,15 @@ console.log(userCopy);
 // 2. `mergeUsers` funksiyasini yozing — ikki user obyektini qabul qilib,
 //    ularni birlashtirgan yangi obyekt qaytarsin (ikkinchi obyekt qiymatlari ustun kelsin).
 //
-const mergeUsers = (user1, user2) => {
-  return { ...user1, ...user2 };
-};
+const mergeUsers = (user1, user2) =>{
+    return{
+        ...user1,
+        ...user2
+    }
+}
+console.log(mergeUsers(users[0],users[1]));
 
-const mergedUser = mergeUsers(users[0], users[1]);
-console.log(mergedUser);
-
-// 3. `addTask` funksiyasini yozing — `tasks` massivi va yangi task obyektini
-//    qabul qilib, vazifani oxiriga qo'shgan yangi massiv qaytarsin —
+// 3. `addTask` funksiyasini yozing — `tasks` massivi va yangi task obyektini qabul qilib, vazifani oxiriga qo'shgan yangi massiv qaytarsin —
 //    asl massivni o'zgartirmagan holda.
 let newTask = {
   id: 15,
@@ -211,7 +211,7 @@ console.log(productLabel(products[0]));
 //    yoki "❌ Bajarilmadi" — vazifaning completed holatiga qarab.
 let taskSummary = (task) => {
   const completed = task.completed ? "✅ Bajarildi" : "❌ Bajarilmadi";
-  return `[${task.priority}] ${task.title} — Muddat: ${task.dueDate} — ${completed}`;
+  return `[${task.priority.toUpperCase()}] ${task.title} — Muddat: ${task.dueDate} — ${completed}`;
 };
 console.log(taskSummary(tasks[0]));
 // ============================================================
