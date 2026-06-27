@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="ProposalAI generates premium client proposals with AI, billing, exports, dashboards, and team management." />
+  <meta name="theme-color" content="#0b1020" />
+  <meta property="og:title" content="ProposalAI" />
+  <meta property="og:description" content="Generate polished client proposals for freelancers, agencies, and consultants." />
+  <meta property="og:type" content="website" />
+  <title>ProposalAI | Premium Proposal Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "ProposalAI",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": "AI-powered proposal generator for freelancers, agencies, and consultants."
+    }
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-a"></div>
+  <div class="ambient ambient-b"></div>
+
+  <div class="shell">
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="#home" aria-label="ProposalAI home">
+          <span class="brand-mark">P</span>
+          <span>
+            <strong>ProposalAI</strong>
+            <small>Premium proposal engine</small>
+          </span>
+        </a>
+
+        <nav class="nav">
+          <a href="#builder">Generator</a>
+          <a href="#dashboard">Dashboard</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#admin">Admin</a>
+          <a href="#blog">Blog</a>
+          <a href="#architecture">Architecture</a>
+        </nav>
+
+        <div class="topbar-actions">
+          <button id="themeToggle" class="btn btn-ghost" type="button" aria-label="Toggle theme">
+            <span class="btn-icon" id="themeIcon">◐</span>
+            <span id="themeLabel">Dark mode</span>
+          </button>
+          <a class="btn btn-primary" href="#builder">Start generating</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="home">
+      <section class="hero section">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <div class="eyebrow">Stripe-level polish for client proposals</div>
+            <h1>Generate premium proposals in minutes, not hours.</h1>
+            <p class="lead">
+              ProposalAI helps freelancers, agencies, software teams, designers, marketers, and consultants create
+              polished proposals with AI, billing controls, export tools, and client history in one modern workspace.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#builder">Build proposal</a>
+              <a class="btn btn-secondary" href="#pricing">View plans</a>
+            </div>
+
+            <div class="hero-stats">
+              <article class="stat-card">
+                <strong>3 min</strong>
+                <span>to produce a first draft</span>
+              </article>
+              <article class="stat-card">
+                <strong>2 exports</strong>
+                <span>PDF and DOCX ready</span>
+              </article>
+              <article class="stat-card">
+                <strong>Teams</strong>
+                <span>Agency workspace support</span>
+              </article>
+            </div>
+          </div>
+
+          <aside class="hero-panel card">
+            <div class="panel-header">
+              <div>
+                <p class="panel-label">Live system snapshot</p>
+                <h2>Proposal generation flow</h2>
+              </div>
+              <span class="pill pill-success">Online</span>
+            </div>
+
+            <div class="snapshot-grid">
+              <div class="snapshot-item">
+                <span>Auth</span>
+                <strong>Email + Google</strong>
+              </div>
+              <div class="snapshot-item">
+                <span>Billing</span>
+                <strong>Stripe plans</strong>
+              </div>
+              <div class="snapshot-item">
+                <span>Database</span>
+                <strong>PostgreSQL</strong>
+              </div>
+              <div class="snapshot-item">
+                <span>AI</span>
+                <strong>OpenAI drafts</strong>
+              </div>
+            </div>
+
+            <div class="mini-flow">
+              <div class="flow-step active">Input</div>
+              <div class="flow-step">Draft</div>
+              <div class="flow-step">Review</div>
+              <div class="flow-step">Export</div>
+            </div>
+
+            <div class="panel-footer">
+              <div>
+                <p class="panel-label">SEO ready</p>
+                <strong>Landing pages, blog, schema markup</strong>
+              </div>
+              <button class="btn btn-secondary" type="button" id="fillSampleTop">Load example</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="builder">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow">Proposal generator</div>
+              <h2>Create the full client proposal in one guided flow.</h2>
+            </div>
+            <p>
+              Fill in the brief, let AI structure the document, then edit, export, and reuse the draft from the dashboard.
+            </p>
+          </div>
+
+          <div class="builder-grid">
+            <form id="proposalForm" class="card builder-form">
+              <div class="form-grid">
+                <label class="field">
+                  <span>Client Name</span>
+                  <input id="clientName" name="clientName" type="text" placeholder="Northwind Labs" required />
+                </label>
+                <label class="field">
+                  <span>Company Name</span>
+                  <input id="companyName" name="companyName" type="text" placeholder="ProposalAI Studio" required />
+                </label>
+                <label class="field full">
+                  <span>Project Description</span>
+                  <textarea id="projectDescription" name="projectDescription" rows="5" placeholder="Build a premium proposal system for sales teams with AI generation, billing, and export tools." required></textarea>
+                </label>
+                <label class="field">
+                  <span>Budget</span>
+                  <input id="budget" name="budget" type="text" placeholder="$12,000" required />
+                </label>
+                <label class="field">
+                  <span>Timeline</span>
+                  <input id="timeline" name="timeline" type="text" placeholder="6 weeks" required />
+                </label>
+                <label class="field">
+                  <span>Industry</span>
+                  <select id="industry" name="industry">
+                    <option>Freelance</option>
+                    <option>Agency</option>
+                    <option>Software</option>
+                    <option>Design</option>
+                    <option>Marketing</option>
+                    <option>Consulting</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Tone</span>
+                  <select id="tone" name="tone">
+                    <option>Premium</option>
+                    <option>Direct</option>
+                    <option>Warm</option>
+                    <option>Executive</option>
+                  </select>
+                </label>
+                <label class="field full">
+                  <span>Services Offered</span>
+                  <textarea id="servicesOffered" name="servicesOffered" rows="4" placeholder="Discovery, UX strategy, product design, front-end build, QA, launch support" required></textarea>
+                </label>
+              </div>
+
+              <div class="form-actions">
+                <div class="action-group">
+                  <button class="btn btn-primary" id="generateBtn" type="submit">Generate proposal</button>
+                  <button class="btn btn-secondary" id="fillSampleBtn" type="button">Use sample brief</button>
+                </div>
+                <button class="btn btn-ghost" id="resetBtn" type="button">Reset form</button>
+              </div>
+
+              <div class="usage-box">
+                <div class="usage-top">
+                  <div>
+                    <p class="panel-label">Current plan</p>
+                    <strong id="currentPlanLabel">Free</strong>
+                  </div>
+                  <span class="pill" id="usageBadge">0 / 3 this month</span>
+                </div>
+                <div class="progress-track">
+                  <div class="progress-fill" id="usageFill"></div>
+                </div>
+                <p class="usage-note" id="usageNote">Free plan includes 3 proposals per month.</p>
+              </div>
+            </form>
+
+            <aside class="card preview-card">
+              <div class="panel-header sticky-header">
+                <div>
+                  <p class="panel-label">AI proposal preview</p>
+                  <h2 id="previewTitle">Northwind Labs Proposal</h2>
+                </div>
+                <div class="preview-actions">
+                  <button class="btn btn-secondary" id="pdfBtn" type="button">PDF Download</button>
+                  <button class="btn btn-secondary" id="docxBtn" type="button">DOCX Download</button>
+                </div>
+              </div>
+              <div id="proposalPreview" class="preview-content"></div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="dashboard">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow">Dashboard</div>
+              <h2>Track proposal history, search, and edit existing drafts.</h2>
+            </div>
+            <p>
+              A dashboard layout built for fast reuse, client lookup, and monthly quota visibility.
+            </p>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="card dashboard-list">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-label">Proposal history</p>
+                  <h3 id="historyCount">0 proposals</h3>
+                </div>
+                <label class="search-field">
+                  <span class="sr-only">Search proposals</span>
+                  <input id="historySearch" type="search" placeholder="Search proposals" />
+                </label>
+              </div>
+              <div id="historyList" class="history-list"></div>
+            </div>
+
+            <div class="stack">
+              <article class="card metrics-card">
+                <div class="metric-grid">
+                  <div>
+                    <span>Total proposals</span>
+                    <strong id="statProposals">0</strong>
+                  </div>
+                  <div>
+                    <span>Monthly usage</span>
+                    <strong id="statMonthlyUsage">0</strong>
+                  </div>
+                  <div>
+                    <span>Unique clients</span>
+                    <strong id="statClients">0</strong>
+                  </div>
+                  <div>
+                    <span>Export actions</span>
+                    <strong id="statExports">0</strong>
+                  </div>
+                </div>
+              </article>
+
+              <article class="card analytics-card">
+                <div class="panel-header">
+                  <div>
+                    <p class="panel-label">Searchable insights</p>
+                    <h3>Proposal trends by industry</h3>
+                  </div>
+                  <span class="pill pill-info">Live counts</span>
+                </div>
+                <div id="industryChart" class="chart-list"></div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="pricing">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow">Subscription system</div>
+              <h2>Plans that map directly to product usage.</h2>
+            </div>
+            <p>Switch plans in the UI to preview feature gates, quota changes, and agency team access.</p>
+          </div>
+
+          <div class="pricing-grid">
+            <article class="card price-card">
+              <div class="price-top">
+                <span class="pill">Free</span>
+                <h3>$0</h3>
+              </div>
+              <p>3 proposals per month for solo users testing the product.</p>
+              <ul>
+                <li>Proposal history</li>
+                <li>Email login</li>
+                <li>Basic exports</li>
+              </ul>
+              <button class="btn btn-secondary plan-btn" data-plan="free" type="button">Use Free</button>
+            </article>
+
+            <article class="card price-card featured">
+              <div class="price-top">
+                <span class="pill pill-success">Pro</span>
+                <h3>$29</h3>
+              </div>
+              <p>Unlimited proposals for individual professionals and small studios.</p>
+              <ul>
+                <li>Unlimited proposal generation</li>
+                <li>Priority AI drafts</li>
+                <li>PDF and DOCX export</li>
+              </ul>
+              <button class="btn btn-primary plan-btn" data-plan="pro" type="button">Upgrade to Pro</button>
+            </article>
+
+            <article class="card price-card">
+              <div class="price-top">
+                <span class="pill pill-info">Agency</span>
+                <h3>$79</h3>
+              </div>
+              <p>Team access, admin controls, and shared workspaces for agencies.</p>
+              <ul>
+                <li>Team seats</li>
+                <li>Admin panel</li>
+                <li>Client workspace access</li>
+              </ul>
+              <button class="btn btn-secondary plan-btn" data-plan="agency" type="button">Switch to Agency</button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="admin">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow">Admin panel</div>
+              <h2>User management, subscriptions, and analytics in one place.</h2>
+            </div>
+            <p>Use this area to model the operational side of the SaaS, including support, billing, and access control.</p>
+          </div>
+
+          <div class="admin-grid">
+            <article class="card">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-label">Operational summary</p>
+                  <h3>Platform health</h3>
+                </div>
+                <span class="pill pill-success">Healthy</span>
+              </div>
+              <div class="metric-grid admin-metrics">
+                <div>
+                  <span>Active users</span>
+                  <strong id="adminUsers">0</strong>
+                </div>
+                <div>
+                  <span>Teams</span>
+                  <strong id="adminTeams">0</strong>
+                </div>
+                <div>
+                  <span>Paid subs</span>
+                  <strong id="adminPaid">0</strong>
+                </div>
+                <div>
+                  <span>MRR</span>
+                  <strong id="adminMrr">$0</strong>
+                </div>
+              </div>
+            </article>
+
+            <article class="card">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-label">User management</p>
+                  <h3>Roles and subscriptions</h3>
+                </div>
+                <span class="pill pill-info">RBAC</span>
+              </div>
+              <div id="adminUsersTable" class="admin-table"></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="blog">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow">SEO content</div>
+              <h2>Blog system and landing pages for organic growth.</h2>
+            </div>
+            <p>Fast-loading content pages, schema markup, and searchable use-case landing pages are baked into the architecture.</p>
+          </div>
+
+          <div class="content-grid">
+            <article class="card">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-label">Blog</p>
+                  <h3>Recent articles</h3>
+                </div>
+                <span class="pill">MDX ready</span>
+              </div>
+              <div id="blogList" class="content-list"></div>
+            </article>
+
+            <article class="card">
+              <div class="panel-header">
+                <div>
+                  <p class="panel-label">Landing pages</p>
+                  <h3>Industry pages</h3>
+                </div>
+                <span class="pill pill-success">SEO</span>
+              </div>
+              <div id="landingPages" class="content-list"></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="architecture">
+        <div class="container">
+          <div class="section-heading">
+            <div>
+              <div class="eyebrow">Architecture</div>
+              <h2>Production-ready implementation plan.</h2>
+            </div>
+            <p>This is the product architecture the full Next.js build should follow when the frontend mock is turned into a real SaaS.</p>
+          </div>
+
+          <div class="roadmap-grid" id="roadmap"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <div>
+          <strong>ProposalAI</strong>
+          <p>Premium proposal generation for modern service businesses.</p>
+        </div>
+        <p>Next.js, TypeScript, Tailwind, Prisma, PostgreSQL, OpenAI, and Stripe.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

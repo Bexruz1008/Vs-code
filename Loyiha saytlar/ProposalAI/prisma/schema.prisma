@@ -1,0 +1,223 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+  OWNER
+}
+
+enum Plan {
+  FREE
+  PRO
+  AGENCY
+}
+
+enum ProposalStatus {
+  DRAFT
+  SENT
+  ARCHIVED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIALING
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  EXPORT
+  LOGIN
+  UPGRADE
+}
+
+model User {
+  id               String         @id @default(cuid())
+  name             String?
+  email            String         @unique
+  emailVerified    DateTime?
+  image            String?
+  passwordHash     String?
+  role             Role           @default(USER)
+  memberships      Membership[]
+  accounts         Account[]
+  sessions         Session[]
+  proposals        Proposal[]     @relation("ProposalOwner")
+  subscriptions    Subscription[]
+  usageRecords     UsageRecord[]
+  auditLogs        AuditLog[]
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Organization {
+  id            String        @id @default(cuid())
+  name          String
+  slug          String        @unique
+  logo          String?
+  memberships   Membership[]
+  proposals     Proposal[]
+  subscriptions Subscription[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Membership {
+  id             String        @id @default(cuid())
+  userId         String
+  organizationId String
+  role           Role          @default(USER)
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+}
+
+model Proposal {
+  id               String           @id @default(cuid())
+  title            String
+  clientName       String
+  companyName      String
+  projectDescription String
+  budget           String
+  timeline         String
+  servicesOffered  String
+  industry         String
+  tone             String
+  summary          String?
+  content          Json
+  markdown         String?
+  status           ProposalStatus   @default(DRAFT)
+  version          Int              @default(1)
+  slug             String           @unique
+  ownerId          String
+  organizationId   String?
+  owner            User             @relation("ProposalOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  organization     Organization?    @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  versions         ProposalVersion[]
+  exports          ProposalExport[]
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@index([ownerId, createdAt])
+  @@index([organizationId, createdAt])
+  @@index([clientName, companyName])
+}
+
+model ProposalVersion {
+  id          String   @id @default(cuid())
+  proposalId  String
+  version     Int
+  snapshot    Json
+  proposal    Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@unique([proposalId, version])
+}
+
+model ProposalExport {
+  id          String   @id @default(cuid())
+  proposalId  String
+  fileType    String
+  fileUrl     String?
+  fileName    String
+  status      String   @default("READY")
+  error       String?
+  proposal    Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+}
+
+model Subscription {
+  id                    String             @id @default(cuid())
+  userId                String?
+  organizationId        String?
+  stripeCustomerId      String?            @unique
+  stripeSubscriptionId  String?            @unique
+  plan                  Plan               @default(FREE)
+  status                SubscriptionStatus @default(INCOMPLETE)
+  currentPeriodEnd      DateTime?
+  cancelAtPeriodEnd     Boolean            @default(false)
+  user                  User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization          Organization?      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+
+  @@index([userId, organizationId])
+}
+
+model UsageRecord {
+  id            String   @id @default(cuid())
+  userId        String
+  month         String
+  proposalCount Int      @default(0)
+  exportCount   Int      @default(0)
+  aiTokens      Int      @default(0)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([userId, month])
+}
+
+model AuditLog {
+  id          String      @id @default(cuid())
+  userId      String?
+  action      AuditAction
+  entityType  String
+  entityId    String?
+  metadata    Json?
+  user        User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt   DateTime    @default(now())
+
+  @@index([entityType, entityId])
+}
+
+model BlogPost {
+  id              String   @id @default(cuid())
+  slug            String   @unique
+  title           String
+  excerpt         String
+  content         String
+  seoTitle        String
+  seoDescription  String
+  published       Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}

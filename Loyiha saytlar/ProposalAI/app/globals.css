@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --bg: #07111f;
+  --bg-soft: #0d1730;
+  --surface: rgba(15, 23, 42, 0.82);
+  --text: #f4f7ff;
+  --muted: #9ca8bf;
+  --line: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f4f7fb;
+  --bg-soft: #e8edf6;
+  --surface: rgba(255, 255, 255, 0.82);
+  --text: #0f172a;
+  --muted: #5e6880;
+  --line: rgba(15, 23, 42, 0.1);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(86, 104, 255, 0.16), transparent 30%),
+    radial-gradient(circle at top right, rgba(71, 215, 167, 0.14), transparent 28%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
+  color: var(--text);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.22), transparent 70%);
+  opacity: 0.4;
+}
+
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .input {
+    @apply w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition placeholder:text-slate-400 focus:border-brand-500/70 focus:ring-2 focus:ring-brand-500/20;
+  }
+
+  .surface {
+    @apply rounded-3xl border border-white/10 bg-white/5 shadow-glow backdrop-blur-xl;
+  }
+
+  .surface-strong {
+    @apply rounded-[2rem] border border-white/10 bg-white/10 shadow-glow backdrop-blur-xl;
+  }
+
+  .section-title {
+    @apply font-display text-3xl font-bold tracking-tight md:text-5xl;
+  }
+
+  .section-kicker {
+    @apply text-xs uppercase tracking-[0.3em] text-brand-500;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-brand-500 px-5 py-3 font-semibold text-white transition hover:bg-brand-600;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-full border border-white/10 px-5 py-3 font-semibold text-white transition hover:bg-white/10;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-full px-5 py-3 font-semibold text-slate-300 transition hover:bg-white/5 hover:text-white;
+  }
+}

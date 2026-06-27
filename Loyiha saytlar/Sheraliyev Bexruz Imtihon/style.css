@@ -1,0 +1,55 @@
+*,
+html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+main {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+.less_price {
+  background-color: rgb(17, 162, 61);
+}
+.card {
+  display: grid;
+  place-items: center;
+  width: 300px;
+  height: 500px;
+  border-radius: 20px;
+  padding: 10px;
+  gap: 20px;
+  background-color: navy;
+  border-bottom:5px solid salmon;
+}
+.card img {
+  width: 100%;
+  border-radius: 20px;
+}
+#location {
+  font-size: 32px;
+  color: white;
+}
+#duration {
+  font-size: 20px;
+  color: white;
+}
+#rating {
+  font-size: 20px;
+  font-weight: bold;
+  color: white;
+}
+#description {
+  font-size: 16px;
+  color: white;
+}
+
+.item {
+  font-size: 16px;
+  color: white;
+  background-color: rgb(17, 162, 61);
+}

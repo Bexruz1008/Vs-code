@@ -6,7 +6,7 @@ export const trips = [
     price: 1200,
     duration: "7 kun",
     image:
-      "https://images.unsplash.com/photo-1502602898536-47ad22581b52?w=400&h=300&fit=crop",
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/La_Tour_Eiffel_vue_de_la_Tour_Saint-Jacques%2C_Paris_ao%C3%BBt_2014_%282%29.jpg/330px-La_Tour_Eiffel_vue_de_la_Tour_Saint-Jacques%2C_Paris_ao%C3%BBt_2014_%282%29.jpg",
     rating: 4.8,
     description: "Sevgi va romantika shahri",
   },
@@ -39,7 +39,7 @@ export const trips = [
     price: 800,
     duration: "6 kun",
     image:
-      "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?w=400&h=300&fit=crop",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQc62vdcwvRfN7DUFkCPbSACYtRJqJiBDuMCw&s",
     rating: 4.6,
     description: "Ikki qit'ani birlashtiruvchi ajoyib shahar",
   },
