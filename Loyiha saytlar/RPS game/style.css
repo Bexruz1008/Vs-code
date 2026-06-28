@@ -248,53 +248,44 @@ code {
   padding: 12px 16px;
 }
 .avatar-ring {
-  width: 62px;
-  height: 62px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
   flex-shrink: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(81, 71, 255, 0.9),
-    rgba(224, 105, 255, 0.9)
-  );
+  background: linear-gradient(135deg, var(--blue), var(--purple));
   padding: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    0 12px 30px rgba(95, 27, 171, 0.2);
-  transition: transform 0.2s ease;
-  overflow: hidden;
 }
-.avatar-ring:hover {
-  transform: translateY(-1px) scale(1.02);
-}
-.avatar-ring img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-  display: block;
-}
+.avatar-ring img,
 .avatar-ring .avatar-init {
   width: 100%;
   height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+/* Ensure hidden attribute works on avatar elements */
+.avatar-ring img[hidden],
+.avatar-ring .avatar-init[hidden],
+.pslot-avatar img[hidden] {
+  display: none !important;
+}
+.avatar-init {
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: var(--f-mono);
   font-weight: 700;
-  font-size: 1.2rem;
-  color: #ffffff;
-  background: linear-gradient(
-    135deg,
-    rgba(26, 24, 63, 0.95),
-    rgba(60, 31, 108, 0.95)
-  );
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 1.15rem;
+  color: var(--text);
+  background: var(--ink-3);
   border-radius: 50%;
-  text-transform: uppercase;
+  width: 100%;
+  height: 100%;
+}
+.avatar-init[hidden] {
+  display: none !important;
 }
 .home-greet {
   display: flex;
@@ -479,6 +470,100 @@ code {
 .home-footer {
   display: flex;
   justify-content: center;
+}
+
+/* ══════════════════════════════════════
+   USERNAME SETUP SCREEN
+   ══════════════════════════════════════ */
+#screen-username {
+  background: var(--ink);
+  align-items: center;
+  justify-content: center;
+}
+.username-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+.username-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 32px 24px;
+  width: min(380px, 92vw);
+}
+.username-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.username-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  padding: 28px 24px;
+}
+.username-avatar-preview {
+  margin-bottom: 4px;
+}
+.username-avatar-preview .avatar-ring {
+  width: 72px;
+  height: 72px;
+}
+.username-avatar-preview .avatar-init {
+  font-size: 1.6rem;
+}
+.username-heading {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+}
+.username-sub {
+  font-size: 0.8rem;
+  color: var(--dim);
+  text-align: center;
+}
+.username-input {
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: var(--r-md);
+  background: var(--ink-3);
+  border: 1.5px solid var(--border);
+  color: var(--text);
+  font-family: var(--f-ui);
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+  transition: border-color var(--t-base);
+}
+.username-input::placeholder {
+  color: var(--muted);
+  font-weight: 400;
+}
+.username-input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-dim);
+}
+.username-input.input-error {
+  border-color: var(--red);
+  box-shadow: 0 0 0 3px var(--red-dim);
+  animation: emojiShake 0.4s ease;
+}
+.username-confirm-btn {
+  width: 100%;
+  margin-top: 4px;
 }
 
 /* ══════════════════════════════════════
@@ -1071,6 +1156,33 @@ code {
 }
 .primary-btn:active {
   transform: scale(0.96);
+}
+
+/* Next Round — waiting for opponent pulse */
+.primary-btn.ready-waiting {
+  background: linear-gradient(135deg, var(--muted), var(--ink-4));
+  box-shadow: none;
+  animation: readyPulse 1.4s ease-in-out infinite;
+  cursor: default;
+}
+@keyframes readyPulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(79, 142, 247, 0);
+  }
+  50% {
+    opacity: 0.75;
+    box-shadow: 0 0 0 6px rgba(79, 142, 247, 0.18);
+  }
+}
+
+/* Next Round — result not yet seen, button locked */
+.primary-btn.result-pending {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none;
 }
 
 .ghost-btn {

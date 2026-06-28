@@ -75,7 +75,7 @@ async function initMongo() {
   if (!useMongo) return;
   try {
     const { MongoClient } = require("mongodb");
-    _mongoClient = new MongoClient(MONGODB_URI, { useUnifiedTopology: true });
+    _mongoClient = new MongoClient(MONGODB_URI);
     await _mongoClient.connect();
     _mongoDb = _mongoClient.db();
     const col = _mongoDb.collection("players");
@@ -383,7 +383,8 @@ function buildRoomView(room, viewerId, store) {
             name: opponent.name,
             role: opponent.role || "player",
             score: opponentScore || createScore(),
-            choice: room.round.choices[opponentId] || null,
+            // Only reveal opponent's choice after the round is resolved (prevent cheating)
+            choice: room.phase === "revealed" ? room.round.choices[opponentId] || null : null,
             result: opponentResult?.outcome || null,
             ready: !!room.ready[opponentId],
           }
@@ -393,7 +394,8 @@ function buildRoomView(room, viewerId, store) {
         resolved: room.phase === "revealed",
         choices: {
           you: room.round.choices[viewerId] || null,
-          opponent: opponentId ? room.round.choices[opponentId] || null : null,
+          // Only reveal opponent's choice after round is resolved (prevent cheating)
+          opponent: room.phase === "revealed" && opponentId ? room.round.choices[opponentId] || null : null,
         },
         results: {
           you: viewerResult?.outcome || null,
@@ -460,7 +462,7 @@ function leaveRoom(roomId, playerId) {
     delete room.players[playerId];
     delete room.scores[playerId];
     room.phase = "waiting";
-    room.status = "waiting";
+    room.status = "active"; // room is still open for a new guest to join
     room.round = {
       index: room.round.index + 1,
       choices: {},
@@ -730,7 +732,7 @@ async function handleApi(req, res, urlObject) {
     }
 
     const room = rooms.get(roomId);
-    if (!room || room.status === "closed") {
+    if (!room || room.phase !== "waiting") {
       sendJson(res, 404, { ok: false, error: "Room unavailable" });
       return;
     }

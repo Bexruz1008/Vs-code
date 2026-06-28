@@ -36,6 +36,7 @@
   const BEATS = { rock: "scissors", paper: "rock", scissors: "paper" };
 
   const STORAGE_KEY = "rps_fallback_state_v3";
+  const USERNAME_KEY = "rps_username_v1";
   const PREFS_KEY = "rps_preferences_v3";
   const CLIENT_ID_KEY = "rps_client_id_v3";
 
@@ -77,7 +78,6 @@
     room: null,
     isPlaying: false,
     pollTimer: null,
-    autoAdvanceTimer: null,
     lastRoomRenderKey: "",
     // Solo session scores (reset per game entry)
     soloScore: { wins: 0, losses: 0 },
@@ -89,9 +89,15 @@
 
   const dom = {
     screens: {
+      username: document.getElementById("screen-username"),
       home: document.getElementById("screen-home"),
       waiting: document.getElementById("screen-waiting"),
       game: document.getElementById("screen-game"),
+    },
+    setup: {
+      avatarInit: document.getElementById("setup-avatar-init"),
+      input: document.getElementById("username-input"),
+      btnConfirm: document.getElementById("btn-confirm-username"),
     },
     home: {
       avatarImg: document.getElementById("home-avatar-img"),
@@ -201,6 +207,53 @@
   }
 
   /* ════════════════════════════════════════
+     USERNAME SETUP
+     ════════════════════════════════════════ */
+
+  function hasSavedUsername() {
+    try {
+      return !!localStorage.getItem(USERNAME_KEY);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function saveUsername(name) {
+    try {
+      localStorage.setItem(USERNAME_KEY, name);
+    } catch (_) {}
+  }
+
+  function loadSavedUsername() {
+    try {
+      return localStorage.getItem(USERNAME_KEY) || "";
+    } catch (_) {
+      return "";
+    }
+  }
+
+  function confirmUsername() {
+    const raw = dom.setup.input.value.trim();
+    if (!raw) {
+      dom.setup.input.classList.add("input-error");
+      dom.setup.input.placeholder = "Please enter a name!";
+      setTimeout(() => {
+        dom.setup.input.classList.remove("input-error");
+        dom.setup.input.placeholder = "Enter your name…";
+      }, 1200);
+      return;
+    }
+    const name = raw.slice(0, 20);
+    state.profile.name = name;
+    saveUsername(name);
+    saveFallbackProfile();
+    syncProfileToUI();
+    setScreen("home");
+    syncBackendAvailability();
+    loadProfile();
+  }
+
+  /* ════════════════════════════════════════
      TELEGRAM INTEGRATION
      ════════════════════════════════════════ */
 
@@ -218,9 +271,6 @@
 
     const user = tg.initDataUnsafe?.user;
     if (!user) return;
-
-    // Use Telegram user ID for player identification (not random client ID)
-    state.clientId = String(user.id);
 
     const displayName = user.first_name || user.username || "Player";
     state.profile.name = displayName;
@@ -264,14 +314,26 @@
 
   function setAvatar(imgEl, initEl, src, name) {
     if (!imgEl || !initEl) return;
-    imgEl.src = src;
-    imgEl.hidden = false;
-    initEl.hidden = true;
-    imgEl.onerror = () => {
+    // Show initial while image loads
+    initEl.textContent = getInitial(name);
+    initEl.hidden = false;
+    imgEl.hidden = true;
+    imgEl.src = "";
+
+    if (!src) return;
+
+    const tempImg = new Image();
+    tempImg.onload = () => {
+      imgEl.src = src;
+      imgEl.hidden = false;
+      initEl.hidden = true;
+    };
+    tempImg.onerror = () => {
       imgEl.hidden = true;
       initEl.hidden = false;
       initEl.textContent = getInitial(name);
     };
+    tempImg.src = src;
   }
 
   function getInitial(name) {
@@ -536,6 +598,10 @@
     dom.game.arenaLabel.textContent = "Pick!";
     setChoiceButtonsEnabled(true);
     clearChoiceHighlight();
+    // Reset next-round button
+    dom.game.btnPlayAgain.textContent = "Next round";
+    dom.game.btnPlayAgain.classList.remove("ready-waiting");
+    dom.game.btnPlayAgain.disabled = false;
   }
 
   function renderOutcomeBanner(outcome) {
@@ -632,11 +698,26 @@
       dom.game.playAgainRow.hidden = false;
       setChoiceButtonsEnabled(false);
 
-      // Auto-advance to next round after 3 seconds
-      if (state.autoAdvanceTimer) clearTimeout(state.autoAdvanceTimer);
-      state.autoAdvanceTimer = setTimeout(() => {
-        readyNextRound();
-      }, 3000);
+      // Disable Next Round briefly so user can't press before result is seen
+      dom.game.btnPlayAgain.disabled = true;
+      dom.game.btnPlayAgain.classList.add("result-pending");
+      setTimeout(() => {
+        dom.game.btnPlayAgain.disabled = false;
+        dom.game.btnPlayAgain.classList.remove("result-pending");
+      }, 1200);
+
+      // Show ready state on Next Round button
+      const youReady = !!room.you?.ready;
+      const oppReady = !!room.opponent?.ready;
+      dom.game.btnPlayAgain.classList.toggle(
+        "ready-waiting",
+        youReady && !oppReady,
+      );
+      dom.game.btnPlayAgain.textContent = youReady
+        ? oppReady
+          ? "Next round"
+          : "Waiting for opponent… ⏳"
+        : "Next round";
 
       // Only fire sounds/confetti once per unique result
       if (state.lastRoomRenderKey !== roomKey) {
@@ -658,8 +739,11 @@
       return;
     }
 
-    // Not revealed yet: keep both moves hidden until the round result is shown
-    dom.game.arenaEmojiYou.textContent = "❓";
+    // Not revealed yet: show your own choice but hide opponent's
+    dom.game.arenaEmojiYou.textContent =
+      youChoice && room.phase === "choosing"
+        ? CHOICE_EMOJI[youChoice] || "❓"
+        : "❓";
     dom.game.arenaEmojiOpp.textContent = "❓";
     dom.game.arenaLabel.textContent =
       room.phase === "waiting"
@@ -757,11 +841,6 @@
 
   function routeToHome() {
     stopPolling();
-    // Clear auto-advance timer
-    if (state.autoAdvanceTimer) {
-      clearTimeout(state.autoAdvanceTimer);
-      state.autoAdvanceTimer = null;
-    }
     state.mode = "home";
     state.session = null;
     state.room = null;
@@ -906,13 +985,13 @@
     }
 
     dom.game.playAgainRow.hidden = false;
-    
-    // Auto-advance to next round after 3 seconds (solo mode)
-    if (state.autoAdvanceTimer) clearTimeout(state.autoAdvanceTimer);
-    state.autoAdvanceTimer = setTimeout(() => {
-      resetBoard();
-    }, 3000);
-
+    // Disable briefly so result is seen before moving on
+    dom.game.btnPlayAgain.disabled = true;
+    dom.game.btnPlayAgain.classList.add("result-pending");
+    setTimeout(() => {
+      dom.game.btnPlayAgain.disabled = false;
+      dom.game.btnPlayAgain.classList.remove("result-pending");
+    }, 1200);
     state.isPlaying = false;
   }
 
@@ -1154,8 +1233,9 @@
       dom.game.arenaYou.classList.remove("thinking");
       dom.game.arenaOpp.classList.remove("thinking");
       setChoiceButtonsEnabled(true);
+    } finally {
+      state.isPlaying = false;
     }
-    state.isPlaying = false;
   }
 
   async function readyNextRound() {
@@ -1165,11 +1245,10 @@
     }
     if (!state.session?.roomId) return;
 
-    // Clear auto-advance timer
-    if (state.autoAdvanceTimer) {
-      clearTimeout(state.autoAdvanceTimer);
-      state.autoAdvanceTimer = null;
-    }
+    // Immediately show waiting state on button
+    dom.game.btnPlayAgain.textContent = "Waiting for opponent… ⏳";
+    dom.game.btnPlayAgain.classList.add("ready-waiting");
+    dom.game.btnPlayAgain.disabled = true;
 
     try {
       const result = await apiRequest("/api/rooms/ready", {
@@ -1228,6 +1307,12 @@
      ════════════════════════════════════════ */
 
   function bindEvents() {
+    // Username setup
+    dom.setup.btnConfirm.addEventListener("click", confirmUsername);
+    dom.setup.input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") confirmUsername();
+    });
+
     // Home
     dom.home.btnVsBot.addEventListener("click", () => {
       triggerHaptic("light");
@@ -1304,11 +1389,32 @@
     resizeCanvas();
     syncSoundButtons();
     syncProfileToUI();
-    syncBackendAvailability(); // show offline notice immediately
-    setScreen("home"); // show home right away (no blank wait)
 
-    // Load profile in background — updates UI when ready
-    await loadProfile();
+    const isTelegram = !!getTelegram()?.initDataUnsafe?.user;
+
+    if (isTelegram) {
+      // Telegram: name & avatar already set by initTelegram — go straight to home
+      syncBackendAvailability();
+      setScreen("home");
+      await loadProfile();
+    } else if (hasSavedUsername()) {
+      // Returning user: use saved name
+      state.profile.name = loadSavedUsername() || state.profile.name;
+      syncProfileToUI();
+      syncBackendAvailability();
+      setScreen("home");
+      await loadProfile();
+    } else {
+      // First time: show username setup screen
+      setScreen("username");
+      // Pre-fill avatar preview with first letter as user types
+      dom.setup.input.addEventListener("input", () => {
+        const val = dom.setup.input.value.trim();
+        dom.setup.avatarInit.textContent = val
+          ? val.charAt(0).toUpperCase()
+          : "?";
+      });
+    }
   }
 
   document.addEventListener("DOMContentLoaded", bootstrap);
