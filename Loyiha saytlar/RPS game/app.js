@@ -677,8 +677,15 @@
      API
      ════════════════════════════════════════ */
 
+  function getBackendBaseUrl() {
+    const configured = window.__RPS_BACKEND_URL__ || "";
+    return configured.replace(/\/$/, "");
+  }
+
   async function apiRequest(path, options = {}) {
-    const res = await fetch(path, {
+    const baseUrl = getBackendBaseUrl();
+    const url = `${baseUrl}${path}`;
+    const res = await fetch(url, {
       headers: {
         "Content-Type": "application/json",
         ...(options.headers || {}),
