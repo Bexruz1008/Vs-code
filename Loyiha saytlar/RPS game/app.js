@@ -77,6 +77,7 @@
     room: null,
     isPlaying: false,
     pollTimer: null,
+    autoAdvanceTimer: null,
     lastRoomRenderKey: "",
     // Solo session scores (reset per game entry)
     soloScore: { wins: 0, losses: 0 },
@@ -631,6 +632,12 @@
       dom.game.playAgainRow.hidden = false;
       setChoiceButtonsEnabled(false);
 
+      // Auto-advance to next round after 3 seconds
+      if (state.autoAdvanceTimer) clearTimeout(state.autoAdvanceTimer);
+      state.autoAdvanceTimer = setTimeout(() => {
+        readyNextRound();
+      }, 3000);
+
       // Only fire sounds/confetti once per unique result
       if (state.lastRoomRenderKey !== roomKey) {
         state.lastRoomRenderKey = roomKey;
@@ -750,6 +757,11 @@
 
   function routeToHome() {
     stopPolling();
+    // Clear auto-advance timer
+    if (state.autoAdvanceTimer) {
+      clearTimeout(state.autoAdvanceTimer);
+      state.autoAdvanceTimer = null;
+    }
     state.mode = "home";
     state.session = null;
     state.room = null;
@@ -894,6 +906,13 @@
     }
 
     dom.game.playAgainRow.hidden = false;
+    
+    // Auto-advance to next round after 3 seconds (solo mode)
+    if (state.autoAdvanceTimer) clearTimeout(state.autoAdvanceTimer);
+    state.autoAdvanceTimer = setTimeout(() => {
+      resetBoard();
+    }, 3000);
+
     state.isPlaying = false;
   }
 
@@ -1145,6 +1164,12 @@
       return;
     }
     if (!state.session?.roomId) return;
+
+    // Clear auto-advance timer
+    if (state.autoAdvanceTimer) {
+      clearTimeout(state.autoAdvanceTimer);
+      state.autoAdvanceTimer = null;
+    }
 
     try {
       const result = await apiRequest("/api/rooms/ready", {
