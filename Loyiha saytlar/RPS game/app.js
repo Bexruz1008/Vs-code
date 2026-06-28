@@ -218,6 +218,9 @@
     const user = tg.initDataUnsafe?.user;
     if (!user) return;
 
+    // Use Telegram user ID for player identification (not random client ID)
+    state.clientId = String(user.id);
+
     const displayName = user.first_name || user.username || "Player";
     state.profile.name = displayName;
 
