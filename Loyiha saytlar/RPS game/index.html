@@ -14,7 +14,8 @@
         const fromStorage = window.localStorage
           ? window.localStorage.getItem("rps-backend-url") || ""
           : "";
-        window.__RPS_BACKEND_URL__ = fromParam || fromStorage || "";
+        window.__RPS_BACKEND_URL__ =
+          fromParam || fromStorage || "https://rps-nnsq.onrender.com";
       })();
     </script>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -50,7 +51,7 @@
         <div class="home-avatar-row">
           <div class="avatar-ring" id="home-avatar-ring">
             <img id="home-avatar-img" src="" alt="" hidden />
-            <span id="home-avatar-init" class="avatar-init">?</span>
+            <span id="home-avatar-init" class="avatar-init"></span>
           </div>
           <div class="home-greet">
             <span class="home-greet-hey">Welcome back,</span>
@@ -188,7 +189,7 @@
         <div class="player-slot player-slot--you">
           <div class="pslot-avatar" id="game-avatar-you">
             <img id="game-img-you" src="" alt="" hidden />
-            <span id="game-init-you" class="avatar-init">?</span>
+            <span id="game-init-you" class="avatar-init"></span>
           </div>
           <span class="pslot-name" id="game-name-you">You</span>
           <span class="pslot-score" id="game-score-you">0</span>
