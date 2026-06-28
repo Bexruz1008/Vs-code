@@ -1,0 +1,40 @@
+{
+  "players": {
+    "f0770826-4281-460d-9124-3ad3cd1b549d": {
+      "name": "Player",
+      "stats": {
+        "wins": 0,
+        "losses": 0,
+        "draws": 0,
+        "currentStreak": 0,
+        "bestStreak": 0
+      },
+      "history": [],
+      "updatedAt": "2026-06-27T07:24:17.427Z"
+    },
+    "ac416e2f-9d55-4f0b-b355-a76c4b3ce621": {
+      "name": "Player",
+      "stats": {
+        "wins": 1,
+        "losses": 1,
+        "draws": 0,
+        "currentStreak": 1,
+        "bestStreak": 1
+      },
+      "history": [],
+      "updatedAt": "2026-06-28T06:55:25.373Z"
+    },
+    "8c079fd9-1bb8-4044-bfce-1951d50c0f57": {
+      "name": "Player",
+      "stats": {
+        "wins": 1,
+        "losses": 1,
+        "draws": 0,
+        "currentStreak": 0,
+        "bestStreak": 1
+      },
+      "history": [],
+      "updatedAt": "2026-06-28T06:55:25.373Z"
+    }
+  }
+}
