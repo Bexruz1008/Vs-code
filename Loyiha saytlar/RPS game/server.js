@@ -119,34 +119,43 @@ function readStore() {
 }
 
 // writeStore updates cache immediately and persists asynchronously to Mongo and file fallback
-function writeStore(store) {
+function writeStore(store, changedPlayerIds = null) {
   storeCache = store;
-  // persist to file as backup
-  try {
-    writeFileStore(store);
-  } catch (e) {
-    /* ignore */
-  }
+  // persist to file as backup (async to avoid blocking request)
+  setImmediate(() => {
+    try {
+      writeFileStore(store);
+    } catch (_) {}
+  });
 
   if (useMongo && _mongoDb) {
+    // Only sync players that actually changed; fall back to all if unspecified
+    const idsToSync = changedPlayerIds
+      ? changedPlayerIds.filter((id) => store.players[id])
+      : Object.keys(store.players || {});
+
+    if (idsToSync.length === 0) return;
+
     (async () => {
       try {
         const col = _mongoDb.collection("players");
-        const entries = Object.entries(store.players || {});
-        for (const [id, profile] of entries) {
-          await col.updateOne(
-            { _id: id },
-            {
-              $set: {
-                name: profile.name,
-                stats: profile.stats,
-                history: profile.history,
-                updatedAt: profile.updatedAt,
+        await Promise.all(
+          idsToSync.map((id) => {
+            const profile = store.players[id];
+            return col.updateOne(
+              { _id: id },
+              {
+                $set: {
+                  name: profile.name,
+                  stats: profile.stats,
+                  history: profile.history || [],
+                  updatedAt: profile.updatedAt,
+                },
               },
-            },
-            { upsert: true },
-          );
-        }
+              { upsert: true },
+            );
+          }),
+        );
       } catch (err) {
         console.error("writeStore (mongo) error", err && err.message);
       }
@@ -320,6 +329,10 @@ function resolveRoomRound(room, store) {
   room.status = "active";
   room.updatedAt = nowIso();
 
+  // Ensure score objects exist before incrementing
+  if (!room.scores[room.hostId]) room.scores[room.hostId] = createScore();
+  if (!room.scores[room.guestId]) room.scores[room.guestId] = createScore();
+
   room.scores[room.hostId][
     hostOutcome === "win" ? "wins" : hostOutcome === "lose" ? "losses" : "draws"
   ] += 1;
@@ -384,7 +397,10 @@ function buildRoomView(room, viewerId, store) {
             role: opponent.role || "player",
             score: opponentScore || createScore(),
             // Only reveal opponent's choice after the round is resolved (prevent cheating)
-            choice: room.phase === "revealed" ? room.round.choices[opponentId] || null : null,
+            choice:
+              room.phase === "revealed"
+                ? room.round.choices[opponentId] || null
+                : null,
             result: opponentResult?.outcome || null,
             ready: !!room.ready[opponentId],
           }
@@ -395,7 +411,10 @@ function buildRoomView(room, viewerId, store) {
         choices: {
           you: room.round.choices[viewerId] || null,
           // Only reveal opponent's choice after round is resolved (prevent cheating)
-          opponent: room.phase === "revealed" && opponentId ? room.round.choices[opponentId] || null : null,
+          opponent:
+            room.phase === "revealed" && opponentId
+              ? room.round.choices[opponentId] || null
+              : null,
         },
         results: {
           you: viewerResult?.outcome || null,
@@ -435,7 +454,7 @@ function closeRoom(roomId) {
 }
 
 function removePlayerFromQueue(playerId) {
-  const index = matchmakingQueue.indexOf(playerId);
+  const index = matchmakingQueue.findIndex((p) => p.playerId === playerId);
   if (index !== -1) matchmakingQueue.splice(index, 1);
   queuedPlayers.delete(playerId);
 }
@@ -506,10 +525,21 @@ function sendText(
   res.end(text);
 }
 
+const MAX_BODY_BYTES = 16 * 1024; // 16 KB
+
 function parseBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
-    req.on("data", (chunk) => chunks.push(chunk));
+    let totalBytes = 0;
+    req.on("data", (chunk) => {
+      totalBytes += chunk.length;
+      if (totalBytes > MAX_BODY_BYTES) {
+        req.destroy();
+        reject(new Error("Request body too large"));
+        return;
+      }
+      chunks.push(chunk);
+    });
     req.on("end", () => {
       if (!chunks.length) {
         resolve({});
@@ -518,7 +548,7 @@ function parseBody(req) {
       try {
         resolve(JSON.parse(Buffer.concat(chunks).toString("utf8")));
       } catch (error) {
-        reject(error);
+        reject(new Error("Invalid JSON body"));
       }
     });
     req.on("error", reject);
@@ -578,6 +608,13 @@ function joinMatchmaking(playerId, name, store) {
   while (matchmakingQueue.length >= 2) {
     const playerA = matchmakingQueue.shift();
     const playerB = matchmakingQueue.shift();
+    // Guard against self-match (should never happen but be safe)
+    if (playerA.playerId === playerB.playerId) {
+      matchmakingQueue.unshift(playerB); // put back, keep only one entry
+      queuedPlayers.delete(playerA.playerId);
+      queuedPlayers.add(playerB.playerId);
+      break;
+    }
     queuedPlayers.delete(playerA.playerId);
     queuedPlayers.delete(playerB.playerId);
     const room = createQuickMatchRoom(playerA, playerB, store);
@@ -591,8 +628,12 @@ function handleProfile(req, res, urlObject) {
   const store = readStore();
   const playerId = normalizePlayerId(urlObject.searchParams.get("playerId"));
   const name = safeName(urlObject.searchParams.get("name"));
+  const existingName = store.players[playerId]?.name;
   const profile = touchProfile(store, playerId, name);
-  writeStore(store);
+  // Only persist if player is new or name changed
+  if (!existingName || existingName !== name) {
+    writeStore(store);
+  }
   sendJson(res, 200, { ok: true, playerId, profile });
 }
 
@@ -669,8 +710,9 @@ async function handleApi(req, res, urlObject) {
     if (roomId) {
       const room = rooms.get(roomId);
       if (!room) {
+        // Stale reference — clean up and tell client to go idle
         activeRoomByPlayer.delete(playerId);
-        sendJson(res, 404, { ok: false, error: "Room not found" });
+        sendJson(res, 200, { ok: true, status: "idle" });
         return;
       }
       sendJson(res, 200, buildRoomView(room, playerId, store));
@@ -704,6 +746,12 @@ async function handleApi(req, res, urlObject) {
     const profile = touchProfile(store, playerId, name);
     let roomId = activeRoomByPlayer.get(playerId);
     let room = roomId ? rooms.get(roomId) : null;
+
+    // Stale reference — room was closed, clean up
+    if (roomId && !room) {
+      activeRoomByPlayer.delete(playerId);
+      roomId = null;
+    }
 
     if (!room) {
       room = makeRoom("private", playerId, profile.name);
@@ -747,6 +795,13 @@ async function handleApi(req, res, urlObject) {
       return;
     }
 
+    // Prevent joining if player is already in another active room
+    const existingRoomId = activeRoomByPlayer.get(playerId);
+    if (existingRoomId && rooms.has(existingRoomId)) {
+      sendJson(res, 409, { ok: false, error: "You are already in a room" });
+      return;
+    }
+
     touchProfile(store, playerId, name);
     room.guestId = playerId;
     addPlayerToRoom(room, playerId, name, "guest");
@@ -766,6 +821,11 @@ async function handleApi(req, res, urlObject) {
     const room = rooms.get(roomId);
     if (!room) {
       sendJson(res, 404, { ok: false, error: "Room not found" });
+      return;
+    }
+    // Only allow players who belong to this room
+    if (room.hostId !== playerId && room.guestId !== playerId) {
+      sendJson(res, 403, { ok: false, error: "Not a member of this room" });
       return;
     }
     sendJson(res, 200, buildRoomView(room, playerId, store));
@@ -790,12 +850,19 @@ async function handleApi(req, res, urlObject) {
     }
 
     if (room.phase !== "choosing") {
-      sendJson(res, 409, buildRoomView(room, playerId, store));
+      // Return current state instead of error — client will sync gracefully
+      sendJson(res, 200, buildRoomView(room, playerId, store));
       return;
     }
 
     if (!room.players[playerId]) {
       sendJson(res, 403, { ok: false, error: "You are not part of this room" });
+      return;
+    }
+
+    // Idempotent: if choice already recorded, return current state
+    if (room.round.choices[playerId]) {
+      sendJson(res, 200, buildRoomView(room, playerId, store));
       return;
     }
 
@@ -830,7 +897,14 @@ async function handleApi(req, res, urlObject) {
     }
 
     if (room.phase !== "revealed") {
-      sendJson(res, 409, buildRoomView(room, playerId, store));
+      // Return current state instead of error — client will sync gracefully
+      sendJson(res, 200, buildRoomView(room, playerId, store));
+      return;
+    }
+
+    // Only accept ready from players who belong to this room
+    if (room.hostId !== playerId && room.guestId !== playerId) {
+      sendJson(res, 403, { ok: false, error: "Not a member of this room" });
       return;
     }
 
@@ -870,6 +944,28 @@ async function handleApi(req, res, urlObject) {
   sendJson(res, 404, { ok: false, error: "Unknown API route" });
 }
 
+// ════════════════════════════════════
+// ROOM CLEANUP — remove stale rooms every 10 minutes
+// ════════════════════════════════════
+const ROOM_TTL_MS = 30 * 60 * 1000; // 30 minutes
+
+function cleanupStaleRooms() {
+  const now = Date.now();
+  const stale = [];
+  for (const [roomId, room] of rooms.entries()) {
+    const updatedAt = new Date(room.updatedAt || 0).getTime();
+    if (now - updatedAt > ROOM_TTL_MS) {
+      stale.push(roomId);
+    }
+  }
+  for (const roomId of stale) {
+    console.log(`Cleaning up stale room: ${roomId}`);
+    closeRoom(roomId);
+  }
+}
+
+setInterval(cleanupStaleRooms, 10 * 60 * 1000);
+
 const server = http.createServer((req, res) => {
   const urlObject = new URL(
     req.url,
@@ -889,7 +985,10 @@ const server = http.createServer((req, res) => {
 
   if (urlObject.pathname.startsWith("/api/")) {
     handleApi(req, res, urlObject).catch((error) => {
-      sendJson(res, 500, {
+      const isBadBody =
+        error.message === "Invalid JSON body" ||
+        error.message === "Request body too large";
+      sendJson(res, isBadBody ? 400 : 500, {
         ok: false,
         error: error.message || "Internal server error",
       });

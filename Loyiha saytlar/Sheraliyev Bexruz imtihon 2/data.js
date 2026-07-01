@@ -1,0 +1,98 @@
+export const restaurants = [
+  {
+    id: 1,
+    name: "Palov Markazi",
+    city: "Toshkent",
+    cuisine: "O'zbek",
+    price: 35000,
+    rating: 4.9,
+    isOpen: true,
+    image:
+      "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop",
+    description: "Toshkentning eng mashhur palov uyi",
+  },
+  {
+    id: 2,
+    name: "Sushi Garden",
+    city: "Toshkent",
+    cuisine: "Yapon",
+    price: 95000,
+    rating: 4.6,
+    isOpen: true,
+    image:
+      "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=400&h=300&fit=crop",
+    description: "Yangi va sifatli sushi tanlovlari",
+  },
+  {
+    id: 3,
+    name: "Pizza Roma",
+    city: "Samarqand",
+    cuisine: "Italyan",
+    price: 55000,
+    rating: 4.4,
+    isOpen: false,
+    image:
+      "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop",
+    description: "Haqiqiy italyan pizza va pasta",
+  },
+  {
+    id: 4,
+    name: "Beshbarmak",
+    city: "Toshkent",
+    cuisine: "Qozoq",
+    price: 42000,
+    rating: 4.7,
+    isOpen: true,
+    image:
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop",
+    description: "An'anaviy qozoq milliy taomlari",
+  },
+  {
+    id: 5,
+    name: "Burger House",
+    city: "Namangan",
+    cuisine: "Amerika",
+    price: 28000,
+    rating: 4.3,
+    isOpen: true,
+    image:
+      "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop",
+    description: "Yangi va mazali burgerlar",
+  },
+  {
+    id: 6,
+    name: "Lagman House",
+    city: "Farg'ona",
+    cuisine: "O'zbek",
+    price: 22000,
+    rating: 4.8,
+    isOpen: false,
+    image:
+      "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop",
+    description: "Uy lagmani va qo'l yo'g'ocha",
+  },
+  {
+    id: 7,
+    name: "Thai Garden",
+    city: "Toshkent",
+    cuisine: "Tailand",
+    price: 78000,
+    rating: 4.5,
+    isOpen: true,
+    image:
+      "https://images.unsplash.com/photo-1559314809-0d155014e29e?w=400&h=300&fit=crop",
+    description: "Asl tailand ta'mi va ziravorlari",
+  },
+  {
+    id: 8,
+    name: "Cafe National",
+    city: "Buxoro",
+    cuisine: "O'zbek",
+    price: 30000,
+    rating: 4.9,
+    isOpen: true,
+    image:
+      "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=400&h=300&fit=crop",
+    description: "Tarixiy Buxoro manzarasida milliy taomlar",
+  },
+];

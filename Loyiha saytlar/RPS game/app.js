@@ -81,6 +81,21 @@
     lastRoomRenderKey: "",
     // Solo session scores (reset per game entry)
     soloScore: { wins: 0, losses: 0 },
+    // Internal flags
+    _leaving: false,
+    _resultPendingTimer: null,
+    // Monotonic counters to discard stale/out-of-order async responses
+    _roomFetchSeq: 0,
+    _roomFetchSeqApplied: 0,
+    // Solo mode session token — incremented each time a new solo game
+    // starts, so an in-flight playSoloRound() from a PREVIOUS solo
+    // session can detect it's stale and abort instead of corrupting
+    // the new session's score/board.
+    _soloSessionId: 0,
+    // Optimistic "I clicked Next round" flag — survives stale poll overwrites
+    _optimisticReady: false,
+    _optimisticReadyRoundKey: "",
+    _readyInFlight: false,
   };
 
   /* ════════════════════════════════════════
@@ -249,8 +264,7 @@
     saveFallbackProfile();
     syncProfileToUI();
     setScreen("home");
-    syncBackendAvailability();
-    loadProfile();
+    loadProfile(); // loadProfile calls syncBackendAvailability internally
   }
 
   /* ════════════════════════════════════════
@@ -414,6 +428,12 @@
     dom.waiting.roomCodeBox.hidden = !options.showCode;
     dom.waiting.joinBox.hidden = !options.showJoin;
     dom.waiting.btnCreateRoom.hidden = !options.showCreate;
+    // Re-enable action buttons each time this screen is shown — otherwise
+    // a successful create/join leaves them permanently disabled (the
+    // disabled flag was only ever cleared in the error/catch path), making
+    // it impossible to create or join a room again after returning here.
+    dom.waiting.btnCreateRoom.disabled = false;
+    dom.waiting.btnJoinRoom.disabled = false;
     setScreen("waiting");
   }
 
@@ -471,6 +491,7 @@
      ════════════════════════════════════════ */
 
   const confettiParticles = [];
+  let confettiAnimationId = null;
 
   function resizeCanvas() {
     if (!dom.fxCanvas) return;
@@ -484,6 +505,15 @@
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     resizeCanvas();
+    // Cancel any in-flight confetti loop before starting a new one —
+    // otherwise rapid consecutive wins spawn multiple overlapping
+    // requestAnimationFrame loops fighting over the same canvas/array.
+    if (confettiAnimationId !== null) {
+      cancelAnimationFrame(confettiAnimationId);
+      confettiAnimationId = null;
+    }
+    confettiParticles.length = 0;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     const colours = [
       "#4F8EF7",
@@ -528,10 +558,11 @@
       });
 
       if (frame < 150 && confettiParticles.some((p) => p.alpha > 0)) {
-        requestAnimationFrame(draw);
+        confettiAnimationId = requestAnimationFrame(draw);
       } else {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         confettiParticles.length = 0;
+        confettiAnimationId = null;
       }
     })();
   }
@@ -600,8 +631,14 @@
     clearChoiceHighlight();
     // Reset next-round button
     dom.game.btnPlayAgain.textContent = "Next round";
-    dom.game.btnPlayAgain.classList.remove("ready-waiting");
+    dom.game.btnPlayAgain.classList.remove("ready-waiting", "result-pending");
     dom.game.btnPlayAgain.disabled = false;
+    // Always reset playing flag on board reset
+    state.isPlaying = false;
+    // Clear optimistic-ready state — a fresh round has begun
+    clearTimeout(state._resultPendingTimer);
+    state._optimisticReady = false;
+    state._optimisticReadyRoundKey = "";
   }
 
   function renderOutcomeBanner(outcome) {
@@ -632,7 +669,10 @@
     dom.game.nameYou.textContent = room.you?.name || state.profile.name;
     dom.game.nameOpp.textContent = room.opponent?.name || "Waiting...";
     dom.game.scoreYou.textContent = String(room.you?.score?.wins ?? 0);
-    dom.game.scoreOpp.textContent = String(room.opponent?.score?.wins ?? 0);
+    // Keep last known opponent score if opponent left
+    const oppWins =
+      room.opponent?.score?.wins ?? state.room?.opponent?.score?.wins ?? 0;
+    dom.game.scoreOpp.textContent = String(oppWins);
 
     if (dom.game.avatarOppInit) {
       dom.game.avatarOppInit.textContent = room.opponent?.name
@@ -698,26 +738,53 @@
       dom.game.playAgainRow.hidden = false;
       setChoiceButtonsEnabled(false);
 
-      // Disable Next Round briefly so user can't press before result is seen
-      dom.game.btnPlayAgain.disabled = true;
-      dom.game.btnPlayAgain.classList.add("result-pending");
-      setTimeout(() => {
-        dom.game.btnPlayAgain.disabled = false;
-        dom.game.btnPlayAgain.classList.remove("result-pending");
-      }, 1200);
-
-      // Show ready state on Next Round button
-      const youReady = !!room.you?.ready;
+      // Disable Next Round briefly so user can't press before result is seen.
+      // IMPORTANT: if we've optimistically marked ourselves ready for THIS
+      // exact round, trust that over a possibly-stale `room.you.ready` value —
+      // this is what prevents the button from "flickering" back to clickable
+      // after the user already pressed Next round.
+      const currentRoundKey = `${room.id}:${room.round?.index}`;
+      const optimisticallyReady =
+        state._optimisticReady &&
+        state._optimisticReadyRoundKey === currentRoundKey;
+      const youReady = !!room.you?.ready || optimisticallyReady;
       const oppReady = !!room.opponent?.ready;
-      dom.game.btnPlayAgain.classList.toggle(
-        "ready-waiting",
-        youReady && !oppReady,
-      );
-      dom.game.btnPlayAgain.textContent = youReady
-        ? oppReady
-          ? "Next round"
-          : "Waiting for opponent… ⏳"
-        : "Next round";
+
+      if (!youReady) {
+        // Not yet voted — lock briefly, then enable
+        dom.game.btnPlayAgain.disabled = true;
+        dom.game.btnPlayAgain.classList.add("result-pending");
+        dom.game.btnPlayAgain.classList.remove("ready-waiting");
+        dom.game.btnPlayAgain.textContent = "Next round";
+        clearTimeout(state._resultPendingTimer);
+        state._resultPendingTimer = setTimeout(() => {
+          // Only apply if still in result-pending state (not been overwritten)
+          // and the user still hasn't readied up in the meantime.
+          if (
+            dom.game.btnPlayAgain.classList.contains("result-pending") &&
+            !state._optimisticReady
+          ) {
+            dom.game.btnPlayAgain.disabled = false;
+            dom.game.btnPlayAgain.classList.remove("result-pending");
+          }
+        }, 1200);
+      } else if (youReady && !oppReady) {
+        // Already voted (or optimistically marked ready) — waiting for opponent
+        clearTimeout(state._resultPendingTimer);
+        dom.game.btnPlayAgain.disabled = true;
+        dom.game.btnPlayAgain.classList.add("ready-waiting");
+        dom.game.btnPlayAgain.classList.remove("result-pending");
+        dom.game.btnPlayAgain.textContent = "Waiting for opponent… ⏳";
+      } else {
+        // Both ready — new round starting
+        clearTimeout(state._resultPendingTimer);
+        dom.game.btnPlayAgain.disabled = false;
+        dom.game.btnPlayAgain.classList.remove(
+          "ready-waiting",
+          "result-pending",
+        );
+        dom.game.btnPlayAgain.textContent = "Next round";
+      }
 
       // Only fire sounds/confetti once per unique result
       if (state.lastRoomRenderKey !== roomKey) {
@@ -776,23 +843,33 @@
     return configured.replace(/\/$/, "");
   }
 
-  async function apiRequest(path, options = {}) {
+  async function apiRequest(path, options = {}, timeoutMs = 10000) {
     const baseUrl = getBackendBaseUrl();
     const url = `${baseUrl}${path}`;
-    const res = await fetch(url, {
-      headers: {
-        "Content-Type": "application/json",
-        ...(options.headers || {}),
-      },
-      ...options,
-    });
-    const ct = res.headers.get("content-type") || "";
-    const payload = ct.includes("application/json")
-      ? await res.json()
-      : await res.text();
-    if (!res.ok)
-      throw new Error(payload?.error || `Request failed: ${res.status}`);
-    return payload;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const res = await fetch(url, {
+        signal: controller.signal,
+        headers: {
+          "Content-Type": "application/json",
+          ...(options.headers || {}),
+        },
+        ...options,
+      });
+      clearTimeout(timer);
+      const ct = res.headers.get("content-type") || "";
+      const payload = ct.includes("application/json")
+        ? await res.json()
+        : await res.text();
+      if (!res.ok)
+        throw new Error(payload?.error || `Request failed: ${res.status}`);
+      return payload;
+    } catch (err) {
+      clearTimeout(timer);
+      if (err.name === "AbortError") throw new Error("Request timed out");
+      throw err;
+    }
   }
 
   async function loadProfile() {
@@ -845,8 +922,13 @@
     state.session = null;
     state.room = null;
     state.isPlaying = false;
+    state._leaving = false;
     state.lastRoomRenderKey = "";
     state.soloScore = { wins: 0, losses: 0 };
+    state._optimisticReady = false;
+    state._optimisticReadyRoundKey = "";
+    state._readyInFlight = false;
+    clearTimeout(state._resultPendingTimer);
     setScreen("home");
     syncProfileToUI();
   }
@@ -861,6 +943,8 @@
     state.session = { kind: "solo" };
     state.room = null;
     state.soloScore = { wins: 0, losses: 0 };
+    // Invalidate any in-flight playSoloRound() from a previous session
+    state._soloSessionId++;
     setScreen("game");
     dom.game.modeBadge.textContent = "vs CPU";
     dom.game.nameYou.textContent = state.profile.name;
@@ -869,12 +953,29 @@
     dom.game.scoreOpp.textContent = "0";
     if (dom.game.avatarOppInit) dom.game.avatarOppInit.textContent = "🤖";
     dom.game.oppStatus.hidden = true;
+    // Sync avatar for game screen (Telegram photo or initial)
+    const tgUser = getTelegram()?.initDataUnsafe?.user;
+    if (tgUser?.photo_url) {
+      setAvatar(
+        dom.game.avatarYouImg,
+        dom.game.avatarYouInit,
+        tgUser.photo_url,
+        state.profile.name,
+      );
+    } else {
+      dom.game.avatarYouInit.textContent = getInitial(state.profile.name);
+    }
     resetBoard();
   }
 
   async function playSoloRound(choice) {
     if (state.isPlaying) return;
     state.isPlaying = true;
+    // Capture the session this round belongs to — if the user leaves and
+    // starts a new solo game before this round finishes, mySessionId will
+    // no longer match state._soloSessionId and we abort without touching
+    // the new session's state.
+    const mySessionId = state._soloSessionId;
     setChoiceButtonsEnabled(false);
     highlightChoice(choice);
     playSound("click");
@@ -891,6 +992,13 @@
     dom.game.arenaOpp.classList.add("thinking");
 
     await delay(650);
+
+    // User may have left during the delay — abort if no longer in solo mode
+    // OR if a newer solo session has since started (stale round guard).
+    if (state.mode !== "solo" || state._soloSessionId !== mySessionId) {
+      state.isPlaying = false;
+      return;
+    }
 
     let round;
     try {
@@ -930,9 +1038,24 @@
       showToast(String(err.message || "Round failed"));
       state.backendReady = false;
       state.isPlaying = false;
-      dom.game.arenaYou.classList.remove("thinking");
-      dom.game.arenaOpp.classList.remove("thinking");
-      setChoiceButtonsEnabled(true);
+      // Only reset the arena visuals if we're still looking at the same
+      // session — otherwise this would stomp on a newer game's UI.
+      if (state.mode === "solo" && state._soloSessionId === mySessionId) {
+        dom.game.arenaYou.classList.remove("thinking");
+        dom.game.arenaOpp.classList.remove("thinking");
+        dom.game.arenaLabel.textContent = "Pick!";
+        dom.game.arenaEmojiYou.textContent = "❓";
+        dom.game.arenaEmojiOpp.textContent = "❓";
+        setChoiceButtonsEnabled(true);
+        clearChoiceHighlight();
+      }
+      return;
+    }
+
+    // The API call itself took time — re-check that we're still in the
+    // same solo session before applying the result to the UI/score.
+    if (state.mode !== "solo" || state._soloSessionId !== mySessionId) {
+      state.isPlaying = false;
       return;
     }
 
@@ -985,12 +1108,19 @@
     }
 
     dom.game.playAgainRow.hidden = false;
-    // Disable briefly so result is seen before moving on
+    // Disable briefly so result is seen before moving on.
+    // Use the SAME tracked timer slot as multiplayer (state._resultPendingTimer)
+    // so navigating away (routeToHome/resetBoard) reliably cancels it — an
+    // untracked setTimeout here could otherwise fire later and corrupt the
+    // button state of a different round/session the user has since started.
     dom.game.btnPlayAgain.disabled = true;
     dom.game.btnPlayAgain.classList.add("result-pending");
-    setTimeout(() => {
-      dom.game.btnPlayAgain.disabled = false;
-      dom.game.btnPlayAgain.classList.remove("result-pending");
+    clearTimeout(state._resultPendingTimer);
+    state._resultPendingTimer = setTimeout(() => {
+      if (dom.game.btnPlayAgain.classList.contains("result-pending")) {
+        dom.game.btnPlayAgain.disabled = false;
+        dom.game.btnPlayAgain.classList.remove("result-pending");
+      }
     }, 1200);
     state.isPlaying = false;
   }
@@ -1003,6 +1133,9 @@
     if (!state.backendReady) {
       showToast("Start the server: npm start");
       return;
+    }
+    if (state.mode === "quick" || state.mode === "private") {
+      return; // already in matchmaking/room
     }
     state.mode = "quick";
     state.session = { kind: "quick", roomId: null };
@@ -1023,6 +1156,8 @@
       if (result.profile) applyProfileFromServer(result.profile);
       if (result.room) {
         state.session.roomId = result.room.id;
+        const seedSeq = ++state._roomFetchSeq;
+        applyRoomUpdate(result.room, seedSeq);
         setScreen("game");
         syncRoomHeader(result.room);
         syncBoardFromRoom(result.room);
@@ -1031,6 +1166,7 @@
         startPolling(refreshMatchmaking);
       }
     } catch (err) {
+      stopPolling();
       showToast(String(err.message || "Unable to find match"));
       routeToHome();
     }
@@ -1043,9 +1179,20 @@
         `/api/matchmaking/status?playerId=${encodeURIComponent(state.clientId)}`,
       );
       if (data.profile) applyProfileFromServer(data.profile);
+
+      // idle = removed from queue (e.g. server restarted) — go home quietly
+      if (data.status === "idle") {
+        stopPolling();
+        showToast("Matchmaking cancelled");
+        routeToHome();
+        return;
+      }
+
       if (data.room) {
         state.session.roomId = data.room.id;
         if (data.room.phase !== "waiting") {
+          const seedSeq = ++state._roomFetchSeq;
+          applyRoomUpdate(data.room, seedSeq);
           setScreen("game");
           syncRoomHeader(data.room);
           syncBoardFromRoom(data.room);
@@ -1055,6 +1202,7 @@
         }
       }
     } catch (err) {
+      stopPolling();
       showToast(String(err.message || "Matchmaking failed"));
       routeToHome();
     }
@@ -1062,27 +1210,75 @@
 
   async function refreshRoomState() {
     if (!state.session?.roomId) return;
+    // Claim the next sequence number for this request
+    const mySeq = ++state._roomFetchSeq;
     try {
       const data = await apiRequest(
         `/api/rooms/state?roomId=${encodeURIComponent(state.session.roomId)}&playerId=${encodeURIComponent(state.clientId)}`,
       );
       if (data.profile) applyProfileFromServer(data.profile);
-      state.room = data.room;
+      // Capture prevPhase BEFORE overwriting state.room
+      const prevPhase = state.room?.phase;
+      const applied = applyRoomUpdate(data.room, mySeq);
+      if (!applied) return; // a newer response already won — discard this one entirely
       if (data.room.phase === "waiting") {
         renderRoomWaiting(data.room);
       } else {
         setScreen("game");
+        // Transitioned from revealed → choosing: clear stale result UI
+        if (prevPhase === "revealed" && data.room.phase === "choosing") {
+          state.lastRoomRenderKey = "";
+          resetBoard();
+        }
         syncRoomHeader(data.room);
         syncBoardFromRoom(data.room);
       }
     } catch (err) {
-      showToast(String(err.message || "Room unavailable"));
+      // Ignore network errors from superseded/aborted polls
+      if (mySeq < state._roomFetchSeqApplied) return;
+      // Stop polling first, then redirect — avoids repeated toasts
+      stopPolling();
+      const msg = String(err.message || "");
+      // Only show toast for unexpected errors (not normal room-closed)
+      if (!msg.includes("Room not found") && !msg.includes("404")) {
+        showToast(msg || "Room unavailable");
+      }
       routeToHome();
     }
   }
 
-  function renderRoomWaiting(room) {
+  /**
+   * Centralized room-state writer. Ensures only the freshest
+   * server response is ever applied to state.room, regardless
+   * of which async call (poll vs. user action) resolves last.
+   * Also clears the optimistic-ready flag once the server
+   * confirms what we expect (round advanced, or our ready=true
+   * is reflected back).
+   */
+  function applyRoomUpdate(room, seq) {
+    if (seq !== undefined) {
+      if (seq < state._roomFetchSeqApplied) return false; // stale, ignore
+      state._roomFetchSeqApplied = seq;
+    }
     state.room = room;
+
+    // Clear optimistic-ready flag once server state genuinely matches:
+    // either the round has moved on, or the server itself now reports
+    // this player as ready.
+    if (state._optimisticReady) {
+      const roundKey = `${room.id}:${room.round?.index}`;
+      const serverSaysReady = !!room.you?.ready;
+      const roundAdvanced = roundKey !== state._optimisticReadyRoundKey;
+      if (serverSaysReady || roundAdvanced || room.phase === "choosing") {
+        state._optimisticReady = false;
+        state._optimisticReadyRoundKey = "";
+      }
+    }
+    return true;
+  }
+
+  function renderRoomWaiting(room) {
+    applyRoomUpdate(room);
     state.mode = room.type === "quick" ? "quick" : "private";
 
     if (room.type === "private") {
@@ -1130,10 +1326,14 @@
       showToast("Start the server: npm start");
       return;
     }
+    if (state.mode === "quick" || state.mode === "private") {
+      return; // already in matchmaking/room
+    }
     stopPolling();
     state.mode = "private";
     state.session = { kind: "private", roomId: null };
     state.room = null;
+    dom.waiting.codeInput.value = ""; // clear any stale code from a previous attempt
     showWaitingScreen("Private room", "Create a room or join with a code.", {
       showJoin: true,
       showCreate: true,
@@ -1146,6 +1346,8 @@
       showToast("Start the server: npm start");
       return;
     }
+    if (dom.waiting.btnCreateRoom.disabled) return;
+    dom.waiting.btnCreateRoom.disabled = true;
     try {
       const result = await apiRequest("/api/rooms/create", {
         method: "POST",
@@ -1164,6 +1366,7 @@
       startPolling(refreshRoomState);
     } catch (err) {
       showToast(String(err.message || "Unable to create room"));
+      dom.waiting.btnCreateRoom.disabled = false;
     }
   }
 
@@ -1173,11 +1376,13 @@
       return;
     }
     const code = dom.waiting.codeInput.value.trim().toUpperCase();
-    if (!code) {
-      showToast("Enter a room code first");
+    if (!code || code.length < 4) {
+      showToast("Enter a valid room code");
+      dom.waiting.codeInput.focus();
       return;
     }
-
+    if (dom.waiting.btnJoinRoom.disabled) return;
+    dom.waiting.btnJoinRoom.disabled = true;
     try {
       const result = await apiRequest("/api/rooms/join", {
         method: "POST",
@@ -1193,12 +1398,15 @@
         roomId: result.room.id,
         code: result.room.code,
       };
+      const seedSeq = ++state._roomFetchSeq;
+      applyRoomUpdate(result.room, seedSeq);
       setScreen("game");
       syncRoomHeader(result.room);
       syncBoardFromRoom(result.room);
       startPolling(refreshRoomState);
     } catch (err) {
       showToast(String(err.message || "Room not found"));
+      dom.waiting.btnJoinRoom.disabled = false;
     }
   }
 
@@ -1210,10 +1418,12 @@
     playSound("click");
     triggerHaptic("light");
     dom.game.arenaLabel.textContent = "Waiting for opponent…";
-    dom.game.arenaEmojiYou.textContent = "❓";
+    dom.game.arenaEmojiYou.textContent = CHOICE_EMOJI[choice] || "❓";
     dom.game.arenaEmojiOpp.textContent = "❓";
-    dom.game.arenaYou.classList.add("thinking");
+    dom.game.arenaYou.classList.remove("thinking");
     dom.game.arenaOpp.classList.add("thinking");
+
+    const mySeq = ++state._roomFetchSeq;
 
     try {
       const result = await apiRequest("/api/rooms/play", {
@@ -1225,14 +1435,21 @@
         }),
       });
       if (result.profile) applyProfileFromServer(result.profile);
-      state.room = result.room;
-      syncRoomHeader(result.room);
-      syncBoardFromRoom(result.room);
+      const applied = applyRoomUpdate(result.room, mySeq);
+      // Remove thinking state before syncing board
+      dom.game.arenaYou.classList.remove("thinking");
+      dom.game.arenaOpp.classList.remove("thinking");
+      if (applied) {
+        syncRoomHeader(result.room);
+        syncBoardFromRoom(result.room);
+      }
     } catch (err) {
       showToast(String(err.message || "Could not play round"));
       dom.game.arenaYou.classList.remove("thinking");
       dom.game.arenaOpp.classList.remove("thinking");
-      setChoiceButtonsEnabled(true);
+      dom.game.arenaEmojiYou.textContent = CHOICE_EMOJI[choice] || "❓";
+      setChoiceButtonsEnabled(!!state.room?.canPlay);
+      clearChoiceHighlight();
     } finally {
       state.isPlaying = false;
     }
@@ -1243,12 +1460,28 @@
       resetBoard();
       return;
     }
-    if (!state.session?.roomId) return;
+    if (!state.session?.roomId || !state.room) return;
 
-    // Immediately show waiting state on button
+    // Guard against double-clicks while a ready request is already in flight
+    if (state._readyInFlight) return;
+    state._readyInFlight = true;
+
+    // Set optimistic flag BEFORE the request, keyed to the current round,
+    // so any stale poll response arriving in the meantime can't undo it.
+    state._optimisticReady = true;
+    state._optimisticReadyRoundKey = `${state.room.id}:${state.room.round?.index}`;
+
+    // Cancel any pending "lock button" timer from the result-pending phase —
+    // we're past that now, the user has acted.
+    clearTimeout(state._resultPendingTimer);
+
+    // Immediately show waiting state on button (optimistic UI)
     dom.game.btnPlayAgain.textContent = "Waiting for opponent… ⏳";
+    dom.game.btnPlayAgain.classList.remove("result-pending");
     dom.game.btnPlayAgain.classList.add("ready-waiting");
     dom.game.btnPlayAgain.disabled = true;
+
+    const mySeq = ++state._roomFetchSeq;
 
     try {
       const result = await apiRequest("/api/rooms/ready", {
@@ -1259,29 +1492,38 @@
         }),
       });
       if (result.profile) applyProfileFromServer(result.profile);
-      state.room = result.room;
-      if (result.room.phase === "choosing") {
-        state.lastRoomRenderKey = "";
-        resetBoard();
-        syncRoomHeader(result.room);
-        syncBoardFromRoom(result.room);
-      } else {
-        syncRoomHeader(result.room);
-        syncBoardFromRoom(result.room);
+      const applied = applyRoomUpdate(result.room, mySeq);
+      if (applied) {
+        if (result.room.phase === "choosing") {
+          state.lastRoomRenderKey = "";
+          resetBoard();
+          syncRoomHeader(result.room);
+          syncBoardFromRoom(result.room);
+        } else {
+          syncRoomHeader(result.room);
+          syncBoardFromRoom(result.room);
+        }
       }
     } catch (err) {
+      state._optimisticReady = false;
+      state._optimisticReadyRoundKey = "";
       showToast(String(err.message || "Could not start next round"));
+      // Re-enable button so user can try again
+      dom.game.btnPlayAgain.disabled = false;
+      dom.game.btnPlayAgain.classList.remove("ready-waiting", "result-pending");
+      dom.game.btnPlayAgain.textContent = "Next round";
+    } finally {
+      state._readyInFlight = false;
     }
   }
 
   async function leaveCurrentSession() {
+    if (state._leaving) return;
+    state._leaving = true;
+    stopPolling(); // stop polling immediately before async calls
     try {
-      if (state.mode === "quick") {
-        await apiRequest("/api/matchmaking/leave", {
-          method: "POST",
-          body: JSON.stringify({ playerId: state.clientId }),
-        });
-      } else if (state.mode === "private" && state.session?.roomId) {
+      if (state.session?.roomId) {
+        // In a room — always use rooms/leave regardless of mode
         await apiRequest("/api/rooms/leave", {
           method: "POST",
           body: JSON.stringify({
@@ -1289,8 +1531,15 @@
             playerId: state.clientId,
           }),
         });
+      } else if (state.mode === "quick") {
+        // In matchmaking queue, not yet in a room
+        await apiRequest("/api/matchmaking/leave", {
+          method: "POST",
+          body: JSON.stringify({ playerId: state.clientId }),
+        });
       }
     } catch (_) {}
+    state._leaving = false;
     routeToHome();
   }
 
@@ -1373,7 +1622,14 @@
     // Global
     window.addEventListener("resize", resizeCanvas);
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && state.mode !== "home") leaveCurrentSession();
+      if (
+        e.key === "Escape" &&
+        (state.mode === "solo" ||
+          state.mode === "quick" ||
+          state.mode === "private")
+      ) {
+        leaveCurrentSession();
+      }
     });
   }
 
@@ -1394,16 +1650,14 @@
 
     if (isTelegram) {
       // Telegram: name & avatar already set by initTelegram — go straight to home
-      syncBackendAvailability();
       setScreen("home");
-      await loadProfile();
+      await loadProfile(); // loadProfile calls syncBackendAvailability internally
     } else if (hasSavedUsername()) {
       // Returning user: use saved name
       state.profile.name = loadSavedUsername() || state.profile.name;
       syncProfileToUI();
-      syncBackendAvailability();
       setScreen("home");
-      await loadProfile();
+      await loadProfile(); // loadProfile calls syncBackendAvailability internally
     } else {
       // First time: show username setup screen
       setScreen("username");
@@ -1417,5 +1671,11 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", bootstrap);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootstrap);
+  } else {
+    // DOMContentLoaded already fired (e.g. script loaded late/async) —
+    // run immediately instead of waiting for an event that will never come.
+    bootstrap();
+  }
 })();
