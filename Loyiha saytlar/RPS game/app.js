@@ -177,6 +177,18 @@
      ════════════════════════════════════════ */
 
   function getOrCreateClientId() {
+    // Prefer a STABLE id derived from the Telegram user, when available.
+    // This must be checked BEFORE falling back to localStorage, because:
+    //  1. It ensures the SAME real person always gets the SAME id, even
+    //     across different devices/windows/app reinstalls — which is what
+    //     lets the server's self-match guard correctly prevent a player
+    //     from being matched against themselves in Quick Match.
+    //  2. WebView-embedded contexts (Telegram Mini Apps, wrapped mobile
+    //     apps) don't always persist localStorage reliably across reloads,
+    //     which would otherwise mint a brand-new random id every launch.
+    const tgUserId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+    if (tgUserId) return `tg_${tgUserId}`;
+
     const existing = localStorage.getItem(CLIENT_ID_KEY);
     if (existing) return existing;
     const id =

@@ -632,7 +632,7 @@ function handleProfile(req, res, urlObject) {
   const profile = touchProfile(store, playerId, name);
   // Only persist if player is new or name changed
   if (!existingName || existingName !== name) {
-    writeStore(store);
+    writeStore(store, [playerId]);
   }
   sendJson(res, 200, { ok: true, playerId, profile });
 }
@@ -667,7 +667,7 @@ async function handleApi(req, res, urlObject) {
     const computerChoice = randomChoice();
     const outcome = determineOutcome(choice, computerChoice);
     updateProfile(profile, outcome);
-    writeStore(store);
+    writeStore(store, [playerId]);
     sendJson(res, 200, {
       ok: true,
       profile,
@@ -685,7 +685,7 @@ async function handleApi(req, res, urlObject) {
     const playerId = normalizePlayerId(body.playerId);
     const profile = touchProfile(store, playerId, safeName(body.name));
     resetProfile(profile);
-    writeStore(store);
+    writeStore(store, [playerId]);
     sendJson(res, 200, { ok: true, profile });
     return;
   }
@@ -695,7 +695,11 @@ async function handleApi(req, res, urlObject) {
     const playerId = normalizePlayerId(body.playerId);
     const name = safeName(body.name);
     const result = joinMatchmaking(playerId, name, store);
-    writeStore(store);
+    if (result.matched) {
+      writeStore(store, [result.room.hostId, result.room.guestId]);
+    } else {
+      writeStore(store, [playerId]);
+    }
     if (result.matched) {
       sendJson(res, 200, buildRoomView(result.room, playerId, store));
     } else {
@@ -734,7 +738,8 @@ async function handleApi(req, res, urlObject) {
     removePlayerFromQueue(playerId);
     const roomId = activeRoomByPlayer.get(playerId);
     if (roomId) leaveRoom(roomId, playerId);
-    writeStore(store);
+    // No writeStore here — neither removePlayerFromQueue nor leaveRoom
+    // touch persisted player profile data, only in-memory room state.
     sendJson(res, 200, { ok: true });
     return;
   }
@@ -761,7 +766,7 @@ async function handleApi(req, res, urlObject) {
     }
 
     room.players[playerId].name = profile.name;
-    writeStore(store);
+    writeStore(store, [playerId]);
     sendJson(res, 200, buildRoomView(room, playerId, store));
     return;
   }
@@ -810,7 +815,7 @@ async function handleApi(req, res, urlObject) {
     room.round.index = 1;
     room.round.startedAt = nowIso();
     activeRoomByPlayer.set(playerId, room.id);
-    writeStore(store);
+    writeStore(store, [playerId]);
     sendJson(res, 200, buildRoomView(room, playerId, store));
     return;
   }
@@ -876,12 +881,13 @@ async function handleApi(req, res, urlObject) {
       room.round.choices[room.guestId]
     ) {
       resolveRoomRound(room, store);
-      writeStore(store);
+      writeStore(store, [room.hostId, room.guestId]);
       sendJson(res, 200, buildRoomView(room, playerId, store));
       return;
     }
 
-    writeStore(store);
+    // Only one player has chosen so far — no player profile data changed
+    // yet (only in-memory room.round.choices), nothing to persist.
     sendJson(res, 200, buildRoomView(room, playerId, store));
     return;
   }
@@ -919,7 +925,8 @@ async function handleApi(req, res, urlObject) {
     }
 
     room.updatedAt = nowIso();
-    writeStore(store);
+    // No writeStore here — ready-state and round transitions are purely
+    // in-memory room state; no player profile data changed.
     sendJson(res, 200, buildRoomView(room, playerId, store));
     return;
   }
@@ -936,7 +943,8 @@ async function handleApi(req, res, urlObject) {
     }
 
     leaveRoom(roomId, playerId);
-    writeStore(store);
+    // No writeStore here — leaveRoom only mutates in-memory room state,
+    // never persisted player profile data.
     sendJson(res, 200, { ok: true });
     return;
   }

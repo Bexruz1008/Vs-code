@@ -9,30 +9,19 @@
     <title>RPS Battle</title>
     <script>
       (function () {
-        // Default backend — used when this page is served from a DIFFERENT
-        // origin than the API server (e.g. packaged into a mobile app via
-        // Median.co, which serves index.html/app.js from its own hosting,
-        // not from the Node.js server). Without this, relative fetch("/api/...")
-        // calls would resolve against the wrong origin and always fail,
-        // showing "Offline" even though the server itself is running fine.
-        const DEFAULT_BACKEND_URL = "https://rps-nnsq.onrender.com";
-
+        // Prefer the current origin when the app is served by its own backend
+        // (local development, Render, Railway, etc.). This keeps API calls
+        // same-origin and avoids false "Offline" states. An explicit
+        // ?backend=... or localStorage override still works for cross-origin
+        // setups such as a separate frontend host talking to a backend API.
         const params = new URLSearchParams(window.location.search);
         const fromParam = params.get("backend") || "";
         const fromStorage = window.localStorage
           ? window.localStorage.getItem("rps-backend-url") || ""
           : "";
-        // If this page IS being served by the backend itself (same origin —
-        // e.g. opened directly via the Render URL in a browser), prefer a
-        // relative/empty base so requests naturally stay same-origin.
-        const isServedByBackend =
-          window.location.origin &&
-          DEFAULT_BACKEND_URL.startsWith(window.location.origin);
+        const fallbackOrigin = window.location.origin || "";
 
-        window.__RPS_BACKEND_URL__ =
-          fromParam ||
-          fromStorage ||
-          (isServedByBackend ? "" : DEFAULT_BACKEND_URL);
+        window.__RPS_BACKEND_URL__ = fromParam || fromStorage || fallbackOrigin;
       })();
     </script>
     <script src="https://telegram.org/js/telegram-web-app.js" defer></script>

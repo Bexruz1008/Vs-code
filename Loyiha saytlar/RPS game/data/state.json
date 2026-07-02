@@ -35,6 +35,18 @@
       },
       "history": [],
       "updatedAt": "2026-06-28T06:55:25.373Z"
+    },
+    "4a3b2b9c-f516-439b-96e5-845ebf590f96": {
+      "name": "TestUser",
+      "stats": {
+        "wins": 4,
+        "losses": 5,
+        "draws": 3,
+        "currentStreak": 2,
+        "bestStreak": 2
+      },
+      "history": [],
+      "updatedAt": "2026-07-02T15:53:26.513Z"
     }
   }
 }
