@@ -5,23 +5,23 @@
 
 :root {
   /* ─ Luxury Palette — Deep & Saturated ─ */
-  --ink: #0f2118;
+  --ink: #091321;
   --ink-2: #162620;
   --ink-3: #1d3028;
   --ink-4: #243a32;
   --muted: #4a5a55;
   --dim: #647070;
-  --soft: #7a8a86;
+  --soft: #16b38c;
   --text: #e8d9c4;
   --text-2: #d9c9b4;
 
   --gold: #f2b758;
   --gold-dim: rgba(120, 93, 50, 0.18);
   --gold-border: rgba(120, 93, 50, 0.35);
-  --copper: #7d4a1b;
+  --copper: #8b5a2b;
   --copper-dim: rgba(139, 90, 43, 0.18);
   --copper-border: rgba(139, 90, 43, 0.35);
-  --emerald: #19784a;
+  --emerald: #cbd9d2;
   --emerald-dim: rgba(15, 59, 38, 0.18);
   --emerald-border: rgba(15, 59, 38, 0.35);
   --garnet: #5c1f0f;
