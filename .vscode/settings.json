@@ -1,18 +1,18 @@
-// {
-//   "editor.tabMovesFocus": false,
-//   "files.autoSave": "afterDelay",
-//   "files.autoSaveDelay": 700,
-//   "[scss]": {
-//     "editor.tabSize": 2,
-//     "editor.insertSpaces": true
-//   },
-//   "liveServer.settings.port": 5588,
-//   "task.saveBeforeRun": "always",
-//   "editor.wordWrap": "bounded",
-//   "chat.editor.wordWrap": "on",
-//   "editor.quickSuggestionsDelay": 0,
-//   "editor.suggest.showWords": true,
-//   "editor.suggest.localityBonus": true,
-//   "editor.codeActionsOnSave": {},
-//   "java.configuration.updateBuildConfiguration": "interactive"
-// }
+{
+  "editor.tabMovesFocus": false,
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 700,
+  "[scss]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  },
+  "liveServer.settings.port": 5588,
+  "task.saveBeforeRun": "always",
+  "editor.wordWrap": "bounded",
+  "chat.editor.wordWrap": "on",
+  "editor.quickSuggestionsDelay": 0,
+  "editor.suggest.showWords": true,
+  "editor.suggest.localityBonus": true,
+  "editor.codeActionsOnSave": {},
+  "java.configuration.updateBuildConfiguration": "interactive"
+}
