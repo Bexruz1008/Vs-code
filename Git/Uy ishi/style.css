@@ -179,7 +179,6 @@ section {
   color: #6b6f66;
 }
 
-
 .arrivals {
   background: #fff;
 }
@@ -287,7 +286,6 @@ section {
   font-size: 13px;
 }
 
-/* testimonial */
 .testimonial {
   background: #fff;
 }
@@ -343,15 +341,13 @@ section {
   background-image: url("https://www.figma.com/file/7dObWl5Xfb0bzEidvHTXVt/image/f4d5d5dc898fbd88150fd0e8ce8e5a85ec6d8ab2");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position:center ;
-  
+  background-position: center;
+
   border-radius: 24px;
   overflow: hidden;
   display: grid;
   grid-template-columns: 320px 1fr;
-  grid-template-areas: 
-  "empty content"
-  ;
+  grid-template-areas: "empty content";
   height: 400px;
   align-items: center;
   max-width: 1300px;
@@ -360,8 +356,7 @@ section {
 .newsletter img {
   height: 100%;
   width: 100%;
-  object-fit: contain; 
-  
+  object-fit: contain;
 }
 .newsletter-content {
   grid-area: content;
@@ -390,7 +385,6 @@ section {
   border: none;
 }
 
-/* footer */
 footer {
   background: #171a24;
   color: #c9cbd6;
