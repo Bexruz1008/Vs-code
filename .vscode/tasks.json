@@ -1,75 +1,75 @@
-{
-  "version": "2.0.0",
-  "tasks": [
-    {
-      "label": "Serve: Ilmla copy (8080)",
-      "type": "shell",
-      "command": "python3",
-      "args": ["-m", "http.server", "8080", "--bind", "0.0.0.0"],
-      "options": {
-        "cwd": "${workspaceFolder}/Html v2/Ilmla copy"
-      },
-      "problemMatcher": [],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated"
-      },
-      "windows": {
-        "command": "python",
-        "args": ["-m", "http.server", "8080", "--bind", "0.0.0.0"]
-      }
-    },
-    {
-      "label": "Sass: Watch workspace",
-      "type": "process",
-      "command": "powershell",
-      "args": [
-        "-NoProfile",
-        "-ExecutionPolicy",
-        "Bypass",
-        "-Command",
-        "$exclude=@(\".git\",\".github\",\".devcontainer\",\".vscode\",\".vercel\",\"node_modules\"); $pairs=Get-ChildItem -Path . -Directory | Where-Object { $exclude -notcontains $_.Name } | ForEach-Object { \"{0}:{0}\" -f $_.Name }; if(-not $pairs){ Write-Host \"No folders to watch.\"; exit 0 }; sass --watch @pairs"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "isBackground": true,
-      "problemMatcher": [],
-      "runOptions": {
-        "runOn": "folderOpen"
-      },
-      "presentation": {
-        "reveal": "never",
-        "panel": "dedicated"
-      }
-    },
-    {
-      "label": "Deploy: Current project (1-click)",
-      "type": "shell",
-      "command": "powershell",
-      "args": [
-        "-NoProfile",
-        "-ExecutionPolicy",
-        "Bypass",
-        "-File",
-        "${workspaceFolder}/scripts/deploy-all.ps1",
-        "-DeployDir",
-        "${relativeFileDirname}",
-        "-RequireDeployDir"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}"
-      },
-      "problemMatcher": [],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated"
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
-    }
-  ]
-}
+// {
+//   "version": "2.0.0",
+//   "tasks": [
+//     {
+//       "label": "Serve: Ilmla copy (8080)",
+//       "type": "shell",
+//       "command": "python3",
+//       "args": ["-m", "http.server", "8080", "--bind", "0.0.0.0"],
+//       "options": {
+//         "cwd": "${workspaceFolder}/Html v2/Ilmla copy"
+//       },
+//       "problemMatcher": [],
+//       "isBackground": true,
+//       "presentation": {
+//         "reveal": "always",
+//         "panel": "dedicated"
+//       },
+//       "windows": {
+//         "command": "python",
+//         "args": ["-m", "http.server", "8080", "--bind", "0.0.0.0"]
+//       }
+//     },
+//     {
+//       "label": "Sass: Watch workspace",
+//       "type": "process",
+//       "command": "powershell",
+//       "args": [
+//         "-NoProfile",
+//         "-ExecutionPolicy",
+//         "Bypass",
+//         "-Command",
+//         "$exclude=@(\".git\",\".github\",\".devcontainer\",\".vscode\",\".vercel\",\"node_modules\"); $pairs=Get-ChildItem -Path . -Directory | Where-Object { $exclude -notcontains $_.Name } | ForEach-Object { \"{0}:{0}\" -f $_.Name }; if(-not $pairs){ Write-Host \"No folders to watch.\"; exit 0 }; sass --watch @pairs"
+//       ],
+//       "options": {
+//         "cwd": "${workspaceFolder}"
+//       },
+//       "isBackground": true,
+//       "problemMatcher": [],
+//       "runOptions": {
+//         "runOn": "folderOpen"
+//       },
+//       "presentation": {
+//         "reveal": "never",
+//         "panel": "dedicated"
+//       }
+//     },
+//     {
+//       "label": "Deploy: Current project (1-click)",
+//       "type": "shell",
+//       "command": "powershell",
+//       "args": [
+//         "-NoProfile",
+//         "-ExecutionPolicy",
+//         "Bypass",
+//         "-File",
+//         "${workspaceFolder}/scripts/deploy-all.ps1",
+//         "-DeployDir",
+//         "${relativeFileDirname}",
+//         "-RequireDeployDir"
+//       ],
+//       "options": {
+//         "cwd": "${workspaceFolder}"
+//       },
+//       "problemMatcher": [],
+//       "presentation": {
+//         "reveal": "always",
+//         "panel": "dedicated"
+//       },
+//       "group": {
+//         "kind": "build",
+//         "isDefault": true
+//       }
+//     }
+//   ]
+// }
