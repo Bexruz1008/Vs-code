@@ -1,10 +1,10 @@
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 body {
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
   color: #1c1d18;
   background: #f7f5f0;
 }
@@ -43,7 +43,11 @@ img {
 }
 
 .hero {
-  background: #23241f;
+  background-image: linear-gradient(180deg, rgba(20,21,17,.8) 0%, rgba(20,21,17,.6) 40%, rgba(20,21,17,.9) 100%), url("https://www.figma.com/file/7dObWl5Xfb0bzEidvHTXVt/image/23d528c58f82d2c087c3c1808660cf2b4c6dc4a5");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 780px;
   color: #fff;
   padding-bottom: 100px;
 }
@@ -278,6 +282,7 @@ section {
   font-size: 13px;
 }
 
+/* testimonial */
 .testimonial {
   background: #fff;
 }
@@ -369,6 +374,7 @@ blockquote {
   border: none;
 }
 
+/* footer */
 footer {
   background: #171a24;
   color: #c9cbd6;
